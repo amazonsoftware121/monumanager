@@ -42,14 +42,14 @@ app.post('/login',(req,res)=>{
     const username =req.body.username;
     const password = req.body.password;
 
-    con.query("SELECT * from users WHERE username = ? AND password =?", [username, password],
+    con.query("SELECT * from admin WHERE username = ? AND password =?", [username, password],
     (err, result) =>{
         if(err){
             req.setEncoding({err: err});
         }
         else{
-            if(result.length > 0){
-                res.send(result);
+            if(result.length == 1){
+                res.send({message: "Login Successful "});
             }else{
                 res.send({message:"WRONG USERNAME OR PASSWORD"});
             }

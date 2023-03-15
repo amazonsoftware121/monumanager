@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Axios from 'axios';
 const formWrapper = {
   width: "360px",
@@ -19,7 +20,7 @@ Axios.post("http://localhost:3001/login",{
   if(response.data.message){
     setLoginStatus(response.data.message);
   }else{
-    setLoginStatus(response.data[0].email)
+    setLoginStatus(response.data[0].email);
   }
 })
 }
@@ -45,7 +46,7 @@ Axios.post("http://localhost:3001/login",{
 
             </div>
             <p className="forgot-password text-right mt-2">
-              Forgot <a href="#">password?</a>
+              Forgot <Link to="/forgotpassword">password?</Link>
             </p>
 <h1 style={{color: 'red',fontSize: '15px', textAlign: 'center',marginTop: '20px'}}>{loginStatus}</h1>
           </form>
