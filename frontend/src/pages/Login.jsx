@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Axios from 'axios';
+import Header from "../components/Header";
+import PageHeader from "../components/PageHeader";
 const formWrapper = {
   width: "360px",
 }
@@ -25,6 +27,9 @@ Axios.post("http://localhost:3001/login",{
 })
 }
   return (
+    <>
+    <Header />
+    <PageHeader title="Login" />
     <div className="container mt-5">
       <div className="loginPage d-flex aligns-items-center justify-content-center">
 
@@ -54,6 +59,8 @@ Axios.post("http://localhost:3001/login",{
         </div>
       </div>
     </div>
+    </>
+
   );
 }
 export default Login;
