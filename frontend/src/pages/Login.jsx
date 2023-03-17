@@ -15,7 +15,7 @@ const Login = () => {
 
 const login = (e) =>{
 e.preventDefault();
-Axios.post("http://localhost:3001/login",{
+Axios.post(`${process.env.REACT_APP_LOGIN_API}`,{
   username: username,
   password: password,
 }).then((response)=>{
@@ -39,11 +39,11 @@ Axios.post("http://localhost:3001/login",{
           <form>
             <div className="form-floating mb-3">
               <input type="email" name="username" onChange={(e) => {setUsername(e.target.value)}} className="form-control" id="floatingInput" placeholder="name@example.com" required />
-              <label for="floatingInput">Email address</label>
+              <label htmlFor="floatingInput">Email address</label>
             </div>
             <div className="form-floating">
               <input type="password" name="password" onChange={(e) => {setPassword(e.target.value)}} className="form-control" id="floatingPassword" placeholder="Password" />
-              <label for="floatingPassword">Password</label>
+              <label htmlFor="floatingPassword">Password</label>
             </div>
 
             <div className="d-grid gap-2 mt-3">
