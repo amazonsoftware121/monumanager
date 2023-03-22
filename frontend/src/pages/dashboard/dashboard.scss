@@ -1,0 +1,29 @@
+.adminContent{
+    margin-top: 82px;
+    height: calc(100vh);
+    .ms-n5 {
+        margin-left: -40px;
+    }
+    .latestUpdate{
+        max-height: calc(60vh);
+    overflow-y: scroll;
+    .item{
+        display: flex;
+    flex-wrap: nowrap;
+    margin-bottom: 15px;
+    background-color: #f2f2f2;
+    box-shadow: 0 2px 5px 0px #969696f7;
+    .rightContent{
+        padding: 5px 15px;
+        .title{
+            font-size: 18px;
+            font-weight: 600;
+            flex: 1
+        }
+    }
+     img{
+        object-fit: cover;
+    }
+}
+    }
+}

@@ -1,7 +1,6 @@
-import React from "react";
-import logo from '../logo__white.png'
+import logo from '../../logo__white.png'
 import { Link } from "react-router-dom";
-import { Search } from 'react-bootstrap-icons';
+import { FaSearch } from 'react-icons/fa';
 
 
 const Header = () =>{
@@ -18,7 +17,7 @@ const Header = () =>{
                         <input name="search" type="search" className="form-control" id="search" placeholder="Search Monu" aria-label="Search" />
 
                         <button type="submit" className="form-control" id="submit">
-                        <Search />
+                        <FaSearch />
                         </button>
                     </div>
                 </form>

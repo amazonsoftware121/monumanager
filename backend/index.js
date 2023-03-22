@@ -1,65 +1,27 @@
-require("dotenv").config();
-const express = require("express");
-const mysql = require("mysql");
-const cors = require("cors");
-
+import express from "express";
 const app = express();
+import customerRoutes from "./routes/customers.js";
+import authRoutes from "./routes/auth.js";
+import jobRoutes from "./routes/jobs.js";
+import carvingRoutes from "./routes/carvings.js";
+import productRoutes from "./routes/products.js";
+import taskRoutes from "./routes/tasks.js";
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
-app.use(express.json());
-app.use(cors());
+// MIDDELWARE
 
-/*Connection*/
+app.use(express.json())
+app.use(cors())
+app.use(cookieParser)
 
-const con = mysql.createConnection(
-    {
-        user: process.env.DATABASE_USER,
-        host: process.env.DATABASE_HOST,
-        password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE_NAME
-    }
-)
+app.use("/api/auth", authRoutes);
+app.use("/api/customers", customerRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/carvings", carvingRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/tasks", taskRoutes);
 
-/*Register*/
-
-/*app.post('/register',(req,res)=>{
-    const email =req.body.email;
-    const username =req.body.username;
-    const password = req.body.password;
-
-    con.query("INSERT INTO users (email, username, password) VALUES(?, ?, ?)", [email, username, password],
-    (err, result) =>{
-        if(result){
-            res.send(result);
-        }
-        else{
-            res.send({message: "Enter correnct asked details!"})
-        }
-    }
-    )
-})*/
-
-/* Login  */
-app.post('/login',(req,res)=>{
-    const username =req.body.username;
-    const password = req.body.password;
-
-    con.query("SELECT * from admin WHERE username = ? AND password =?", [username, password],
-    (err, result) =>{
-        if(err){
-            req.setEncoding({err: err});
-        }
-        else{
-            if(result.length == 1){
-                res.send({message: "Login Successful "});
-            }else{
-                res.send({message:"WRONG USERNAME OR PASSWORD"});
-            }
-        }
-    }
-    )
-})
-
-
-app.listen(3001, ()=> {
-    console.log("Backend server is running");
+app.listen(8800, () =>{
+    console.log("Api Working")
 })

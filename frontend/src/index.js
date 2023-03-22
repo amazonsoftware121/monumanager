@@ -2,39 +2,26 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import './custom.scss';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Login from './pages/Login';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import Root from "./routes/root";
 import ErrorPage from "./error-page";
 
+import { DarkModeContextProvider } from './context/darkModeContext';
+import { AuthContextProvider } from './context/authContext';
 
 
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "login",
-    element: <Login />,
-  },
-]);
 
-
-
-ReactDOM.createRoot(document.getElementById("root")).render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+  <DarkModeContextProvider>
+  <AuthContextProvider>
+    <App />
+    </AuthContextProvider>
+    </DarkModeContextProvider>
   </React.StrictMode>
 );
-
 
 
 // If you want to start measuring performance in your app, pass a function
