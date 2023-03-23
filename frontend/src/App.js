@@ -6,73 +6,61 @@ import {
     RouterProvider,
     Navigate
 } from "react-router-dom";
-import Header from './components/header/Header';
 import NavBar from './components/navbar/NavBar';
 import LeftBar from './components/leftBar/LeftBar';
 import RightBar from './components/rightBar/RightBar';
 import Home from './pages/home/Home';
+import Profile from './pages/profile/Profile'
 import Dashboard from './pages/dashboard/Dashboard';
-import Profile from './pages/profile/Profile';
 import './style.scss';
 import { useContext } from 'react';
-import { DarkModeContext } from './context/darkModeContext';
 import { AuthContext } from './context/authContext';
+//import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ErrorPage from './error-page';
 
 function App() {
     const { currentUser } = useContext(AuthContext);
-    const { darkMode } = useContext(DarkModeContext);
-    console.log(darkMode)
-    const DashboardPanel = () => {
-        return (
-            <div className={`theme-${darkMode ? "dark" : "light"}`}>
-                <NavBar />
-                <div style={{ display: "flex" }}>
-                    <LeftBar />
-                   <Outlet />
-                    <RightBar />
-                </div>
-            </div>
-        );
-    };
-   /* const ProtectedRoute = ({ children }) => {
+
+    // const queryClient = new QueryClient();
+    //console.log(darkMode);
+    const ProtectedRoute = ({ children }) => {
         if (!currentUser) {
             return <Navigate to="/login" />;
         }
-        return children
-    }*/
+
+        return children;
+    };
 
     const router = createBrowserRouter([
         {
-            path: '/',
-            element: <Home />
-        },
-        /*{
             path: "/",
-            element:  <DashboardPanel />,
-            errorElement: <ErrorPage />,
+            element: <Home />,
+        },
+        {
+            path: "/admin",
+            element: (
+                <ProtectedRoute>
+                    <Dashboard />
+                </ProtectedRoute>
+            ),
             children: [
                 {
-                    path: "/dashboard",
-                    element: <Dashboard />
+                    path: "/admin/profile",
+                    element: <Profile />,
                 },
                 {
-                    path: "/profile/:id",
-                    element: <Profile />
+                    path: "/admin/dashboard",
+                    element: <Dashboard />,
                 }
-            ]
-        },*/
-
-        {
-            path: "/login",
-            element: <Login />
+            ],
         },
         {
-            path: "/dashboard",
-            element: <Dashboard />
-        }
+            path: "/login",
+            element: <Login />,
+        },
 
     ]);
+
 
     return (
         <div>

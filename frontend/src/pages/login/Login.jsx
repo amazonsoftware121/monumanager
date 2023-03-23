@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { Link } from "react-router-dom";
+import { useContext,useState } from 'react';
+import { Link,useNavigate } from "react-router-dom";
 import { AuthContext } from '../../context/authContext';
 import './login.scss';
 import Header from "../../components/header/Header";
@@ -9,10 +9,29 @@ const formWrapper = {
   width: "360px",
 }
 const Login = () => {
-  const {login} = useContext(AuthContext);
-  const handleLogin = () =>{
-      login();
-  }
+  const [inputs, setInputs] = useContext({
+    username: "",
+    password: "",
+  });
+
+  const [err, setErr] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value}));
+  };
+const { login } = useContext(AuthContext);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try{
+      await login(inputs);
+      navigate("/dashboard")
+    } catch (err) {
+      setErr(err.response.data);
+    }
+  };
 
 
 
@@ -28,17 +47,17 @@ const Login = () => {
 
           <form>
             <div className="form-floating mb-3">
-              <input type="email" name="username"  className="form-control" id="floatingInput" placeholder="name@example.com" required />
-              <label htmlFor="floatingInput">Email address</label>
+              <input type="text" name="username"  className="form-control" id="floatingInput"  placeholder="Username" onChange={handleChange}  />
+              <label htmlFor="floatingInput">Username</label>
             </div>
             <div className="form-floating">
-              <input type="password" name="password"  className="form-control" id="floatingPassword" placeholder="Password" />
+              <input type="password" name="password"  className="form-control" id="floatingPassword" placeholder="Password" onChange={handleChange} />
               <label htmlFor="floatingPassword">Password</label>
             </div>
-
+{err && err}
             <div className="d-grid gap-2 mt-3">
              { /* <input onClick={handleLogin} type="submit" className="btn btn-primary" value="Login" /> */ }
-<Link to="/dashboard" className='btn btn-primary'>Login</Link>
+<button onClick={handleLogin} className='btn btn-primary'>Login</button>
             </div>
             <p className="forgot-password text-right mt-2">
               Forgot <Link to="/forgotpassword">password?</Link>
