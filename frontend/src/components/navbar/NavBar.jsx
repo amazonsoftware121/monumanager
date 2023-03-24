@@ -52,7 +52,7 @@ const NavBar = () => {
                     </ul>
 
                     <div className="ms-4">
-                        <Link to="/login" className="btn custom-btn custom-border-btn smoothscroll">Login</Link>
+                        <Link to="/login" className="btn custom-btn custom-border-btn smoothscroll">Logout</Link>
                     </div>
                 </div>
             </div>

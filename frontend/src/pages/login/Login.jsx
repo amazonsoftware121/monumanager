@@ -9,30 +9,28 @@ const formWrapper = {
   width: "360px",
 }
 const Login = () => {
-  const [inputs, setInputs] = useContext({
+  const [inputs, setInputs] = useState({
     username: "",
     password: "",
   });
-
   const [err, setErr] = useState(null);
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value}));
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-const { login } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try{
+    try {
       await login(inputs);
-      navigate("/dashboard")
+      navigate("/admin/dashboard")
     } catch (err) {
       setErr(err.response.data);
     }
   };
-
 
 
   return (

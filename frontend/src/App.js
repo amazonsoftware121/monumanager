@@ -15,6 +15,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import './style.scss';
 import { useContext } from 'react';
 import { AuthContext } from './context/authContext';
+
 //import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ErrorPage from './error-page';
 
