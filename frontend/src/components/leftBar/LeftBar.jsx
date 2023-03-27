@@ -20,7 +20,7 @@ const LeftBar = () => {
                         
                     </li>
                     <li>
-                        <Link to="#" className="nav-link px-0 align-middle ">
+                        <Link to="/admin/customer" className="nav-link px-0 align-middle ">
                         <FaUserAlt /> <span className="ms-1 d-none d-sm-inline">Customers</span></Link>
                         
                         

@@ -18,12 +18,34 @@ import { AuthContext } from './context/authContext';
 
 //import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ErrorPage from './error-page';
+import Customer from './pages/customer/Customer';
 
 function App() {
     const { currentUser } = useContext(AuthContext);
 
     // const queryClient = new QueryClient();
     //console.log(darkMode);
+
+
+
+    const Layout = () => {
+        return (
+            <div className="adminDashboard">
+                <NavBar />
+                <div style={{ display: "flex" }}>
+                    <LeftBar />
+                    <div style={{ flex: 6 }}>
+                        <Outlet />
+                    </div>
+                    <RightBar />
+                </div>
+            </div>
+        )
+    }
+
+
+
+
     const ProtectedRoute = ({ children }) => {
         if (!currentUser) {
             return <Navigate to="/login" />;
@@ -36,30 +58,22 @@ function App() {
         {
             path: "/",
             element: <Home />,
-        },
-        {
-            path: "/admin",
-            element: (
-                <ProtectedRoute>
-                    <Dashboard />
-                </ProtectedRoute>
-            ),
-            children: [
-                {
-                    path: "/admin/profile",
-                    element: <Profile />,
-                },
-                {
-                    path: "/admin/dashboard",
-                    element: <Dashboard />,
-                }
-            ],
+            errorElement: <ErrorPage />,
         },
         {
             path: "/login",
             element: <Login />,
         },
-
+    {
+        path: "/dashboard",
+        element: <ProtectedRoute><Layout /></ProtectedRoute>,
+        children: [
+            {
+                path: "/dashboard/customer",
+                element: <Dashboard />
+            }
+        ]
+    }
     ]);
 
 

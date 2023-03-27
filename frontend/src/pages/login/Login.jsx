@@ -26,7 +26,7 @@ const Login = () => {
     e.preventDefault();
     try {
       await login(inputs);
-      navigate("/admin/dashboard")
+      navigate("/dashboard")
     } catch (err) {
       setErr(err.response.data);
     }

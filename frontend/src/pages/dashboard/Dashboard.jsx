@@ -1,6 +1,4 @@
 import './dashboard.scss';
-import LeftBar from "../../components/leftBar/LeftBar";
-import Nabvar from "../../components/navbar/NavBar";
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -13,11 +11,10 @@ const Dashboard = () => {
   const [value, onChange] = useState(new Date());
   return (
     <>
-      <Nabvar />
+
       <div className="adminContent">
         <div className="container-fluid">
           <div className="row flex-nowrap">
-            <LeftBar />
             <div className="rightBar col py-3">
 
               <div className='row flex-nowrap'>
