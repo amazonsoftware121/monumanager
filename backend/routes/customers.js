@@ -1,8 +1,11 @@
 import express from "express";
-import { getUser } from "../controllers/customer.js";
+import {addCustomer,viewCustomer,updateCustomer} from '../controllers/customer.js';
 
 const router = express.Router();
 
-router.get("/find/:customerId", getUser)
+router.post("/addcustomer", addCustomer);
+router.post("/viewcustomer", viewCustomer);
+router.post("/updatecustomer", updateCustomer);
+
 
 export default router

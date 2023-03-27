@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './dashboard.scss';
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
@@ -50,7 +51,9 @@ const Dashboard = () => {
                       </button>
 
                       <button className='btn btn-success btn-lg mx-3'>
+                      <Link to="/dashboard/job">
                         <FaPlus />
+                        </Link>
                       </button>
 
                       <button className='btn btn-lg'>

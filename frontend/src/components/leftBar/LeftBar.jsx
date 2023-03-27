@@ -9,41 +9,41 @@ const LeftBar = () => {
   return (
     <>
 
-        <div className="leftBar col-auto col-md-3 col-xl-2 px-sm-2 px-0">
+        <div className="leftBar">
             <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 
                 <ul className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
 
                     <li>
-                        <Link to="#submenu1" className="nav-link px-0 align-middle">
+                        <Link to="/dashboard" className="nav-link px-0 align-middle">
                         <AiFillDashboard />  <span className="ms-1 d-none d-sm-inline">Dashboard</span> </Link>
                         
                     </li>
                     <li>
-                        <Link to="/admin/customer" className="nav-link px-0 align-middle ">
+                        <Link to="/dashboard/customer" className="nav-link px-0 align-middle ">
                         <FaUserAlt /> <span className="ms-1 d-none d-sm-inline">Customers</span></Link>
                         
                         
                     </li>
                     <li>
-                        <Link to="#" className="nav-link px-0 align-middle">
+                        <Link to="/dashboard/job" className="nav-link px-0 align-middle">
                             <FaTasks /> <span className="ms-1 d-none d-sm-inline">Jobs</span></Link>
                     </li>
                     
                     <li>
-                        <Link to="#"  className="nav-link px-0 align-middle">
+                        <Link to="/dashboard/product"  className="nav-link px-0 align-middle">
                            <FaDatabase /> <span className="ms-1 d-none d-sm-inline">Products</span> </Link>
                            
                     </li>
 
                     <li>
-                        <Link to="#" className="nav-link px-0 align-middle">
+                        <Link to="/dashboard/task" className="nav-link px-0 align-middle">
                           <FaTasks /> <span className="ms-1 d-none d-sm-inline">Task</span> </Link>
                            
                     </li>
 
                     <li>
-                        <Link to="#" className="nav-link px-0 align-middle">
+                        <Link to="/dashboard/carving" className="nav-link px-0 align-middle">
                            <MdEngineering /> <span className="ms-1 d-none d-sm-inline">Carving</span> </Link>
                            
                     </li>
