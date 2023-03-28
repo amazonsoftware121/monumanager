@@ -19,6 +19,21 @@ const Customer = () => {
     const[order,setOrder] = useState(false);
 
     const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
+    const [alert, setAlert] = useState(null);
+
+
+    const [display, setDisplay] = useState("false");
+
+const toggleDisplay = () =>{
+    if(!display){
+        setDisplay(true);
+    }
+    else{
+        setDisplay(false);
+    }
+}
+   
 
     const handleChange = (e) => {
         setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -36,7 +51,10 @@ const Customer = () => {
     const handleClick = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:4500/api/customers/addcustomer", inputs)
+           const response =  await axios.post("http://localhost:4500/api/customers/addcustomer", inputs);
+           //console.log(response.data);
+           setSucc(response.data);
+           console.log(response.data);
         } catch (err) {
             setErr(err.response.data);
         }
@@ -104,6 +122,11 @@ const Customer = () => {
                                 </div>
                                 {err && err}
 
+                                {succ && <div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>{succ}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>}
+
                                 <div className='buttonWrapper'>
                                     <button className='btn btn-primary' onClick={handleClick}>Archive</button>
                                     <button className='btn btn-success' onClick={handleClick}>Save</button>
@@ -116,12 +139,12 @@ const Customer = () => {
                             <div className='recentOrderWrapper'>
                                 <div className='recentOrderButton'>
                                     <div className="form-check form-switch">
-                                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onChange={handleOnChange} />
-                                        <label className="form-check-label" for="flexSwitchCheckDefault"><strong>Show Recent Orders</strong></label>
+                                        <input onClick={toggleDisplay} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onChange={handleOnChange} />
+                                        <label className="form-check-label" htmlfor="flexSwitchCheckDefault"><strong>Show Recent Orders</strong></label>
                                     </div>
                                 </div>
 
-                                <div className='recentOrders'>
+                                <div className='recentOrders' style={display ? {display:"none"} : {display:"block"} } >
                                     <ul>
                                         <li><span><FaHome /></span> Order 001</li>
                                         <li><span><FaHome /></span> One-fine Order 002</li>
