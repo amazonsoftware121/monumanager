@@ -1,15 +1,37 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './dashboard.scss';
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { FaSearch, FaPlus, FaCog } from 'react-icons/fa';
 import dummy from "../../images/dummy.jpg";
+import axios from 'axios';
+
 
 
 
 const Dashboard = () => {
   const [value, onChange] = useState(new Date());
+  const [err, setErr] = useState(null);
+  const navigate = useNavigate();
+  const [jobid, setJobid] = useState(null);
+  const handleClick = async (e) => {
+       
+    e.preventDefault();
+  
+    try {
+     
+    const response = await axios.post("http://localhost:4500/api/jobs/jobadd", { data: 1 });
+    setJobid(response.data.jobId);
+   navigate("/dashboard/customer");
+                        
+
+  } catch (err) {
+    setErr(err.response.data);
+  }
+    
+  }
+
   return (
     <>
 
@@ -20,6 +42,8 @@ const Dashboard = () => {
 
               <div className='row flex-nowrap'>
                 <div className='col-6 '>
+
+                 
                   <div className="calender">
 
                     <div className="container shadow py-4 d-flex flex-column align-items-center">
@@ -50,10 +74,10 @@ const Dashboard = () => {
                         <FaSearch />
                       </button>
 
-                      <button className='btn btn-success btn-lg mx-3'>
-                      <Link to="/dashboard/job">
-                        <FaPlus />
-                        </Link>
+                      <button className='btn btn-success btn-lg mx-3'  onClick={handleClick}>
+
+                      <FaPlus />
+                      
                       </button>
 
                       <button className='btn btn-lg'>
