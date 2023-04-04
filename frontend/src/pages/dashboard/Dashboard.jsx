@@ -6,6 +6,8 @@ import 'react-calendar/dist/Calendar.css';
 import { FaSearch, FaPlus, FaCog } from 'react-icons/fa';
 import dummy from "../../images/dummy.jpg";
 import axios from 'axios';
+//import Products from '../products/Products';
+import Product from './product/Product';
 
 
 
@@ -173,9 +175,7 @@ const Dashboard = () => {
                     </div>
 
 
-                    
-
-
+            
                    
 
 

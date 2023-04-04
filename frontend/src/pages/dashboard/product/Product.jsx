@@ -1,16 +1,9 @@
-import "./product.scss"
-import {
-    useMutation,
-    useQueryClient,
-    QueryClient,
-    QueryClientProvider,
-  } from 'react-query'
-  
+import React from 'react'
 
-const product = () => {
+const Product = () => {
   return (
-    <div>product</div>
+    <div>Product</div>
   )
 }
 
-export default product
+export default Product

@@ -14,7 +14,7 @@
     --link-hover-color:             #0066CC;
   
     --body-font-family:             'Montserrat', sans-serif;
-    --title-font-family:            'Sono', sans-serif;
+    --title-font-family:            'Montserrat', sans-serif;
   
     --h1-font-size:                 58px;
     --h2-font-size:                 46px;
@@ -1260,3 +1260,14 @@
     background-color: #f2f2f2;
     border-radius: 15px;
 }
+.stepperControl { 
+  button{
+    border: none;
+    background-color:transparent;
+    font-size: 28px;
+    &:last-child{
+      color: green;
+    }
+  }
+}
+

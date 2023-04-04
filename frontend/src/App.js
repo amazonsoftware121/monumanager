@@ -22,6 +22,8 @@ import Order from './pages/dashboard/order/Order';
 //import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ErrorPage from './error-page';
 import Customer from './pages/dashboard/customer/Customer';
+import { QueryClient, QueryClientProvider } from 'react-query'
+
 
 function App() {
     const { currentUser } = useContext(AuthContext);
@@ -29,10 +31,12 @@ function App() {
     // const queryClient = new QueryClient();
     //console.log(darkMode);
 
+    const queryClient = new QueryClient();
 
 
     const Layout = () => {
         return (
+            <QueryClientProvider client={queryClient}>
             <div className="adminDashboard">
                 <NavBar />
                 <div className='row'>
@@ -43,6 +47,7 @@ function App() {
                    
                 </div>
             </div>
+            </QueryClientProvider>
         )
     }
 
