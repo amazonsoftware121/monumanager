@@ -34,9 +34,9 @@ const Job = () => {
 const displayStep = (step) => {
     switch (step) {
       case 1:
-        return <Customer />
+        return <Customer showOrder= {currentStep => setCurrentStep(currentStep)} />
       case 2:
-        return <Order />
+        return <Order showOrder= {currentStep => setCurrentStep(currentStep)} />
       case 3:
         return <Status />
       case 4:
@@ -55,7 +55,7 @@ const displayStep = (step) => {
 
   const handleClick = (direction)=>{
 let newStep = currentStep;
-direction == "next" ? newStep++ : newStep--;
+direction === "next" ? newStep++ : newStep--;
 // check if steps are within bounds
 newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
   }
@@ -75,10 +75,7 @@ newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
       
 
           />
-          <Stepper 
-          steps={steps}
-          currentStep={currentStep}
-           />
+        
 
 {/* Display Components */}
 <div>
@@ -86,8 +83,7 @@ newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
   userData,
   setUserData,
   finalData,
-  setFinalData,
-  displayStep
+  setFinalData
 }}>
   {displayStep(currentStep)}
 </StepperContext.Provider>
@@ -101,4 +97,4 @@ newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
   )
 }
 
-export default Job
+export  default Job 

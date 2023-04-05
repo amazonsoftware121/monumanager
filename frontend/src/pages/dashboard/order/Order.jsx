@@ -6,7 +6,7 @@ import dummy from "../../../images/dummy.jpg";
 import 'react-calendar/dist/Calendar.css';
 import { useState,useContext } from 'react';
 import {StepperContext} from '../../../context/StepperContext';
-const Order = () => {
+const Order = (props) => {
   const [textInput, setTextInput] = useState("");
   const {userData, setUserData} = useContext(StepperContext);
 const handleChange = (e) =>{
@@ -110,8 +110,8 @@ const onSubmits = (e) =>{
 
         </div>
 
-        <select class="form-select form-select-lg my-5" aria-label=".form-select-lg example">
-  <option selected>Status</option>
+        <select onClick={()=>props.showOrder(3)} className="form-select form-select-lg my-5" aria-label=".form-select-lg example">
+  <option defaultValue>Status</option>
   <option value="1">Approve</option>
   <option value="2">Pending</option>
   <option value="3">Ready</option>

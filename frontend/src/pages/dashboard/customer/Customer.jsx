@@ -3,7 +3,7 @@ import { useState,useContext } from 'react';
 import {StepperContext} from '../../../context/StepperContext';
 import { FaHome } from 'react-icons/fa';
 import axios from 'axios';
-const Customer = () => {
+const Customer = (props) => {
     const {userData, setUserData} = useContext(StepperContext);
     const[order,setOrder] = useState(false);
 
@@ -50,9 +50,10 @@ const toggleDisplay = () =>{
         }
     }
     //    console.log(inputs)
-    console.log(err)
+
     return (
         <>
+        
             <div className='customer'>
                 <h2 className='text-center my-3'>Customer</h2>
                 <div className='row'>
@@ -135,7 +136,7 @@ const toggleDisplay = () =>{
                                 <div className='recentOrderButton'>
                                     <div className="form-check form-switch">
                                         <input onClick={toggleDisplay} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onChange={handleOnChange} />
-                                        <label className="form-check-label" htmlfor="flexSwitchCheckDefault"><strong>Show Recent Orders</strong></label>
+                                        <label className="form-check-label" htmlFor="flexSwitchCheckDefault"><strong>Show Recent Orders</strong></label>
                                     </div>
                                 </div>
 
@@ -148,7 +149,7 @@ const toggleDisplay = () =>{
                                 </div>
 
                                 <div className='addOrder mt-5'>
-                                   <button onClick={displayStep[3]} className='btn btn-secondary' >Add Order</button> 
+                                   <button onClick={()=>props.showOrder(2)} className='btn btn-secondary' >Add Order</button> 
                                 </div>
 
 
@@ -159,8 +160,15 @@ const toggleDisplay = () =>{
                     </div>
                 </div>
             </div>
+
+
         </>
     )
+
+
+   
+
+
 }
 
 export default Customer
