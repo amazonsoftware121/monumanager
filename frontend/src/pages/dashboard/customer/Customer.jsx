@@ -1,11 +1,15 @@
 import './customer.scss'
-import { useState,useContext } from 'react';
-import {StepperContext} from '../../../context/StepperContext';
-import { FaHome } from 'react-icons/fa';
+import { useState, useContext } from 'react';
+import { StepperContext } from '../../../context/StepperContext';
+import { FaHome, FaPlus } from 'react-icons/fa';
+import Calendar from "react-calendar";
+import dummy from "../../../images/dummy.jpg";
+import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
+import Button from '../../../components/Button';
 const Customer = (props) => {
-    const {userData, setUserData} = useContext(StepperContext);
-    const[order,setOrder] = useState(false);
+    const { userData, setUserData } = useContext(StepperContext);
+    const [order, setOrder] = useState(false);
 
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
@@ -13,38 +17,40 @@ const Customer = (props) => {
 
     const [display, setDisplay] = useState("false");
 
-const toggleDisplay = () =>{
-    if(!display){
-        setDisplay(true);
+    const toggleDisplay = () => {
+        if (!display) {
+            setDisplay(true);
+        }
+        else {
+            setDisplay(false);
+        }
     }
-    else{
-        setDisplay(false);
-    }
-}
-   
+
 
     const handleChange = (e) => {
-        const {name, value } = e.target;
+        const { name, value } = e.target;
         /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
-        setUserData({...userData, [name] : value });
+        setUserData({ ...userData, [name]: value });
     };
 
-    const handleOnChange = () =>{
-        if(!false){
+    const handleOnChange = () => {
+        if (!false) {
             setOrder(true);
         }
-        else{
+        else {
             setOrder(false);
         }
     }
 
     const handleClick = async (e) => {
+        setErr(null);
+        setSucc(null);
         e.preventDefault();
         try {
-           const response =  await axios.post("http://localhost:4500/api/customers/addcustomer", userData);
-           //console.log(response.data);
-           setSucc(response.data);
-           console.log(response.data);
+            const response = await axios.post("http://localhost:4500/api/customers/addcustomer", userData);
+            //console.log(response.data);
+            setSucc(response.data);
+            console.log(response.data);
         } catch (err) {
             setErr(err.response.data);
         }
@@ -53,29 +59,29 @@ const toggleDisplay = () =>{
 
     return (
         <>
-        
+
             <div className='customer'>
                 <h2 className='text-center my-3'>Customer</h2>
                 <div className='row'>
                     <div className='col-7'>
                         <div className='cardItem shadow p-3 mx-3'>
-                            <form>
+                            <form onSubmit={handleClick}>
                                 <div className='row'>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["first_name"] || "" } name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} />
+                                            <input type="text" value={userData["first_name"] || ""} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Firstname</label>
                                         </div>
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["middle_name"]} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
+                                            <input type="text" value={userData["middle_name"]} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Middlename</label>
                                         </div>
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["last_name"]} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} />
+                                            <input type="text" value={userData["last_name"]} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Lastname</label>
                                         </div>
                                     </div>
@@ -84,14 +90,14 @@ const toggleDisplay = () =>{
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["phone"]} name="phone" className="form-control" placeholder="phone" onChange={handleChange} />
+                                            <input type="text" value={userData["phone"]} name="phone" className="form-control" placeholder="phone" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Phone</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
 
                                         <div className="form-floating mb-3">
-                                            <input type="email" value={userData["email"]} name="email" className="form-control" placeholder="email" onChange={handleChange} />
+                                            <input type="email" value={userData["email"]} name="email" className="form-control" placeholder="email" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Email</label>
                                         </div>
                                     </div>
@@ -111,21 +117,26 @@ const toggleDisplay = () =>{
                                         </div>
                                     </div>
                                 </div>
-            
+
 
                                 {err && <div className="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>{err}</strong>
-  <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>}
+                                    <strong>{err}</strong>
+
+
+                                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>}
 
                                 {succ && <div className="alert alert-success alert-dismissible fade show" role="alert">
-  <strong>{succ}</strong>
-  <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>}
+                                    <strong>{succ}</strong>
+                                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>}
 
                                 <div className='buttonWrapper'>
-                                    <button className='btn btn-primary' onClick={handleClick}>Archive</button>
-                                    <button className='btn btn-success' onClick={handleClick}>Save</button>
+
+
+                                    <Button btnDesign="btn btn-primary" btnText="Archive" onClick={handleClick} />
+
+                                    <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
                                 </div>
                             </form>
                         </div>
@@ -140,7 +151,7 @@ const toggleDisplay = () =>{
                                     </div>
                                 </div>
 
-                                <div className='recentOrders' style={display ? {display:"none"} : {display:"block"} } >
+                                <div className='recentOrders' style={display ? { display: "none" } : { display: "block" }} >
                                     <ul>
                                         <li><span><FaHome /></span> Order 001</li>
                                         <li><span><FaHome /></span> One-fine Order 002</li>
@@ -149,11 +160,11 @@ const toggleDisplay = () =>{
                                 </div>
 
                                 <div className='addOrder mt-5'>
-                                   <button onClick={()=>props.showOrder(2)} className='btn btn-secondary' >Add Order</button> 
+                                    <button onClick={() => props.showOrder(2)} className='btn btn-secondary' >Add Order</button>
                                 </div>
 
 
-
+                             
 
                             </div>
                         </div>
@@ -166,9 +177,165 @@ const toggleDisplay = () =>{
     )
 
 
-   
+
 
 
 }
 
-export default Customer
+const Order = (props) => {
+
+    const { userData, setUserData } = useContext(StepperContext);
+    const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
+        setUserData({ ...userData, [name]: value });
+    };
+
+    const handleClick = async (e) => {
+        setErr(null);
+        setSucc(null);
+        e.preventDefault();
+        try {
+            const response = await axios.post("http://localhost:4500/api/customers/addcustomer", userData);
+            //console.log(response.data);
+            setSucc(response.data);
+            console.log(response.data);
+        } catch (err) {
+            setErr(err.response.data);
+        }
+    }
+    //    console.log(inputs)
+    return (
+        <>
+            <div className="order">
+                <h2 className='text-center my-3'>Order</h2>
+
+                <div className="row">
+                    <div className="col-8 px-5">
+                        <form onSubmit={handleClick}>
+
+                            <div className=''>
+                                <div className="form-floating mb-3">
+                                    <textarea value={userData["order_notes"] || ""} name="order_notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                    <label htmlFor="floatingInput">Notes</label>
+                                </div>
+                            </div>
+
+
+                            <button className="btn btn-primary" type="submit">Submit</button>
+                        </form>
+
+                        <div className="calender mt-5"><Calendar /></div>
+
+
+                        <div className="latestUpdate mt-5">
+                            <div className="item">
+                                <div className="leftContent">
+                                    <img src={dummy} alt='' width={75} height={75} />
+                                </div>
+
+                                <div className="rightContent">
+                                    <div className="title">Customer Info</div>
+                                    <p>Secondar text</p>
+                                </div>
+                            </div>
+
+
+                            <div className="item">
+                                <div className="leftContent">
+                                    <img src={dummy} alt='' width={75} height={75} />
+                                </div>
+
+                                <div className="rightContent">
+                                    <div className="title">Product Info</div>
+                                    <p>Secondar text</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div className="addService float-end">
+                            <button className="btn btn-secondary"> <FaPlus /> Add Service</button>
+                        </div>
+
+
+                    </div>
+
+                    <div className="col-4 px-5">
+                        <h3>Services</h3>
+
+                        <div className="serviceList">
+                            <ul>
+                                <li><span><FaHome /></span> Task 1 </li>
+                                <li><span><FaHome /></span> Task 2 </li>
+                                <li><span><FaHome /></span> Task 3 </li>
+                                <li><span><FaHome /></span> Task 4 </li>
+                            </ul>
+
+                        </div>
+
+                        <select onClick={() => props.showOrder(3)} className="form-select form-select-lg my-5" aria-label=".form-select-lg example">
+                            <option defaultValue>Status</option>
+                            <option value="1">Approve</option>
+                            <option value="2">Pending</option>
+                            <option value="3">Ready</option>
+                        </select>
+
+
+
+
+                    </div>
+                </div>
+
+
+
+            </div>
+        </>
+    )
+}
+
+const Product = () => {
+    return (
+        <div>Product</div>
+    )
+}
+
+const Task = () => {
+    return (
+        <div>Task</div>
+    )
+}
+
+
+const CarvingType = () => {
+    return (
+        <div>CarvingType</div>
+    )
+}
+
+
+const Carving = () => {
+    return (
+        <div>Carving</div>
+    )
+}
+
+const OrderServices = () => {
+    return (
+        <div>OrderServices</div>
+    )
+}
+
+
+const Status = () => {
+    return (
+        <div>Status</div>
+    )
+}
+
+
+
+export default Customer;
+export { Status, Order, OrderServices, Carving, CarvingType, Task, Product }

@@ -6,11 +6,6 @@ import 'react-calendar/dist/Calendar.css';
 import { FaSearch, FaPlus, FaCog } from 'react-icons/fa';
 import dummy from "../../images/dummy.jpg";
 import axios from 'axios';
-//import Products from '../products/Products';
-import Product from './product/Product';
-
-
-
 
 const Dashboard = () => {
   const [value, onChange] = useState(new Date());
@@ -25,7 +20,7 @@ const Dashboard = () => {
      
     const response = await axios.post("http://localhost:4500/api/jobs/jobadd", { data: 1 });
     setJobid(response.data.jobId);
-   navigate("/dashboard/customer");
+   navigate("/dashboard/job");
                         
 
   } catch (err) {

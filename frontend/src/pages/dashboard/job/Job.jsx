@@ -1,13 +1,5 @@
 import "./job.scss";
-import Customer from "../customer/Customer"
-import Order from "../order/Order";
-import Product from "../product/Product";
-import Carving from "../carving/Carving";
-import Status from "../status/Status";
-import Stepper from "../../../components/Stepper"
-import CarvingType from "../carvingtype/CarvingType";
-import OrderServices from "../orderservices/OrderServices";
-import Task from "../task/Task";
+import Customer,{ Status,Order,OrderServices,Carving,CarvingType,Task, Product } from "../customer/Customer"
 import StepperControl from "../../../components/StepperControl"
 import { useState } from "react";
 import { StepperContext } from "../../../context/StepperContext";
@@ -79,6 +71,8 @@ newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
 
 {/* Display Components */}
 <div>
+
+
 <StepperContext.Provider value={{
   userData,
   setUserData,

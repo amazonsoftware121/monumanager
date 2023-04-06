@@ -1271,3 +1271,57 @@
   }
 }
 
+.form-floating{
+  .form-control{
+    padding: 0.4rem 0.75rem;
+    height: 3rem;
+  }
+  label{
+    padding: 12px 15px;
+  }
+}
+
+.order{
+  button{
+      padding: 10px 30px;
+      text-transform: uppercase;
+  }
+  .buttonWrapper{
+      display: flex;
+      gap: 30px;
+
+  }
+  ul{
+      
+          list-style-type: none;
+          padding: 0;
+      li{
+          margin-bottom: 15px;
+      }
+  }
+  .addService{
+      margin-top: 50px;
+  }
+}
+.latestUpdate{
+  max-height: calc(60vh);
+overflow-y: scroll;
+.item{
+  display: flex;
+flex-wrap: nowrap;
+margin-bottom: 15px;
+background-color: #f2f2f2;
+box-shadow: 0 2px 5px 0px #969696f7;
+.rightContent{
+  padding: 5px 15px;
+  .title{
+      font-size: 18px;
+      font-weight: 600;
+      flex: 1
+  }
+}
+img{
+  object-fit: cover;
+}
+}
+}

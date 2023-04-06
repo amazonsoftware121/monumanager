@@ -10,14 +10,11 @@ import NavBar from './components/navbar/NavBar';
 import LeftBar from './components/leftBar/LeftBar';
 import Home from './pages/home/Home';
 import Dashboard from './pages/dashboard/Dashboard';
+import Job from "../src/pages/dashboard/job/Job"
 import './style.scss';
 import { useContext } from 'react';
 import { AuthContext } from './context/authContext';
-import Product from './pages/dashboard/product/Product';
-import Job from "./pages/dashboard/job/Job";
-import Task from "./pages/dashboard/task/Task"
-import Carving from './pages/dashboard/carving/Carving';
-import Order from './pages/dashboard/order/Order';
+
 
 //import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ErrorPage from './error-page';
@@ -80,30 +77,15 @@ function App() {
                 path: "/dashboard",
                 element: <Dashboard />
             },
-            {
-                path: "/dashboard/customer",
-                element: <Customer />
-            },
-            {
-                path: "/dashboard/product",
-                element: <Product />
-            },
+            
+           
             {
                 path: "/dashboard/job",
                 element: <Job />
-            },
-            {
-                path: "/dashboard/carving",
-                element: <Carving />
-            },
-            {
-                path: "/dashboard/task",
-                element: <Task />
-            },
-            {
-                path: "/dashboard/order",
-                element: <Order />
             }
+          
+            
+           
         ]
     }
     ]);
