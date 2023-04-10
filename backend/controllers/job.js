@@ -1,7 +1,7 @@
-import {db} from "../connect.js";
+const db = require("../connect.js");
 
 
-export const jobadd= (req, res) => {
+const jobadd= (req, res) => {
     const q =
     "INSERT INTO `job`(`customer_id`, `product_id`, `task_id`, `status`, `notes`) VALUES (?, ?, ?, ?, ?)";
   const values = ["", "", "", "", ""];
@@ -14,7 +14,7 @@ export const jobadd= (req, res) => {
 
 
 
-export const orderNotes = (req, res) => {
+const orderNotes = (req, res) => {
   const q =
   "UPDATE INTO `job`(`notes`) VALUES ? ";
 const values = [""];
@@ -25,3 +25,5 @@ db.query(q, values, (err, data) => {
 // return res.status(200).json({ jobId });
 });
 };
+
+module.exports = jobadd,orderNotes;

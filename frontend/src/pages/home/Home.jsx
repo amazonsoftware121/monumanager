@@ -1,9 +1,39 @@
 import { Link } from "react-router-dom";
 import Header from "../../components/header/Header";
+import { useState } from "react";
 const Home = () => {
+
+const [inputData, setInputData] = useState({
+    fullName: "",
+    userEmail: ""
+});
+
+const handleInput = (e) =>{
+console.log(e.target.name);
+//console.log(e.target.value);
+
+
+
+
+}
+
+const handleSubmit = (e) =>{
+e.preventDefault();
+
+}
+
     return (
         <>
+
             <Header />
+
+
+
+
+
+
+
+
             <section className="hero-section">
                 <div className="container">
                     <div className="row">
@@ -38,6 +68,18 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+{inputData.fullName}
+            <div className="text">
+<form onSubmit={handleSubmit}>
+    <input type="text" name="fullName" onChange={handleInput} value={inputData.fullName} />
+    <input type="email" name="userEmail" onChange={handleInput} value={inputData.userEmail} />
+    <input type="submit" value="Submit" />
+</form>
+</div>
+
+
+
         </>
     )
 }

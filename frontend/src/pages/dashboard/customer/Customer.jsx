@@ -275,13 +275,10 @@ const Order = (props) => {
                             </ul>
 
                         </div>
+                        
+                        <button className="btn btn-success"  onClick={() => props.showOrder(3)}  > Status </button>
 
-                        <select onClick={() => props.showOrder(3)} className="form-select form-select-lg my-5" aria-label=".form-select-lg example">
-                            <option defaultValue>Status</option>
-                            <option value="1">Approve</option>
-                            <option value="2">Pending</option>
-                            <option value="3">Ready</option>
-                        </select>
+                                                
 
 
 
@@ -322,16 +319,77 @@ const Carving = () => {
     )
 }
 
-const OrderServices = () => {
-    return (
-        <div>OrderServices</div>
+const Status = () =>{
+
+    const [checkList, setCheckList] = useState("");
+    const [Items, setItems] = useState([]);
+
+    const itemEvent = (event) =>{
+        setCheckList(event.target.value);
+    };
+
+    const listOfItems = () =>{
+
+    }
+
+    return(
+        <>
+        <div className='status'>
+            
+            <h2 className='text-center my-3'>Status</h2>
+        
+        <div className='mainDiv'>
+            <div className="mainWrapper">
+<div className='row'>
+    <div className='col-md-6 col-sm-12'>
+
+<div className='statusList'>
+    <ol>
+{ Items.map( (statusval) => {
+    return   (    
+        <>
+          <li>
+        <div className="form-check">
+  <input className="form-check-input" name="status" type="radio" value={Items.value} />
+  <label className="form-check-label" htmlFor="">
+{Items.value}
+  </label>
+</div>
+
+        </li>
+        </>
+    )
+}) }
+
+    </ol>
+
+</div>
+
+        <div className='row'>
+            <div className='col-sm-10'>
+            <div className="form-floating mb-3">
+                                            <input type="text"   className="form-control" placeholder="phone" required />
+                                            <label htmlFor="floatingInput">Add New Status</label>
+                                        </div>
+                                        </div>
+   <div className='col-sm-2'>
+                <Button btnDesign='btn btn-primary roundButton' btnText="+" /> 
+                </div>
+
+                <Button btnDesign="btn btn-success" btnText="Save" onClick={""} />
+            </div>
+            </div>
+            </div>
+            </div>
+        </div>
+        </div>
+        </>
     )
 }
 
-
-const Status = () => {
+const OrderServices = () => {
     return (
-        <div>Status</div>
+        <div>OrderServices</div>
     )
 }
 

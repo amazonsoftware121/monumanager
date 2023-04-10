@@ -1303,6 +1303,7 @@
       margin-top: 50px;
   }
 }
+
 .latestUpdate{
   max-height: calc(60vh);
 overflow-y: scroll;
@@ -1323,5 +1324,31 @@ box-shadow: 0 2px 5px 0px #969696f7;
 img{
   object-fit: cover;
 }
+}
+}
+
+
+.status{
+  ol{
+    list-style-type: none;
+    padding-left: 0;
+    li{
+      margin: 15px 0;
+      input{
+        margin-right: 5px;
+      }
+
+    }
+  }
+  .roundButton{
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 34px;
+    line-height: 26px;
+    text-align: center;
+    padding: 0;
+    font-weight: 500;
+    
 }
 }

@@ -1,13 +1,13 @@
-import express from "express";
+const  express = require("express");
 const app = express();
-import customerRoutes from "./routes/customers.js";
-import authRoutes from "./routes/auth.js";
-import jobRoutes from "./routes/jobs.js";
-import carvingRoutes from "./routes/carvings.js";
-import productRoutes from "./routes/products.js";
-import taskRoutes from "./routes/tasks.js";
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
+const customerRoutes = require("./routes/customers.js");
+const authRoutes = require("./routes/auth.js");
+const jobRoutes = require("./routes/jobs.js");
+/*const carvingRoutes = require("./routes/carvings.js");
+const productRoutes = require("./routes/products.js");
+const taskRoutes = require("./routes/tasks.js");*/
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 // MIDDELWARE
 
@@ -24,13 +24,15 @@ app.use((req, res, next) => {
   );
   app.use(cookieParser());
   
-
+app.get("", (req,res)=>{
+  res.send("Hello");
+})
 app.use("/api/auth", authRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/jobs", jobRoutes);
-app.use("/api/carvings", carvingRoutes);
+/*app.use("/api/carvings", carvingRoutes);
 app.use("/api/products", productRoutes);
-app.use("/api/tasks", taskRoutes);
+app.use("/api/tasks", taskRoutes);*/
 
 app.listen(4500, () =>{
     console.log("Api Working")

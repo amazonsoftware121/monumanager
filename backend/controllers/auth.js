@@ -1,6 +1,6 @@
-import {db} from "../connect.js";
-import bcrypt from 'bcryptjs';
-import jwt from "jsonwebtoken";
+const db = require("../connect.js");
+const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
 
 
 
@@ -39,7 +39,7 @@ db.query(q, [values], (err,data) => {
 
 
 
-export const login = (req, res) =>{
+const login = (req, res) =>{
    const q = "SELECT * FROM admin WHERE username = ?"
 
     db.query(q, [req.body.username], (err,data) =>{
@@ -62,9 +62,11 @@ export const login = (req, res) =>{
     })
 }
 
-export const logout = (req, res) =>{
+const logout = (req, res) =>{
     res.clearCookie("accessToken",{
         secure:true,
         sameSite:"none"
     }).status(200).json("User has been logged out.")
 };
+
+module.exports = logout,login
