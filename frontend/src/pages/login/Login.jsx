@@ -43,19 +43,19 @@ const Login = () => {
         <div className="formWrapper" style={formWrapper}>
           <h3>Login Page</h3>
 
-          <form>
+          <form onSubmit={handleLogin}>
             <div className="form-floating mb-3">
-              <input type="text" name="username"  className="form-control" id="floatingInput"  placeholder="Username" onChange={handleChange}  />
+              <input type="text" name="username"  className="form-control" id="floatingInput"  placeholder="Username" onChange={handleChange} required  />
               <label htmlFor="floatingInput">Username</label>
             </div>
             <div className="form-floating">
-              <input type="password" name="password"  className="form-control" id="floatingPassword" placeholder="Password" onChange={handleChange} />
+              <input type="password" name="password"  className="form-control" id="floatingPassword" placeholder="Password" onChange={handleChange} required />
               <label htmlFor="floatingPassword">Password</label>
             </div>
 {err && err}
             <div className="d-grid gap-2 mt-3">
              { /* <input onClick={handleLogin} type="submit" className="btn btn-primary" value="Login" /> */ }
-<button onClick={handleLogin} className='btn btn-primary'>Login</button>
+<button  className='btn btn-primary'>Login</button>
             </div>
             <p className="forgot-password text-right mt-2">
               Forgot <Link to="/forgotpassword">password?</Link>

@@ -37,8 +37,8 @@ function App() {
             <div className="adminDashboard">
                 <NavBar />
                 <div className='row'>
-                   <div className='dashboardLeft col-auto col-md-3 col-xl-2 px-sm-2 px-0'> <LeftBar /></div>
-                    <div className='dashboardRight col-auto col-md-9 col-xl-9 px-sm-9 px-0'>
+                   <div className='dashboardLeft col-md-3 col-xl-2 '> <LeftBar /></div>
+                    <div className='dashboardRight col-md-9 col-xl-10 '>
                         <Outlet />
                     </div>
                    

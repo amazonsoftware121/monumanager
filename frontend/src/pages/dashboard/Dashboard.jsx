@@ -18,7 +18,7 @@ const Dashboard = () => {
   
     try {
      
-    const response = await axios.post("http://localhost:4500/api/jobs/jobadd", { data: 1 });
+    const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/jobs/jobadd", { data: 1 });
     setJobid(response.data.jobId);
    navigate("/dashboard/job");
                         
@@ -33,7 +33,7 @@ const Dashboard = () => {
     <>
 
       <div className="adminContent">
-        <div className="container-fluid">
+        <div className="">
           <div className="row flex-nowrap">
             <div className="rightBar col py-3">
 

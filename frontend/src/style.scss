@@ -1352,3 +1352,47 @@ img{
     
 }
 }
+.orderServices{
+  .orderServicesList,.servicesList{
+    .btn-ext-lg{
+      height: 100px;
+      width: 50%;
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+    }
+    ul{
+      list-style-type: none;
+      padding: 0 0 0 30px;
+      
+      li{
+        margin: 20px 0;
+        font-weight: 500;
+        span{
+          &.icon{
+            margin-right: 15px;
+          }
+
+        }
+      }
+    }
+  }
+  .orderServicesList{
+    max-height: 350px;
+    overflow-y: scroll;
+  }
+  
+}
+
+.carving{
+  .carTopSection{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+    .carvingPositionWrap{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+}

@@ -32,15 +32,15 @@ const displayStep = (step) => {
       case 3:
         return <Status />
       case 4:
-        return <OrderServices />
+        return <OrderServices showOrder= {currentStep => setCurrentStep(currentStep)} />
       case 5:
-        return <Carving />
+        return <Carving showOrder= {currentStep => setCurrentStep(currentStep)} />
       case 6:
         return <CarvingType />
       case 7:
-        return <Task />
+        return <Task showOrder= {currentStep => setCurrentStep(currentStep)} />
       case 8:
-        return <Product />
+        return <Product  />
       default:
     }
   }
@@ -57,7 +57,7 @@ newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
       <div className="jobFormWrapper">
         {/* Stepper */}
 
-        <div className="container horizontal mt-5 mt-4 shadow-lg py-3">
+        <div className="container horizontal">
           { /* Navigation Controls */}
 
           <StepperControl 

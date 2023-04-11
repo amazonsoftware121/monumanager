@@ -33,21 +33,15 @@ const Header = () =>{
                         </li>
 
                         <li className="nav-item">
-                            <Link className="nav-link" to="/">About</Link>
-                        </li>
-
-                        <li className="nav-item dropdown">
-                            <Link className="nav-link dropdown-toggle" to="/" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Services</Link>
-
-                            <ul className="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                                <li><Link className="dropdown-item" to="/">Job</Link></li>
-
-                                <li><Link className="dropdown-item" to="/">Tenant</Link></li>
-                            </ul>
+                            <Link className="nav-link" to="#">About</Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link className="nav-link" to="/">Contact</Link>
+                            <Link className="nav-link" to="#">Services</Link>
+                        </li>
+
+                        <li className="nav-item">
+                            <Link className="nav-link" to="#">Contact</Link>
                         </li>
                     </ul>
 

@@ -20,30 +20,30 @@ const LeftBar = () => {
                         
                     </li>
                     <li>
-                        <Link to="/dashboard/customer" className="nav-link px-0 align-middle ">
+                        <Link to="#" className="nav-link px-0 align-middle ">
                         <FaUserAlt /> <span className="ms-1 d-none d-sm-inline">Customers</span></Link>
                         
                         
                     </li>
                     <li>
-                        <Link to="/dashboard/job" className="nav-link px-0 align-middle">
+                        <Link to="#" className="nav-link px-0 align-middle">
                             <FaTasks /> <span className="ms-1 d-none d-sm-inline">Jobs</span></Link>
                     </li>
                     
                     <li>
-                        <Link to="/dashboard/product"  className="nav-link px-0 align-middle">
+                        <Link to="#"  className="nav-link px-0 align-middle">
                            <FaDatabase /> <span className="ms-1 d-none d-sm-inline">Products</span> </Link>
                            
                     </li>
 
                     <li>
-                        <Link to="/dashboard/task" className="nav-link px-0 align-middle">
+                        <Link to="#" className="nav-link px-0 align-middle">
                           <FaTasks /> <span className="ms-1 d-none d-sm-inline">Task</span> </Link>
                            
                     </li>
 
                     <li>
-                        <Link to="/dashboard/carving" className="nav-link px-0 align-middle">
+                        <Link to="#" className="nav-link px-0 align-middle">
                            <MdEngineering /> <span className="ms-1 d-none d-sm-inline">Carving</span> </Link>
                            
                     </li>

@@ -3,10 +3,7 @@ import Header from "../../components/header/Header";
 import { useState } from "react";
 const Home = () => {
 
-const [inputData, setInputData] = useState({
-    fullName: "",
-    userEmail: ""
-});
+
 
 const handleInput = (e) =>{
 console.log(e.target.name);
@@ -69,14 +66,7 @@ e.preventDefault();
                 </div>
             </section>
 
-{inputData.fullName}
-            <div className="text">
-<form onSubmit={handleSubmit}>
-    <input type="text" name="fullName" onChange={handleInput} value={inputData.fullName} />
-    <input type="email" name="userEmail" onChange={handleInput} value={inputData.userEmail} />
-    <input type="submit" value="Submit" />
-</form>
-</div>
+
 
 
 
