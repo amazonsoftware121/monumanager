@@ -6,6 +6,7 @@ import dummy from "../../../images/dummy.jpg";
 import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 import Button from '../../../components/Button';
+
 const Customer = (props) => {
     const { userData, setUserData } = useContext(StepperContext);
     const [order, setOrder] = useState(false);
@@ -118,17 +119,7 @@ const Customer = (props) => {
                                 </div>
 
 
-                                {err && <div className="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>{err}</strong>
-
-
-                                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>}
-
-                                {succ && <div className="alert alert-success alert-dismissible fade show" role="alert">
-                                    <strong>{succ}</strong>
-                                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>}
+                               
 
                                 <div className='buttonWrapper'>
 
@@ -137,6 +128,11 @@ const Customer = (props) => {
 
                                     <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
                                 </div>
+
+                               <p className='custResponse text-danger'> {err && err}</p>
+
+                               <p className='custResponse text-success'>{succ && succ}</p>
+
                             </form>
                         </div>
                     </div>
@@ -226,7 +222,7 @@ const Order = (props) => {
                             <div className='col-6'>
                                 <div className="mb-3">
                                     <label htmlFor="orderDueDate" className="form-label">Order Due Date</label>
-                                    <input type='date' value={userData["order_notes"] || ""} id='orderDueDate' name="orderDueDate" className="form-control" placeholder="notes" onChange={handleChange} />
+                                    <input type='date' value={userData["order_due_date"] || ""} id='order_due_date' name="order_due_date" className="form-control" placeholder="notes" onChange={handleChange} />
 
                                 </div>
                             </div>
@@ -519,7 +515,7 @@ const Carving = (props) => {
 }
 
 const Status = () => {
-
+    const { userData, setUserData } = useContext(StepperContext);
     const [checkList, setCheckList] = useState("");
     const [Items, setItems] = useState([]);
 
@@ -544,7 +540,7 @@ const Status = () => {
 
                                 <div className='statusList'>
                                     <ol>
-
+                                    {`${userData}`}
                                         <li>
                                             <div className="form-check">
                                                 <input className="form-check-input" name="orderStatus" type="radio" value="Stone Ordered" id='orderStatus1' />
@@ -586,7 +582,7 @@ const Status = () => {
                                             </div>
 
                                         </li>
-
+{}
                                         {Items.map((statusval) => {
                                             return (
                                                 <>

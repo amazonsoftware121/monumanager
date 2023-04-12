@@ -1,28 +1,28 @@
 import axios from "axios";
-import {createContext, useState, useEffect} from "react";
+import { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext();
 
-export const AuthContextProvider = ({children}) =>{
-    const [currentUser, setCurrentUser] = useState(
-        JSON.parse(localStorage.getItem("user")) || null
-    );
+export const AuthContextProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("user")) || null
+  );
 
-    const login = async (inputs) => {
-        const res = await axios.post("http://amaronsoftware.com/monumanagerapi/api/auth/login", inputs, {
-          withCredentials: true,
-        });
-    
-        setCurrentUser(res.data)
-      };
+  const login = async (inputs) => {
+    const res = await axios.post("http://amaronsoftware.com/monumanagerapi/api/auth/login", inputs, {
+      withCredentials: true,
+    });
 
-    useEffect(()=>{
-localStorage.setItem("user", JSON.stringify(currentUser));
-    },[currentUser])
+    setCurrentUser(res.data)
+  };
 
-  return(
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(currentUser));
+  }, [currentUser]);
+
+  return (
     <AuthContext.Provider value={{ currentUser, login }}>
-    {children}
+      {children}
     </AuthContext.Provider>
   );
 };

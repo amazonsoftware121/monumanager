@@ -14,9 +14,6 @@ import Job from "../src/pages/dashboard/job/Job"
 import './style.scss';
 import { useContext } from 'react';
 import { AuthContext } from './context/authContext';
-
-
-//import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ErrorPage from './error-page';
 import Customer from './pages/dashboard/customer/Customer';
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -77,8 +74,6 @@ function App() {
                 path: "/dashboard",
                 element: <Dashboard />
             },
-            
-           
             {
                 path: "/dashboard/job",
                 element: <Job />
