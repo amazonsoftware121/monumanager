@@ -52,7 +52,7 @@ const Login = () => {
               <input type="password" name="password"  className="form-control" id="floatingPassword" placeholder="Password" onChange={handleChange} required />
               <label htmlFor="floatingPassword">Password</label>
             </div>
-{err && err}
+
             <div className="d-grid gap-2 mt-3">
              { /* <input onClick={handleLogin} type="submit" className="btn btn-primary" value="Login" /> */ }
 <button  className='btn btn-primary'>Login</button>
@@ -60,13 +60,12 @@ const Login = () => {
             <p className="forgot-password text-right mt-2">
               Forgot <Link to="/forgotpassword">password?</Link>
             </p>
+            <p className='text-danger text-center'><strong>{err && err}</strong></p>
           </form>
-
         </div>
       </div>
     </div>
     </>
-
   );
 }
 export default Login;

@@ -192,14 +192,15 @@ const Order = (props) => {
         setErr(null);
         setSucc(null);
         e.preventDefault();
-        try {
+     /*   try {
             const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/customers/addcustomer", userData);
             //console.log(response.data);
             setSucc(response.data);
             console.log(response.data);
         } catch (err) {
             setErr(err.response.data);
-        }
+        }*/
+        console.log(userData);
     }
     //    console.log(inputs)
     return (
@@ -515,16 +516,32 @@ const Carving = (props) => {
 }
 
 const Status = () => {
-    const { userData, setUserData } = useContext(StepperContext);
-    const [checkList, setCheckList] = useState("");
+   const { userData, setUserData } = useContext(StepperContext);
+    const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
+    const handleChange = (e) => {
+        console.log(e)
+        const { name, value } = e.target;
+        
+        //setUserData({ ...userData, [e.target.name]: e.target.value });
+        setUserData({ ...userData, [name]: value });
+        console.log(userData);
+    };
+
+    const [inputList, setInputList] = useState("");
     const [Items, setItems] = useState([]);
 
     const itemEvent = (event) => {
-        setCheckList(event.target.value);
+        setInputList(event.target.value);
     };
 
-    const listOfItems = () => {
-
+    const listOfItems = (e) => {
+      e.preventDefault();
+        setItems((oldItems) =>{
+            return [...oldItems, inputList];
+        });
+        setInputList("");
+        console.log(userData);
     }
 
     return (
@@ -538,13 +555,15 @@ const Status = () => {
                         <div className='row'>
                             <div className='col-md-6 col-sm-12'>
 
+                            <form onSubmit={listOfItems} >
+
                                 <div className='statusList'>
-                                    <ol>
-                                    {`${userData}`}
+                                    <ol onChange={handleChange}>
+                                   
                                         <li>
                                             <div className="form-check">
-                                                <input className="form-check-input" name="orderStatus" type="radio" value="Stone Ordered" id='orderStatus1' />
-                                                <label className="form-check-label" htmlFor="orderStatus1">
+                                                <input className="form-check-input" name="order_status"  type="radio"  value="Stone Ordered" id='order_status1' />
+                                                <label className="form-check-label" htmlFor="order_status1">
                                                     Stone Ordered
                                                 </label>
                                             </div>
@@ -553,8 +572,8 @@ const Status = () => {
 
                                         <li>
                                             <div className="form-check">
-                                                <input className="form-check-input" name="orderStatus" type="radio" value="Stone Ready To Carve" id='orderStatus2' />
-                                                <label className="form-check-label" htmlFor="orderStatus2">
+                                                <input className="form-check-input" name="order_status" type="radio"  value="Stone Ready To Carve"  id='order_status2' />
+                                                <label className="form-check-label" htmlFor="order_status2">
                                                     Stone Ready To Carve
                                                 </label>
                                             </div>
@@ -564,8 +583,8 @@ const Status = () => {
 
                                         <li>
                                             <div className="form-check">
-                                                <input className="form-check-input" name="orderStatus" type="radio" value="Inside the Shop" id='orderStatus3' />
-                                                <label className="form-check-label" htmlFor="orderStatus3">
+                                                <input className="form-check-input" name="order_status" type="radio"  value="Inside the Shop" id='order_status3' />
+                                                <label className="form-check-label" htmlFor="order_status3">
                                                     Inside the Shop
                                                 </label>
                                             </div>
@@ -575,22 +594,22 @@ const Status = () => {
 
                                         <li>
                                             <div className="form-check">
-                                                <input className="form-check-input" name="orderStatus" type="radio" value="Ready for Placement" id='orderStatus4' />
-                                                <label className="form-check-label" htmlFor="orderStatus4">
+                                                <input className="form-check-input" name="order_status" type="radio"  value="Ready for Placement" id='order_status4' />
+                                                <label className="form-check-label" htmlFor="order_status4">
                                                     Ready for Placement
                                                 </label>
                                             </div>
 
                                         </li>
 {}
-                                        {Items.map((statusval) => {
+                                        {Items.map((itemval,i) => {
                                             return (
                                                 <>
                                                     <li>
                                                         <div className="form-check">
-                                                            <input className="form-check-input" name="status" type="radio" value={Items.value} id='orderStatus' />
-                                                            <label className="form-check-label" htmlFor="">
-                                                                {Items.value}
+                                                        <input className="form-check-input" name="order_status" type="radio" value={itemval} id={`order_statusCus${i}`} />
+                                                            <label className="form-check-label" htmlFor={`order_statusCus${i}`}>
+                                                                {itemval} 
                                                             </label>
                                                         </div>
 
@@ -606,16 +625,17 @@ const Status = () => {
                                 <div className='row'>
                                     <div className='col-sm-10'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" className="form-control" placeholder="phone" required />
+                                            <input type="text" className="form-control" placeholder="phone" value={inputList}  required onChange={itemEvent} />
                                             <label htmlFor="floatingInput">Add New Status</label>
                                         </div>
                                     </div>
                                     <div className='col-sm-2'>
-                                        <Button btnDesign='btn btn-primary roundButton' btnText="+" />
+                                        <button type='submit' className='btn btn-primary roundButton' > + </button>
                                     </div>
 
                                     <Button btnDesign="btn btn-success" btnText="Save" onClick={""} />
                                 </div>
+                                </form>
                             </div>
                         </div>
                     </div>
