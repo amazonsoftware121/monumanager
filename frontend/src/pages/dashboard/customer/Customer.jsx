@@ -9,6 +9,9 @@ import Button from '../../../components/Button';
 
 const Customer = (props) => {
     const { userData, setUserData } = useContext(StepperContext);
+
+    const { customerId, setCustomerId } = useContext(StepperContext);
+
     const [order, setOrder] = useState(false);
 
     const [err, setErr] = useState(null);
@@ -49,8 +52,11 @@ const Customer = (props) => {
         try {
             const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/customers/addcustomer", userData);
             //console.log(response.data);
-            setSucc(response.data);
-            console.log(response.data);
+            setSucc(response.data[0].successmsg);
+            console.log(response.data[0].lastInserId);
+            const currcustomerId = response.data[0].lastInserId;
+
+            setUserData({ ...userData, ["currentCustomerid"]: currcustomerId });
         } catch (err) {
             setErr(err.response.data);
         }
@@ -119,7 +125,7 @@ const Customer = (props) => {
                                 </div>
 
 
-                               
+
 
                                 <div className='buttonWrapper'>
 
@@ -129,9 +135,9 @@ const Customer = (props) => {
                                     <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
                                 </div>
 
-                               <p className='custResponse text-danger'> {err && err}</p>
+                                <p className='custResponse text-danger'> {err && err}</p>
 
-                               <p className='custResponse text-success'>{succ && succ}</p>
+                                <p className='custResponse text-success'>{succ && succ}</p>
 
                             </form>
                         </div>
@@ -158,7 +164,7 @@ const Customer = (props) => {
                                     <button onClick={() => props.showOrder(2)} className='btn btn-secondary' >Add Order</button>
                                 </div>
 
-
+{customerId}
 
 
                             </div>
@@ -182,6 +188,7 @@ const Order = (props) => {
     const { userData, setUserData } = useContext(StepperContext);
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
+    const [jobid, setJobid] = useState(null);
     const handleChange = (e) => {
         const { name, value } = e.target;
         /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
@@ -189,18 +196,23 @@ const Order = (props) => {
     };
 
     const handleClick = async (e) => {
-        setErr(null);
-        setSucc(null);
+        // setErr(null);
+        // setSucc(null);
         e.preventDefault();
-     /*   try {
-            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/customers/addcustomer", userData);
-            //console.log(response.data);
-            setSucc(response.data);
-            console.log(response.data);
+
+
+
+        e.preventDefault();
+
+        try {
+
+            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/jobs/jobadd", { data: 1 });
+            setJobid(response.data.jobId);
+            //console.log(response.data);                           
         } catch (err) {
             setErr(err.response.data);
-        }*/
-        console.log(userData);
+        }
+
     }
     //    console.log(inputs)
     return (
@@ -220,13 +232,13 @@ const Order = (props) => {
                             </div>
 
 
-                            <div className='col-6'>
+                            {/*<div className='col-6'>
                                 <div className="mb-3">
                                     <label htmlFor="orderDueDate" className="form-label">Order Due Date</label>
                                     <input type='date' value={userData["order_due_date"] || ""} id='order_due_date' name="order_due_date" className="form-control" placeholder="notes" onChange={handleChange} />
 
                                 </div>
-                            </div>
+                            </div>*/}
 
 
 
@@ -301,7 +313,9 @@ const Order = (props) => {
 
 const Product = () => {
     return (
-        <div>Product</div>
+        <div className='product'>
+            <h2 className='text-center my-3'>Product</h2>
+        </div>
     )
 }
 
@@ -369,160 +383,160 @@ const Carving = (props) => {
     }
     //    console.log(inputs)
     return (
-        <div className='carving' style={{maxWidth: "1000px", margin: "0 auto"}}>
+        <div className='carving' style={{ maxWidth: "1000px", margin: "0 auto" }}>
             <h2 className='text-center my-3'>Carving</h2>
-            
-                
-                    <div className='cardItem shadow p-3 mx-3'>
-                        <form onSubmit={handleClick}>
 
-                        <div className='carTopSection'>
-                                <div className=''>
+
+            <div className='cardItem shadow p-3 mx-3'>
+                <form onSubmit={handleClick}>
+
+                    <div className='carTopSection'>
+                        <div className=''>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" id="inlineradio1" value="Front" name='car_side' />
+                                <label className="form-check-label" htmlFor="inlineradio1">Front</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" id="inlineradio2" value="Back" name='car_side' />
+                                <label className="form-check-label" htmlFor="inlineradio2">Back</label>
+                            </div>
+                        </div>
+
+
+                        <div className='carPosition'>
+                            <h5 className='h4 text-center my-3'>Position</h5>
+                            <div className='carvingPositionWrap'>
+
                                 <div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio1" value="Front" name='car_side' />
-  <label className="form-check-label" htmlFor="inlineradio1">Front</label>
-</div>
-<div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio2" value="Back" name='car_side' />
-  <label className="form-check-label" htmlFor="inlineradio2">Back</label>
-</div>
-</div>
-
-
-<div className='carPosition'>
-<h5 className='h4 text-center my-3'>Position</h5>
-<div className='carvingPositionWrap'>
-
-<div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio1" value="Top Left" name='car_position' />  
-</div>
-<div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio2" value="Top Center" name='car_position' />
-  
-</div>
- <div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio1" value="Top Right" name='car_position' />
-  
-</div>
-<div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio2" value="Center Left" name='car_position' />
-  
-</div>
- <div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio1" value="Center Center" name='car_position' />
-  
-</div>
-<div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio2" value="Center Right" name='car_position' />
-  
-</div>
-<div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Left" name='car_position' />
-  
-</div>
-<div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Center" name='car_position' />
-  
-</div>
-<div className="form-check form-check-inline">
-  <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Right" name='car_position' />
-  
-</div>
-</div>
-
-</div>
+                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Left" name='car_position' />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Top Center" name='car_position' />
 
                                 </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Right" name='car_position' />
 
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Center Left" name='car_position' />
 
-                                    <div className='row'>
-                                        <div className='col-4'>
-                                            <div className="form-floating mb-3">
-                                                <input type="text" value={userData["car_first_name"] || ""} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange} required />
-                                                <label htmlFor="floatingInput">First Name</label>
-                                            </div>
-                                        </div>
-                                        <div className='col-4'>
-                                            <div className="form-floating mb-3">
-                                                <input type="text" value={userData["car_middle_name"]} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} required />
-                                                <label htmlFor="floatingInput">Middlename</label>
-                                            </div>
-                                        </div>
-                                        <div className='col-4'>
-                                            <div className="form-floating mb-3">
-                                                <input type="text" value={userData["car_last_name"]} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
-                                                <label htmlFor="floatingInput">Lastname</label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Center Center" name='car_position' />
 
-                                    <div className='row'>
-                                        <div className='col-6'>
-                                            <div className="form-floating mb-3">
-                                                <input type="text" value={userData["car_birth_date"]} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange} required />
-                                                <label htmlFor="floatingInput">Birth Date</label>
-                                            </div>
-                                        </div>
-                                        <div className='col-6'>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Center Right" name='car_position' />
 
-                                            <div className="form-floating mb-3">
-                                                <input type="text" value={userData["car_passing_date"]} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange} required />
-                                                <label htmlFor="floatingInput">Passing Date</label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Left" name='car_position' />
 
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Center" name='car_position' />
 
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Right" name='car_position' />
 
-                                    <div className='col-12'>
-                                        <div className="form-floating mb-3">
-                                            <textarea name="car_notes" rows="4" value={userData["car_notes"]} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} />
-                                            <label htmlFor="floatingInput">My Beloved Love</label>
-                                        </div>
-                                    </div>
-
-
-
-                                    {err && <div className="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <strong>{err}</strong>
-
-
-                                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>}
-
-                                    {succ && <div className="alert alert-success alert-dismissible fade show" role="alert">
-                                        <strong>{succ}</strong>
-                                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>}
-
-                                    <div className='buttonWrapper'>
-
-
-
-
-                                        <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" onClick={handleClick} />
-                                  
-
-                               
-
-
+                                </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
 
-          
+                        </div>
+
+                    </div>
+
+
+                    <div className='row'>
+                        <div className='col-4'>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={userData["car_first_name"] || ""} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange} required />
+                                <label htmlFor="floatingInput">First Name</label>
+                            </div>
+                        </div>
+                        <div className='col-4'>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={userData["car_middle_name"]} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} required />
+                                <label htmlFor="floatingInput">Middlename</label>
+                            </div>
+                        </div>
+                        <div className='col-4'>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={userData["car_last_name"]} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                <label htmlFor="floatingInput">Lastname</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <div className='col-6'>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={userData["car_birth_date"]} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                <label htmlFor="floatingInput">Birth Date</label>
+                            </div>
+                        </div>
+                        <div className='col-6'>
+
+                            <div className="form-floating mb-3">
+                                <input type="text" value={userData["car_passing_date"]} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange} required />
+                                <label htmlFor="floatingInput">Passing Date</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div className='col-12'>
+                        <div className="form-floating mb-3">
+                            <textarea name="car_notes" rows="4" value={userData["car_notes"]} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} />
+                            <label htmlFor="floatingInput">My Beloved Love</label>
+                        </div>
+                    </div>
+
+
+
+                    {err && <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>{err}</strong>
+
+
+                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>}
+
+                    {succ && <div className="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{succ}</strong>
+                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>}
+
+                    <div className='buttonWrapper'>
+
+
+
+
+                        <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" onClick={handleClick} />
+
+
+
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
     )
 }
 
 const Status = () => {
-   const { userData, setUserData } = useContext(StepperContext);
+    const { userData, setUserData } = useContext(StepperContext);
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
     const handleChange = (e) => {
         console.log(e)
         const { name, value } = e.target;
-        
+
         //setUserData({ ...userData, [e.target.name]: e.target.value });
         setUserData({ ...userData, [name]: value });
         console.log(userData);
@@ -536,8 +550,8 @@ const Status = () => {
     };
 
     const listOfItems = (e) => {
-      e.preventDefault();
-        setItems((oldItems) =>{
+        e.preventDefault();
+        setItems((oldItems) => {
             return [...oldItems, inputList];
         });
         setInputList("");
@@ -555,86 +569,86 @@ const Status = () => {
                         <div className='row'>
                             <div className='col-md-6 col-sm-12'>
 
-                            <form onSubmit={listOfItems} >
+                                <form onSubmit={listOfItems} >
 
-                                <div className='statusList'>
-                                    <ol onChange={handleChange}>
-                                   
-                                        <li>
-                                            <div className="form-check">
-                                                <input className="form-check-input" name="order_status"  type="radio"  value="Stone Ordered" id='order_status1' />
-                                                <label className="form-check-label" htmlFor="order_status1">
-                                                    Stone Ordered
-                                                </label>
+                                    <div className='statusList'>
+                                        <ol onChange={handleChange}>
+
+                                            <li>
+                                                <div className="form-check">
+                                                    <input className="form-check-input" name="order_status" type="radio" value="Stone Ordered" id='order_status1' />
+                                                    <label className="form-check-label" htmlFor="order_status1">
+                                                        Stone Ordered
+                                                    </label>
+                                                </div>
+
+                                            </li>
+
+                                            <li>
+                                                <div className="form-check">
+                                                    <input className="form-check-input" name="order_status" type="radio" value="Stone Ready To Carve" id='order_status2' />
+                                                    <label className="form-check-label" htmlFor="order_status2">
+                                                        Stone Ready To Carve
+                                                    </label>
+                                                </div>
+
+                                            </li>
+
+
+                                            <li>
+                                                <div className="form-check">
+                                                    <input className="form-check-input" name="order_status" type="radio" value="Inside the Shop" id='order_status3' />
+                                                    <label className="form-check-label" htmlFor="order_status3">
+                                                        Inside the Shop
+                                                    </label>
+                                                </div>
+
+                                            </li>
+
+
+                                            <li>
+                                                <div className="form-check">
+                                                    <input className="form-check-input" name="order_status" type="radio" value="Ready for Placement" id='order_status4' />
+                                                    <label className="form-check-label" htmlFor="order_status4">
+                                                        Ready for Placement
+                                                    </label>
+                                                </div>
+
+                                            </li>
+                                            { }
+                                            {Items.map((itemval, i) => {
+                                                return (
+                                                    <>
+                                                        <li>
+                                                            <div className="form-check">
+                                                                <input className="form-check-input" name="order_status" type="radio" value={itemval} id={`order_statusCus${i}`} />
+                                                                <label className="form-check-label" htmlFor={`order_statusCus${i}`}>
+                                                                    {itemval}
+                                                                </label>
+                                                            </div>
+
+                                                        </li>
+                                                    </>
+                                                )
+                                            })}
+
+                                        </ol>
+
+                                    </div>
+
+                                    <div className='row'>
+                                        <div className='col-sm-10'>
+                                            <div className="form-floating mb-3">
+                                                <input type="text" className="form-control" placeholder="phone" value={inputList} onChange={itemEvent} />
+                                                <label htmlFor="floatingInput">Add New Status</label>
                                             </div>
-
-                                        </li>
-
-                                        <li>
-                                            <div className="form-check">
-                                                <input className="form-check-input" name="order_status" type="radio"  value="Stone Ready To Carve"  id='order_status2' />
-                                                <label className="form-check-label" htmlFor="order_status2">
-                                                    Stone Ready To Carve
-                                                </label>
-                                            </div>
-
-                                        </li>
-
-
-                                        <li>
-                                            <div className="form-check">
-                                                <input className="form-check-input" name="order_status" type="radio"  value="Inside the Shop" id='order_status3' />
-                                                <label className="form-check-label" htmlFor="order_status3">
-                                                    Inside the Shop
-                                                </label>
-                                            </div>
-
-                                        </li>
-
-
-                                        <li>
-                                            <div className="form-check">
-                                                <input className="form-check-input" name="order_status" type="radio"  value="Ready for Placement" id='order_status4' />
-                                                <label className="form-check-label" htmlFor="order_status4">
-                                                    Ready for Placement
-                                                </label>
-                                            </div>
-
-                                        </li>
-{}
-                                        {Items.map((itemval,i) => {
-                                            return (
-                                                <>
-                                                    <li>
-                                                        <div className="form-check">
-                                                        <input className="form-check-input" name="order_status" type="radio" value={itemval} id={`order_statusCus${i}`} />
-                                                            <label className="form-check-label" htmlFor={`order_statusCus${i}`}>
-                                                                {itemval} 
-                                                            </label>
-                                                        </div>
-
-                                                    </li>
-                                                </>
-                                            )
-                                        })}
-
-                                    </ol>
-
-                                </div>
-
-                                <div className='row'>
-                                    <div className='col-sm-10'>
-                                        <div className="form-floating mb-3">
-                                            <input type="text" className="form-control" placeholder="phone" value={inputList}  required onChange={itemEvent} />
-                                            <label htmlFor="floatingInput">Add New Status</label>
                                         </div>
-                                    </div>
-                                    <div className='col-sm-2'>
-                                        <button type='submit' className='btn btn-primary roundButton' > + </button>
-                                    </div>
+                                        <div className='col-sm-2'>
+                                            <button type='submit' className='btn btn-primary roundButton' onClick={listOfItems} > + </button>
+                                        </div>
 
-                                    <Button btnDesign="btn btn-success" btnText="Save" onClick={""} />
-                                </div>
+                                        <Button btnDesign="btn btn-success" btnText="Save" type="submit" onClick={""} />
+                                    </div>
                                 </form>
                             </div>
                         </div>

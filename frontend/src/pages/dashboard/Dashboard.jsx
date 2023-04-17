@@ -9,24 +9,9 @@ import axios from 'axios';
 
 const Dashboard = () => {
   const [value, onChange] = useState(new Date());
-  const [err, setErr] = useState(null);
   const navigate = useNavigate();
-  const [jobid, setJobid] = useState(null);
   const handleClick = async (e) => {
-       
-    e.preventDefault();
-  
-    try {
-     
-    const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/jobs/jobadd", { data: 1 });
-    setJobid(response.data.jobId);
-   navigate("/dashboard/job");
-                        
-
-  } catch (err) {
-    setErr(err.response.data);
-  }
-    
+    navigate("/dashboard/job");
   }
 
   return (
@@ -40,7 +25,7 @@ const Dashboard = () => {
               <div className='row flex-nowrap'>
                 <div className='col-6 '>
 
-                 
+
                   <div className="calender">
 
                     <div className="container shadow py-4 d-flex flex-column align-items-center">
@@ -71,10 +56,10 @@ const Dashboard = () => {
                         <FaSearch />
                       </button>
 
-                      <button className='btn btn-success btn-lg mx-3'  onClick={handleClick}>
+                      <button className='btn btn-success btn-lg mx-3' onClick={handleClick}>
 
-                      <FaPlus />
-                      
+                        <FaPlus />
+
                       </button>
 
                       <button className='btn btn-lg'>
@@ -90,93 +75,93 @@ const Dashboard = () => {
                   <div className="latestUpdate">
                     <div className="item">
                       <div className="leftContent">
-<img src={dummy} alt='' width={75} height={75} />
+                        <img src={dummy} alt='' width={75} height={75} />
                       </div>
 
                       <div className="rightContent">
-<div className="title">Recent Updates</div>
-<p>Secondar text</p>
+                        <div className="title">Recent Updates</div>
+                        <p>Secondar text</p>
                       </div>
                     </div>
 
                     <div className="item">
                       <div className="leftContent">
-<img src={dummy} alt='' width={75} height={75} />
+                        <img src={dummy} alt='' width={75} height={75} />
                       </div>
 
                       <div className="rightContent">
-<div className="title">Task/Job Status Change </div>
-<p>Secondar text</p>
-                      </div>
-                    </div>
-
-
-                    <div className="item">
-                      <div className="leftContent">
-<img src={dummy} alt='' width={75} height={75} />
-                      </div>
-
-                      <div className="rightContent">
-<div className="title">Approval</div>
-<p>Secondar text</p>
+                        <div className="title">Task/Job Status Change </div>
+                        <p>Secondar text</p>
                       </div>
                     </div>
 
 
                     <div className="item">
                       <div className="leftContent">
-<img src={dummy} alt='' width={75} height={75} />
+                        <img src={dummy} alt='' width={75} height={75} />
                       </div>
 
                       <div className="rightContent">
-<div className="title">Carving</div>
-<p>Secondar text</p>
+                        <div className="title">Approval</div>
+                        <p>Secondar text</p>
                       </div>
                     </div>
 
 
                     <div className="item">
                       <div className="leftContent">
-<img src={dummy} alt='' width={75} height={75} />
+                        <img src={dummy} alt='' width={75} height={75} />
                       </div>
 
                       <div className="rightContent">
-<div className="title">Products</div>
-<p>Secondar text</p>
-                      </div>
-                    </div>
-
-                    <div className="item">
-                      <div className="leftContent">
-<img src={dummy} alt='' width={75} height={75} />
-                      </div>
-
-                      <div className="rightContent">
-<div className="title">Jobs</div>
-<p>Secondar text</p>
+                        <div className="title">Carving</div>
+                        <p>Secondar text</p>
                       </div>
                     </div>
 
 
                     <div className="item">
                       <div className="leftContent">
-<img src={dummy} alt='' width={75} height={75} />
+                        <img src={dummy} alt='' width={75} height={75} />
                       </div>
 
                       <div className="rightContent">
-<div className="title">Tasks</div>
-<p>Secondar text</p>
+                        <div className="title">Products</div>
+                        <p>Secondar text</p>
+                      </div>
+                    </div>
+
+                    <div className="item">
+                      <div className="leftContent">
+                        <img src={dummy} alt='' width={75} height={75} />
+                      </div>
+
+                      <div className="rightContent">
+                        <div className="title">Jobs</div>
+                        <p>Secondar text</p>
                       </div>
                     </div>
 
 
-            
-                   
+                    <div className="item">
+                      <div className="leftContent">
+                        <img src={dummy} alt='' width={75} height={75} />
+                      </div>
+
+                      <div className="rightContent">
+                        <div className="title">Tasks</div>
+                        <p>Secondar text</p>
+                      </div>
+                    </div>
 
 
-                    
 
-                   
+
+
+
+
+
+
 
                   </div>
 
