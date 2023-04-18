@@ -81,13 +81,13 @@ const Customer = (props) => {
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["middle_name"]} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} required />
+                                            <input type="text" value={userData["middle_name"] || ""} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Middlename</label>
                                         </div>
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["last_name"]} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                            <input type="text" value={userData["last_name"] || ""} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Lastname</label>
                                         </div>
                                     </div>
@@ -96,14 +96,14 @@ const Customer = (props) => {
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["phone"]} name="phone" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                            <input type="text" value={userData["phone"] || ""} name="phone" className="form-control" placeholder="phone" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Phone</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
 
                                         <div className="form-floating mb-3">
-                                            <input type="email" value={userData["email"]} name="email" className="form-control" placeholder="email" onChange={handleChange} required />
+                                            <input type="email" value={userData["email"] || ""} name="email" className="form-control" placeholder="email" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Email</label>
                                         </div>
                                     </div>
@@ -112,13 +112,13 @@ const Customer = (props) => {
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="address" value={userData["address"]} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
+                                            <textarea name="address" value={userData["address"] || ""} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Address</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="notes" rows="4" value={userData["notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                            <textarea name="notes" rows="4" value={userData["notes"] || ""} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Notes</label>
                                         </div>
                                     </div>
@@ -164,7 +164,7 @@ const Customer = (props) => {
                                     <button onClick={() => props.showOrder(2)} className='btn btn-secondary' >Add Order</button>
                                 </div>
 
-{customerId}
+                                {customerId}
 
 
                             </div>
@@ -312,16 +312,209 @@ const Order = (props) => {
 }
 
 const Product = () => {
+    const { userData, setUserData } = useContext(StepperContext);
+    const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
+        setUserData({ ...userData, [name]: value });
+    };
+
+    const handleClick = async (e) => {
+        setErr(null);
+        setSucc(null);
+        e.preventDefault();
+        try {
+            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/products/addproduct", userData);
+            //console.log(response.data);
+            setSucc(response.data);
+            console.log(response.data);
+            //const currcustomerId = response.data[0].lastInserId;
+
+            //setUserData({ ...userData, ["currentCustomerid"]: currcustomerId });
+        } catch (err) {
+            setErr(err.response.data);
+        }
+    }
+    //    console.log(inputs)
+
     return (
-        <div className='product'>
-            <h2 className='text-center my-3'>Product</h2>
-        </div>
+        <>
+
+            <div className='customer'>
+                <h2 className='text-center my-3'>Product</h2>
+
+                <div className='cardItem shadow p-3 mx-3'>
+                    <form onSubmit={handleClick}>
+                        <div className='row'>
+                            <div className='col-6'>
+                                <div className="form-floating mb-3">
+                                    <textarea type="text" rows="4" value={userData["product_description"] || ""} style={{ height: "112px" }} name="product_description" className="form-control" placeholder="Description" onChange={handleChange} required />
+                                    <label htmlFor="floatingInput">Description</label>
+                                </div>
+                            </div>
+                            <div className='col-6'>
+                                <div className='row'>
+                                    <div className='col-6'>
+                                        <div className="form-floating mb-3">
+
+                                            <select className="form-select form-control" aria-label="Default select example" name='product_color' onChange={handleChange}>
+                                                <option defaultValue={"Color"}>Color</option>
+                                                <option value={userData["product_color"]} >Red</option>
+                                                <option value={userData["product_color"]}>Black</option>
+                                                <option value={userData["product_color"]}>Gray</option>
+                                            </select>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div className='col-6'>
+                                        <div className="form-floating mb-3">
+                                            <input type="text" value={userData["product_size"]} name="product_size" className="form-control" placeholder="Options" onChange={handleChange} required />
+                                            <label htmlFor="floatingInput">Size </label>
+                                        </div>
+                                    </div>
+                                    <div className='col-6'>
+                                        <div className="form-floating mb-3">
+                                            <input type="number" value={userData["product_qty_on_hand"]} name="product_qty_on_hand" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                            <label htmlFor="floatingInput">Qty On Hand</label>
+                                        </div>
+
+                                    </div>
+                                    <div className='col-6'>
+
+                                        <div className="form-floating mb-3">
+                                            <input type="number" value={userData["product_price"]} name="product_price" className="form-control" placeholder="email" onChange={handleChange} required />
+                                            <label htmlFor="floatingInput">Price</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+                        </div>
+
+
+
+                        <div className='row'>
+
+                            <div className='col-6'>
+
+                                <div className="form-floating mb-3">
+                                    <textarea value={userData["product_options"]} style={{ height: "100px" }} name="product_options" className="form-control" placeholder="Options" onChange={handleChange} required />
+                                    <label htmlFor="floatingInput">Options</label>
+                                </div>
+
+                                <div className="form-floating mb-3">
+                                    <textarea name="product_notes" rows="4" value={userData["product_notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                    <label htmlFor="floatingInput">Notes</label>
+                                </div>
+
+
+
+
+                            </div>
+
+                            <div className='col-6'>
+                                <div class="mb-3">
+                                    <div className='text-center'>
+                                        <img src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' width={200} />
+                                    </div>
+                                    <label htmlFor="formFile" className="form-label">Select Product Image</label>
+                                    <input className="form-control" type="file" id="formFile" />
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+                        <div className='buttonWrapper'>
+
+
+                            <Button btnDesign="btn btn-primary" btnText="Archive" onClick={handleClick} />
+
+                            <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
+                            <Button btnDesign="btn btn-success" btnText="Add" btnType="submit" />
+                        </div>
+
+                        <p className='custResponse text-danger'> {err && err}</p>
+
+                        <p className='custResponse text-success'>{succ && succ}</p>
+
+                    </form>
+                </div>
+            </div>
+
+
+
+
+
+
+
+        </>
     )
 }
 
 const Task = () => {
+    const { userData, setUserData } = useContext(StepperContext);
+    //const [err, setErr] = useState(null);
+    //const [succ, setSucc] = useState(null);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUserData({ ...userData, [name]: value });
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+    }
+
     return (
-        <div>Task</div>
+        <div className='task'>
+            <h2 className='text-center my-3'>Task</h2>
+            <div className='mainDiv'>
+                <div className="mainWrapper">
+                    <form onSubmit={handleSubmit} >
+                        <div className='row'>
+                            <div className='col-8'>
+                                <div className="form-floating mb-3">
+                                    <textarea id='task_description' className="form-control" style={{ height: "400px" }} name='task_description' onChange={handleChange} value={userData["task_description"] || ""} />
+                                    <label htmlFor="task_description">Task Description</label>
+                                </div>
+                            </div>
+                            <div className='col-4'>
+                                <div className='form-floating mb-3'>
+                                    <input type='text' className='form-control' value={userData["task_title"] || ""} name='task_title' required onChange={handleChange} />
+                                    <label htmlFor='floatingInput'>Here's Something</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
     )
 }
 
