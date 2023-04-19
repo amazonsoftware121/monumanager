@@ -20,7 +20,15 @@ const Customer = (props) => {
 
     const [display, setDisplay] = useState("false");
 
-    const toggleDisplay = () => {
+    const toggleDisplay = async () => {
+
+        try {
+            const response = await axios.get("http://amaronsoftware.com/monumanagerapi/api/jobs/recentjobs");
+            console.log(response.data);
+        } catch (err) {
+            setErr(err.response.data);
+        }
+
         if (!display) {
             setDisplay(true);
         }
@@ -61,9 +69,9 @@ const Customer = (props) => {
             setErr(err.response.data);
         }
     }
-    //    console.log(inputs)
+   
 
-    return (
+    return (    
         <>
 
             <div className='customer'>
@@ -191,30 +199,22 @@ const Order = (props) => {
     const [jobid, setJobid] = useState(null);
     const handleChange = (e) => {
         const { name, value } = e.target;
-        /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
         setUserData({ ...userData, [name]: value });
     };
-
     const handleClick = async (e) => {
-        // setErr(null);
-        // setSucc(null);
+        setErr(null);
+        setSucc(null);
         e.preventDefault();
-
-
-
-        e.preventDefault();
-
         try {
-
-            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/jobs/jobadd", { data: 1 });
-            setJobid(response.data.jobId);
-            //console.log(response.data);                           
+            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/jobs/addjob", userData );
+            setSucc(response.data[0].successmsg);
+            console.log(response.data[0].lastInserId);
+            const jobId = response.data[0].lastInserId; 
+            setUserData({ ...userData, ["currentjobid"]: jobId });                           
         } catch (err) {
             setErr(err.response.data);
         }
-
     }
-    //    console.log(inputs)
     return (
         <>
             <div className="order">
@@ -226,10 +226,12 @@ const Order = (props) => {
 
                             <div className=''>
                                 <div className="form-floating mb-3">
-                                    <textarea value={userData["order_notes"] || ""} name="order_notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                    <textarea value={userData["order_notes"]} name="order_notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                     <label htmlFor="floatingInput">Order Description</label>
                                 </div>
                             </div>
+
+                            <input type='hidden'  value={userData.currentCustomerid} name='order_customer_id' />
 
 
                             {/*<div className='col-6'>
@@ -241,8 +243,10 @@ const Order = (props) => {
                             </div>*/}
 
 
+                            <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
+                            <p className='custResponse text-danger'> {err && err}</p>
 
-                            <button className="btn btn-primary" type="submit">Submit</button>
+<p className='custResponse text-success'>{succ && succ}</p>
                         </form>
 
 
@@ -256,7 +260,7 @@ const Order = (props) => {
 
                                 <div className="rightContent">
                                     <div className="title">Customer Info</div>
-                                    <p>Secondar text</p>
+                                     { !userData.first_name && !userData.middle_name && !userData.last_name ? "" : `Name: ${userData.first_name}  ${userData.middle_name} ${userData.last_name}` }
                                 </div>
                             </div>
 
@@ -268,7 +272,7 @@ const Order = (props) => {
 
                                 <div className="rightContent">
                                     <div className="title">Product Info</div>
-                                    <p>Secondar text</p>
+{ !userData.first_name && !userData.middle_name && !userData.last_name ? "" : `Name: ${userData.first_name}  ${userData.middle_name} ${userData.last_name}` }
                                 </div>
                             </div>
                         </div>
