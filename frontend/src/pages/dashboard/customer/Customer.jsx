@@ -16,6 +16,7 @@ const Customer = (props) => {
 
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
+    const [recentOrders, setRecentOrders] = useState([]);
 
 
     const [display, setDisplay] = useState("false");
@@ -24,7 +25,7 @@ const Customer = (props) => {
 
         try {
             const response = await axios.get("http://amaronsoftware.com/monumanagerapi/api/jobs/recentjobs");
-            console.log(response.data);
+            setRecentOrders(response.data.data);
         } catch (err) {
             setErr(err.response.data);
         }
@@ -162,14 +163,21 @@ const Customer = (props) => {
 
                                 <div className='recentOrders' style={display ? { display: "none" } : { display: "block" }} >
                                     <ul>
-                                        <li><span><FaHome /></span> Order 001</li>
-                                        <li><span><FaHome /></span> One-fine Order 002</li>
-                                        <li><span><FaHome /></span> Order 003</li>
+
+{recentOrders.map((item,index)=>{
+    return(
+    <li><span><FaHome /> {item.id} </span>{item.notes}</li>
+    )
+})}
+
+                                        
+                                      
                                     </ul>
                                 </div>
 
                                 <div className='addOrder mt-5'>
-                                    <button onClick={() => props.showOrder(2)} className='btn btn-secondary' >Add Order</button>
+                                {!userData["currentCustomerid"] ? "Please Enter customer info" : <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button> }
+                                    
                                 </div>
 
                                 {customerId}
