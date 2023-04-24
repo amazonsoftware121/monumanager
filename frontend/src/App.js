@@ -11,6 +11,7 @@ import LeftBar from './components/leftBar/LeftBar';
 import Home from './pages/home/Home';
 import Dashboard from './pages/dashboard/Dashboard';
 import Job from "../src/pages/dashboard/job/Job"
+import Search from  "../src/pages/dashboard/search/Search"
 import './style.scss';
 import { useContext } from 'react';
 import { AuthContext } from './context/authContext';
@@ -77,7 +78,11 @@ function App() {
             {
                 path: "/dashboard/job",
                 element: <Job />
-            }
+            },
+{
+    path: "/dashboard/search",
+    element: <Search />
+}
           
             
            

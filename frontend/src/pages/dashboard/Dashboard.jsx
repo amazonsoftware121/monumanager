@@ -53,9 +53,13 @@ const Dashboard = () => {
                 <div className="col-6 px-5">
                   <div className="topButton d-flex justify-content-center mb-4">
                     <div className="buttonInner">
+                    <Link to={"/dashboard/search"} >
                       <button className='btn btn-primary btn-lg'>
+                       
                         <FaSearch />
+                        
                       </button>
+                      </Link>
 
                       <button className='btn btn-success btn-lg mx-3' onClick={handleClick}>
 

@@ -70,9 +70,9 @@ const Customer = (props) => {
             setErr(err.response.data);
         }
     }
-   
 
-    return (    
+
+    return (
         <>
 
             <div className='customer'>
@@ -164,20 +164,20 @@ const Customer = (props) => {
                                 <div className='recentOrders' style={display ? { display: "none" } : { display: "block" }} >
                                     <ul>
 
-{recentOrders.map((item,index)=>{
-    return(
-    <li><span><FaHome /> {item.id} </span>{item.notes}</li>
-    )
-})}
+                                        {recentOrders.map((item, index) => {
+                                            return (
+                                                <li key={index}><span><FaHome /> {item.id} </span>{item.notes}</li>
+                                            )
+                                        })}
 
-                                        
-                                      
+
+
                                     </ul>
                                 </div>
 
                                 <div className='addOrder mt-5'>
-                                {!userData["currentCustomerid"] ? "Please Enter customer info" : <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button> }
-                                    
+                                    {!userData["currentCustomerid"] ? "Please Enter customer info to add order." : <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button>}
+
                                 </div>
 
                                 {customerId}
@@ -214,11 +214,11 @@ const Order = (props) => {
         setSucc(null);
         e.preventDefault();
         try {
-            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/jobs/addjob", userData );
+            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/jobs/addjob", userData);
             setSucc(response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
-            const jobId = response.data[0].lastInserId; 
-            setUserData({ ...userData, ["currentjobid"]: jobId });                           
+            const jobId = response.data[0].lastInserId;
+            setUserData({ ...userData, ["currentjobid"]: jobId });
         } catch (err) {
             setErr(err.response.data);
         }
@@ -239,7 +239,7 @@ const Order = (props) => {
                                 </div>
                             </div>
 
-                            <input type='hidden'  value={userData.currentCustomerid} name='order_customer_id' />
+                            <input type='hidden' value={userData.currentCustomerid} name='order_customer_id' />
 
 
                             {/*<div className='col-6'>
@@ -254,7 +254,7 @@ const Order = (props) => {
                             <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
                             <p className='custResponse text-danger'> {err && err}</p>
 
-<p className='custResponse text-success'>{succ && succ}</p>
+                            <p className='custResponse text-success'>{succ && succ}</p>
                         </form>
 
 
@@ -268,7 +268,7 @@ const Order = (props) => {
 
                                 <div className="rightContent">
                                     <div className="title">Customer Info</div>
-                                     { !userData.first_name && !userData.middle_name && !userData.last_name ? "" : `Name: ${userData.first_name}  ${userData.middle_name} ${userData.last_name}` }
+                                    {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `Name: ${userData.first_name}  ${userData.middle_name} ${userData.last_name}`}
                                 </div>
                             </div>
 
@@ -280,7 +280,7 @@ const Order = (props) => {
 
                                 <div className="rightContent">
                                     <div className="title">Product Info</div>
-{ !userData.first_name && !userData.middle_name && !userData.last_name ? "" : `Name: ${userData.first_name}  ${userData.middle_name} ${userData.last_name}` }
+                                    {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `Name: ${userData.first_name}  ${userData.middle_name} ${userData.last_name}`}
                                 </div>
                             </div>
                         </div>
@@ -540,23 +540,8 @@ const CarvingType = () => {
 
 const Carving = (props) => {
     const { userData, setUserData } = useContext(StepperContext);
-    const [order, setOrder] = useState(false);
-
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
-
-
-    const [display, setDisplay] = useState("false");
-
-    const toggleDisplay = () => {
-        if (!display) {
-            setDisplay(true);
-        }
-        else {
-            setDisplay(false);
-        }
-    }
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -564,24 +549,16 @@ const Carving = (props) => {
         setUserData({ ...userData, [name]: value });
     };
 
-    const handleOnChange = () => {
-        if (!false) {
-            setOrder(true);
-        }
-        else {
-            setOrder(false);
-        }
-    }
-
     const handleClick = async (e) => {
-        setErr(null);
-        setSucc(null);
         e.preventDefault();
+        console.log(userData);
+       setErr(null);
+        setSucc(null);
         try {
-            const response = await axios.post(/*"http://amaronsoftware.com/monumanagerapi/api/customers/addcustomer", userData*/);
+            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/carvings/addcarving", userData);
             //console.log(response.data);
             setSucc(response.data);
-            console.log(response.data);
+            console.log(response);
         } catch (err) {
             setErr(err.response.data);
         }
@@ -596,7 +573,7 @@ const Carving = (props) => {
                 <form onSubmit={handleClick}>
 
                     <div className='carTopSection'>
-                        <div className=''>
+                        <div className='' onChange={handleChange}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" id="inlineradio1" value="Front" name='car_side' />
                                 <label className="form-check-label" htmlFor="inlineradio1">Front</label>
@@ -610,7 +587,7 @@ const Carving = (props) => {
 
                         <div className='carPosition'>
                             <h5 className='h4 text-center my-3'>Position</h5>
-                            <div className='carvingPositionWrap'>
+                            <div className='carvingPositionWrap' onChange={handleChange}>
 
                                 <div className="form-check form-check-inline">
                                     <input className="form-check-input" type="radio" id="inlineradio1" value="Top Left" name='car_position' />
@@ -647,6 +624,9 @@ const Carving = (props) => {
                                     <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Right" name='car_position' />
 
                                 </div>
+
+
+
                             </div>
 
                         </div>
@@ -663,13 +643,13 @@ const Carving = (props) => {
                         </div>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={userData["car_middle_name"]} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} required />
+                                <input type="text" value={userData["car_middle_name"] || ""} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">Middlename</label>
                             </div>
                         </div>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={userData["car_last_name"]} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                <input type="text" value={userData["car_last_name"]  || ""} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">Lastname</label>
                             </div>
                         </div>
@@ -678,14 +658,14 @@ const Carving = (props) => {
                     <div className='row'>
                         <div className='col-6'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={userData["car_birth_date"]} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                <input type="date" value={userData["car_birth_date"]  || ""} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">Birth Date</label>
                             </div>
                         </div>
                         <div className='col-6'>
 
                             <div className="form-floating mb-3">
-                                <input type="text" value={userData["car_passing_date"]} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange} required />
+                                <input type="date" value={userData["car_passing_date"]  || ""} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">Passing Date</label>
                             </div>
                         </div>
@@ -695,31 +675,24 @@ const Carving = (props) => {
 
                     <div className='col-12'>
                         <div className="form-floating mb-3">
-                            <textarea name="car_notes" rows="4" value={userData["car_notes"]} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} />
+                            <textarea name="car_notes" rows="4" value={userData["car_notes"]  || ""} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} />
                             <label htmlFor="floatingInput">My Beloved Love</label>
                         </div>
                     </div>
+                    <input type='hidden' value={userData.currentjobid} name='car_job_id' />
 
 
-
-                    {err && <div className="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>{err}</strong>
+                    <strong>{err && err}</strong>
 
 
-                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>}
-
-                    {succ && <div className="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>{succ}</strong>
-                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>}
+                    <strong> {succ && succ} </strong>
 
                     <div className='buttonWrapper'>
 
 
 
 
-                        <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" onClick={handleClick} />
+                       <button className='btn btn-primary'>Save</button>
 
 
 
@@ -744,7 +717,7 @@ const Status = () => {
 
         //setUserData({ ...userData, [e.target.name]: e.target.value });
         setUserData({ ...userData, [name]: value });
-        console.log(userData);
+
     };
 
     const [inputList, setInputList] = useState("");
@@ -763,6 +736,25 @@ const Status = () => {
         console.log(userData);
     }
 
+
+
+
+    const handleSubmit = async (e) => {
+        setErr(null);
+        setSucc(null);
+        e.preventDefault();
+        try {
+            const response = await axios.put("http://amaronsoftware.com/monumanagerapi/api/jobs/updatejobstatus", userData);
+            //console.log(response.data);
+            setSucc(response.data);
+        } catch (err) {
+            setErr(err.response.data);
+        }
+    }
+
+
+
+
     return (
         <>
             <div className='status'>
@@ -774,7 +766,9 @@ const Status = () => {
                         <div className='row'>
                             <div className='col-md-6 col-sm-12'>
 
-                                <form onSubmit={listOfItems} >
+                                <form onSubmit={handleSubmit} >
+
+                                    Current Status: { }
 
                                     <div className='statusList'>
                                         <ol onChange={handleChange}>
@@ -840,7 +834,7 @@ const Status = () => {
                                         </ol>
 
                                     </div>
-
+                                    <input type='hidden' value={userData.currentjobid} name='currentjobid' />
                                     <div className='row'>
                                         <div className='col-sm-10'>
                                             <div className="form-floating mb-3">
@@ -849,11 +843,13 @@ const Status = () => {
                                             </div>
                                         </div>
                                         <div className='col-sm-2'>
-                                            <button type='submit' className='btn btn-primary roundButton' onClick={listOfItems} > + </button>
+                                            <button className='btn btn-primary roundButton' onClick={listOfItems} > + </button>
                                         </div>
 
-                                        <Button btnDesign="btn btn-success" btnText="Save" type="submit" onClick={""} />
+                                        <Button btnDesign="btn btn-success" btnText="Save" type="submit" />
+
                                     </div>
+                                    <div className='mt-3'> {succ}</div>
                                 </form>
                             </div>
                         </div>
