@@ -339,10 +339,11 @@ const Product = () => {
         setErr(null);
         setSucc(null);
         e.preventDefault();
+        console.log(userData);
         try {
             const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/products/addproduct", userData);
             //console.log(response.data);
-            setSucc(response.data);
+            setSucc(response.data[0].successmsg);
             console.log(response.data);
             //const currcustomerId = response.data[0].lastInserId;
 
@@ -441,12 +442,12 @@ const Product = () => {
                             </div>
 
                             <div className='col-6'>
-                                <div class="mb-3">
+                                <div className="mb-3">
                                     <div className='text-center'>
                                         <img src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' width={200} />
                                     </div>
-                                    <label htmlFor="formFile" className="form-label">Select Product Image</label>
-                                    <input className="form-control" type="file" id="formFile" />
+                                    <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
+                                    <input className="form-control" value={userData["product_image"] || ""} type="file" id="product_image" name="product_image" />
                                 </div>
                             </div>
 
@@ -484,16 +485,27 @@ const Product = () => {
 
 const Task = () => {
     const { userData, setUserData } = useContext(StepperContext);
-    //const [err, setErr] = useState(null);
-    //const [succ, setSucc] = useState(null);
+    const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserData({ ...userData, [name]: value });
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(userData);
+        setErr(null);
+        setSucc(null);
+        try {
+            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/tasks/addtask", userData);
+            //console.log(response.data);
+            setSucc(response.data[0].successmsg);
+            console.log(response.data);
+        } catch (err) {
+            setErr(err.response.data);
+        }
     }
 
     return (
@@ -504,17 +516,40 @@ const Task = () => {
                     <form onSubmit={handleSubmit} >
                         <div className='row'>
                             <div className='col-8'>
+
+
+
                                 <div className="form-floating mb-3">
-                                    <textarea id='task_description' className="form-control" style={{ height: "400px" }} name='task_description' onChange={handleChange} value={userData["task_description"] || ""} />
+                                    <textarea id='task_description' className="form-control" style={{ height: "400px" }} name='task_description' onChange={handleChange} value={userData["task_description"] || ""} placeholder='Task Description' />
                                     <label htmlFor="task_description">Task Description</label>
                                 </div>
                             </div>
                             <div className='col-4'>
                                 <div className='form-floating mb-3'>
-                                    <input type='text' className='form-control' value={userData["task_title"] || ""} name='task_title' required onChange={handleChange} />
-                                    <label htmlFor='floatingInput'>Here's Something</label>
+                                    <input id='task_notes' type='text' className='form-control' value={userData["task_notes"] || ""} name='task_notes' required onChange={handleChange} placeholder="Here's Something" />
+                                    <label htmlFor="task_notes">Here's Something</label>
                                 </div>
+
+                                <div className='form-floating mb-3'>
+                                    <input type='date' className='form-control' value={userData["task_creation_date"] || ""} name='task_creation_date' required onChange={handleChange} placeholder='Creation Date' />
+                                    <label htmlFor='floatingInput'>Creation Date</label>
+                                </div>
+
+                                <div className='form-floating mb-3'>
+                                    <input type='date' className='form-control' value={userData["task_due_date"] || ""} name='task_due_date' required onChange={handleChange} placeholder='Due Date' />
+                                    <label htmlFor='floatingInput'>Due Date</label>
+                                </div>
+                                <div className='mb-3'>{err && err}
+                                    {succ && succ}
+                                </div>
+                                <button type='submit' className='btn btn-success'>Save</button>
+
                             </div>
+
+
+
+
+
                         </div>
 
 
@@ -545,14 +580,13 @@ const Carving = (props) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
         setUserData({ ...userData, [name]: value });
     };
 
     const handleClick = async (e) => {
         e.preventDefault();
         console.log(userData);
-       setErr(null);
+        setErr(null);
         setSucc(null);
         try {
             const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/carvings/addcarving", userData);
@@ -649,7 +683,7 @@ const Carving = (props) => {
                         </div>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={userData["car_last_name"]  || ""} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                <input type="text" value={userData["car_last_name"] || ""} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">Lastname</label>
                             </div>
                         </div>
@@ -658,14 +692,14 @@ const Carving = (props) => {
                     <div className='row'>
                         <div className='col-6'>
                             <div className="form-floating mb-3">
-                                <input type="date" value={userData["car_birth_date"]  || ""} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                <input type="date" value={userData["car_birth_date"] || ""} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">Birth Date</label>
                             </div>
                         </div>
                         <div className='col-6'>
 
                             <div className="form-floating mb-3">
-                                <input type="date" value={userData["car_passing_date"]  || ""} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange} required />
+                                <input type="date" value={userData["car_passing_date"] || ""} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">Passing Date</label>
                             </div>
                         </div>
@@ -675,7 +709,7 @@ const Carving = (props) => {
 
                     <div className='col-12'>
                         <div className="form-floating mb-3">
-                            <textarea name="car_notes" rows="4" value={userData["car_notes"]  || ""} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} />
+                            <textarea name="car_notes" rows="4" value={userData["car_notes"] || ""} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} />
                             <label htmlFor="floatingInput">My Beloved Love</label>
                         </div>
                     </div>
@@ -692,7 +726,7 @@ const Carving = (props) => {
 
 
 
-                       <button className='btn btn-primary'>Save</button>
+                        <button className='btn btn-primary'>Save</button>
 
 
 
