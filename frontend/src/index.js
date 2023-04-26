@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import ErrorPage from "./error-page";
 
 import { DarkModeContextProvider } from './context/darkModeContext';
 import { AuthContextProvider } from './context/authContext';

@@ -1,6 +1,5 @@
 import './leftbar.scss'
 import { Link } from 'react-router-dom'
-import { FaHome } from 'react-icons/fa';
 import { FaUserAlt,FaDatabase,FaTasks } from 'react-icons/fa';
 import { AiFillDashboard } from "react-icons/ai";
 import { MdEngineering } from "react-icons/md";

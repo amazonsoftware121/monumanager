@@ -5,7 +5,6 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { FaSearch, FaPlus, FaCog } from 'react-icons/fa';
 import dummy from "../../images/dummy.jpg";
-import axios from 'axios';
 
 const Dashboard = () => {
   const [value, onChange] = useState(new Date());

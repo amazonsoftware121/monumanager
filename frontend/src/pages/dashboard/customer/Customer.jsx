@@ -9,9 +9,6 @@ import Button from '../../../components/Button';
 
 const Customer = (props) => {
     const { userData, setUserData } = useContext(StepperContext);
-
-    const { customerId, setCustomerId } = useContext(StepperContext);
-
     const [order, setOrder] = useState(false);
 
     const [err, setErr] = useState(null);
@@ -46,7 +43,7 @@ const Customer = (props) => {
     };
 
     const handleOnChange = () => {
-        if (!false) {
+        if (!order) {
             setOrder(true);
         }
         else {
@@ -180,7 +177,7 @@ const Customer = (props) => {
 
                                 </div>
 
-                                {customerId}
+                              
 
 
                             </div>
@@ -763,11 +760,15 @@ const Status = () => {
 
     const listOfItems = (e) => {
         e.preventDefault();
-        setItems((oldItems) => {
+        if(inputList === ""){
+alert("Please enter new status.")
+        }
+        else{        setItems((oldItems) => {
             return [...oldItems, inputList];
         });
         setInputList("");
         console.log(userData);
+    }
     }
 
 
@@ -809,7 +810,7 @@ const Status = () => {
 
                                             <li>
                                                 <div className="form-check">
-                                                    <input className="form-check-input" name="order_status" type="radio" value="Stone Ordered" id='order_status1' />
+                                                    <input className="form-check-input" name="order_status" type="radio" required value="Stone Ordered" id='order_status1' />
                                                     <label className="form-check-label" htmlFor="order_status1">
                                                         Stone Ordered
                                                     </label>
@@ -819,7 +820,7 @@ const Status = () => {
 
                                             <li>
                                                 <div className="form-check">
-                                                    <input className="form-check-input" name="order_status" type="radio" value="Stone Ready To Carve" id='order_status2' />
+                                                    <input className="form-check-input" name="order_status" type="radio" required value="Stone Ready To Carve" id='order_status2' />
                                                     <label className="form-check-label" htmlFor="order_status2">
                                                         Stone Ready To Carve
                                                     </label>
@@ -830,7 +831,7 @@ const Status = () => {
 
                                             <li>
                                                 <div className="form-check">
-                                                    <input className="form-check-input" name="order_status" type="radio" value="Inside the Shop" id='order_status3' />
+                                                    <input className="form-check-input" name="order_status" type="radio" required value="Inside the Shop" id='order_status3' />
                                                     <label className="form-check-label" htmlFor="order_status3">
                                                         Inside the Shop
                                                     </label>
@@ -841,7 +842,7 @@ const Status = () => {
 
                                             <li>
                                                 <div className="form-check">
-                                                    <input className="form-check-input" name="order_status" type="radio" value="Ready for Placement" id='order_status4' />
+                                                    <input className="form-check-input" name="order_status" type="radio" required value="Ready for Placement" id='order_status4' />
                                                     <label className="form-check-label" htmlFor="order_status4">
                                                         Ready for Placement
                                                     </label>
@@ -854,7 +855,7 @@ const Status = () => {
                                                     <>
                                                         <li>
                                                             <div className="form-check">
-                                                                <input className="form-check-input" name="order_status" type="radio" value={itemval} id={`order_statusCus${i}`} />
+                                                                <input className="form-check-input" name="order_status" type="radio" required value={itemval} id={`order_statusCus${i}`} />
                                                                 <label className="form-check-label" htmlFor={`order_statusCus${i}`}>
                                                                     {itemval}
                                                                 </label>

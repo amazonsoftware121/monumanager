@@ -16,7 +16,6 @@ import './style.scss';
 import { useContext } from 'react';
 import { AuthContext } from './context/authContext';
 import ErrorPage from './error-page';
-import Customer from './pages/dashboard/customer/Customer';
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 
