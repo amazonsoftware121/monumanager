@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/authContext';
 import './login.scss';
 import Header from "../../components/header/Header";
 import PageHeader from "../../components/PageHeader";
+import { ThreeDots } from  'react-loader-spinner';
 
 const formWrapper = {
   width: "360px",
@@ -13,6 +14,9 @@ const Login = () => {
     username: "",
     password: "",
   });
+
+  const[loader, setLoader] = useState(false);
+
   const [err, setErr] = useState(null);
 
   const navigate = useNavigate()
@@ -23,6 +27,7 @@ const Login = () => {
   const { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
+    setLoader(true);
     e.preventDefault();
     try {
       await login(inputs);
@@ -53,13 +58,28 @@ const Login = () => {
               <label htmlFor="floatingPassword">Password</label>
             </div>
 
-            <div className="d-grid gap-2 mt-3">
+            <div className="d-grid justify-content-center gap-2 mt-3 ">
              { /* <input onClick={handleLogin} type="submit" className="btn btn-primary" value="Login" /> */ }
-<button  className='btn btn-primary'>Login</button>
+<button  className='btn btn-primary d-block'>Login</button>
+            
+{ !loader ? "" : <ThreeDots 
+      height="50" 
+      width="80" 
+      radius="9"
+      color="#4fa94d" 
+      ariaLabel="three-dots-loading"
+      wrapperStyle={{}}
+      wrapperClassName=""
+      visible={true}
+       />}
+
             </div>
+
+
             <p className="forgot-password text-right mt-2">
               Forgot <Link to="/forgotpassword">password?</Link>
             </p>
+          
             <p className='text-danger text-center'><strong>{err && err}</strong></p>
           </form>
         </div>

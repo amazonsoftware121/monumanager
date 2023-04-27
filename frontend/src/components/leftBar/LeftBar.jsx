@@ -19,31 +19,31 @@ const LeftBar = () => {
                         
                     </li>
                     <li>
-                        <Link to="#" className="nav-link px-0 align-middle ">
+                        <Link to="/dashboard/customers" className="nav-link px-0 align-middle ">
                         <FaUserAlt /> <span className="ms-1 d-none d-sm-inline">Customers</span></Link>
                         
                         
                     </li>
                     <li>
-                        <Link to="#" className="nav-link px-0 align-middle">
+                        <Link to="/dashboard/jobs" className="nav-link px-0 align-middle">
                             <FaTasks /> <span className="ms-1 d-none d-sm-inline">Jobs</span></Link>
                     </li>
                     
                     <li>
-                        <Link to="#"  className="nav-link px-0 align-middle">
+                        <Link to="/dashboard/products"  className="nav-link px-0 align-middle">
                            <FaDatabase /> <span className="ms-1 d-none d-sm-inline">Products</span> </Link>
                            
                     </li>
 
                     <li>
-                        <Link to="#" className="nav-link px-0 align-middle">
-                          <FaTasks /> <span className="ms-1 d-none d-sm-inline">Task</span> </Link>
+                        <Link to="/dashboard/tasks" className="nav-link px-0 align-middle">
+                          <FaTasks /> <span className="ms-1 d-none d-sm-inline">Tasks</span> </Link>
                            
                     </li>
 
                     <li>
-                        <Link to="#" className="nav-link px-0 align-middle">
-                           <MdEngineering /> <span className="ms-1 d-none d-sm-inline">Carving</span> </Link>
+                        <Link to="/dashboard/carvings" className="nav-link px-0 align-middle">
+                           <MdEngineering /> <span className="ms-1 d-none d-sm-inline">Carvings</span> </Link>
                            
                     </li>
                   

@@ -157,10 +157,8 @@ const Customer = (props) => {
                                         <label className="form-check-label" htmlFor="flexSwitchCheckDefault"><strong>Show Recent Orders</strong></label>
                                     </div>
                                 </div>
-
-                                <div className='recentOrders' style={display ? { display: "none" } : { display: "block" }} >
+{!display ? <div className='recentOrders'>
                                     <ul>
-
                                         {recentOrders.map((item, index) => {
                                             return (
                                                 <li key={index}><span><FaHome /> {item.id} </span>{item.notes}</li>
@@ -170,8 +168,7 @@ const Customer = (props) => {
 
 
                                     </ul>
-                                </div>
-
+                                </div> : "" }
                                 <div className='addOrder mt-5'>
                                     {!userData["currentCustomerid"] ? "Please Enter customer info to add order." : <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button>}
 
@@ -324,12 +321,16 @@ const Product = () => {
     const { userData, setUserData } = useContext(StepperContext);
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
+    const [file,setFile] = useState(null);
 
+    const handleFile = (e) => {
+        setFile(e.target.file[0]);
+    }
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+       const { name, value } = e.target;
         /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
-        setUserData({ ...userData, [name]: value });
+       setUserData({ ...userData, [name]: value });
     };
 
     const handleClick = async (e) => {
@@ -337,6 +338,10 @@ const Product = () => {
         setSucc(null);
         e.preventDefault();
         console.log(userData);
+        const formdata = new FormData();
+        formdata.append('product_image',file);
+        setUserData({...userData, file})
+
         try {
             const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/products/addproduct", userData);
             //console.log(response.data);
@@ -349,8 +354,8 @@ const Product = () => {
             setErr(err.response.data);
         }
     }
-    //    console.log(inputs)
-
+     
+console.log(file);
     return (
         <>
 
@@ -406,28 +411,13 @@ const Product = () => {
 
                                 </div>
                             </div>
-
-
-
-
-
-
-
-
-
                         </div>
-
-
-
                         <div className='row'>
-
                             <div className='col-6'>
-
                                 <div className="form-floating mb-3">
                                     <textarea value={userData["product_options"]} style={{ height: "100px" }} name="product_options" className="form-control" placeholder="Options" onChange={handleChange} required />
                                     <label htmlFor="floatingInput">Options</label>
                                 </div>
-
                                 <div className="form-floating mb-3">
                                     <textarea name="product_notes" rows="4" value={userData["product_notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                     <label htmlFor="floatingInput">Notes</label>
@@ -444,7 +434,7 @@ const Product = () => {
                                         <img src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' width={200} />
                                     </div>
                                     <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
-                                    <input className="form-control" value={userData["product_image"] || ""} type="file" id="product_image" name="product_image" />
+                                    <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleFile} />
                                 </div>
                             </div>
 
