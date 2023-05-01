@@ -118,13 +118,13 @@ const Customer = (props) => {
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="address" value={userData["address"] || ""} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
+                                            <textarea name="address" value={userData["address"] || ""} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Address</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="notes" rows="4" value={userData["notes"] || ""} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                            <textarea name="notes" rows="4" value={userData["notes"] || ""} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Notes</label>
                                         </div>
                                     </div>
@@ -324,7 +324,7 @@ const Product = () => {
     const [file,setFile] = useState(null);
 
     const handleFile = (e) => {
-        setFile(e.target.file[0]);
+        setFile(e.target.files[0]);
     }
 
     const handleChange = (e) => {
