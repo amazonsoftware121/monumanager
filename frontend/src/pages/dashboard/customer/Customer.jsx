@@ -333,10 +333,25 @@ const Product = () => {
        setUserData({ ...userData, [name]: value });
     };
 
+    const upload = async () =>{
+        try{
+const formData = new FormData();
+formData.append("file", file);
+const res = await makeRequest.post("/upload",formData);
+return res.data;
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     const handleClick = async (e) => {
         setErr(null);
         setSucc(null);
         e.preventDefault();
+
+        let imgUrl = "";
+        if(file) imgUrl = await upload( )
+
         console.log(userData);
         const formdata = new FormData();
         formdata.append('product_image',file);
