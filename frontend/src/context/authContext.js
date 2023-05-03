@@ -9,7 +9,7 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (inputs) => {
-    const res = await axios.post("http://amaronsoftware.com/monumanagerapi/api/auth/login", inputs, {
+    const res = await axios.post("https://amaronsoftware.com/monumanagerapi/api/auth/login", inputs, {
       withCredentials: true,
     });
 

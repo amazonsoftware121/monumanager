@@ -6,6 +6,9 @@ import dummy from "../../../images/dummy.jpg";
 import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 import Button from '../../../components/Button';
+import { AuthContext } from "../../../context/authContext";
+import { makeRequest } from '../../../axios';
+import { useMutation, useQueryClient } from "react-query";
 
 const Customer = (props) => {
     const { userData, setUserData } = useContext(StepperContext);
@@ -21,7 +24,7 @@ const Customer = (props) => {
     const toggleDisplay = async () => {
 
         try {
-            const response = await axios.get("http://amaronsoftware.com/monumanagerapi/api/jobs/recentjobs");
+            const response = await axios.get("https://amaronsoftware.com/monumanagerapi/api/jobs/recentjobs");
             setRecentOrders(response.data.data);
         } catch (err) {
             setErr(err.response.data);
@@ -56,7 +59,7 @@ const Customer = (props) => {
         setSucc(null);
         e.preventDefault();
         try {
-            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/customers/addcustomer", userData);
+            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/customers/addcustomer", userData);
             //console.log(response.data);
             setSucc(response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
@@ -157,7 +160,7 @@ const Customer = (props) => {
                                         <label className="form-check-label" htmlFor="flexSwitchCheckDefault"><strong>Show Recent Orders</strong></label>
                                     </div>
                                 </div>
-{!display ? <div className='recentOrders'>
+                                {!display ? <div className='recentOrders'>
                                     <ul>
                                         {recentOrders.map((item, index) => {
                                             return (
@@ -168,13 +171,13 @@ const Customer = (props) => {
 
 
                                     </ul>
-                                </div> : "" }
+                                </div> : ""}
                                 <div className='addOrder mt-5'>
                                     {!userData["currentCustomerid"] ? "Please Enter customer info to add order." : <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button>}
 
                                 </div>
 
-                              
+
 
 
                             </div>
@@ -208,7 +211,7 @@ const Order = (props) => {
         setSucc(null);
         e.preventDefault();
         try {
-            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/jobs/addjob", userData);
+            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/jobs/addjob", userData);
             setSucc(response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
             const jobId = response.data[0].lastInserId;
@@ -321,28 +324,32 @@ const Product = () => {
     const { userData, setUserData } = useContext(StepperContext);
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
-    const [file,setFile] = useState(null);
+    const [file, setFile] = useState(null);
 
     const handleFile = (e) => {
         setFile(e.target.files[0]);
     }
 
     const handleChange = (e) => {
-       const { name, value } = e.target;
+        const { name, value } = e.target;
         /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
-       setUserData({ ...userData, [name]: value });
+        setUserData({ ...userData, [name]: value });
     };
 
-    const upload = async () =>{
-        try{
-const formData = new FormData();
-formData.append("file", file);
-const res = await makeRequest.post("/upload",formData);
-return res.data;
-        }catch(err){
+    const upload = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            const res = await makeRequest.post("/upload", formData);
+            return res.data;
+        } catch (err) {
             console.log(err)
         }
-    }
+    };
+
+    const { currentUser } = useContext(AuthContext);
+
+    const queryClient = useQueryClient();
 
     const handleClick = async (e) => {
         setErr(null);
@@ -350,15 +357,15 @@ return res.data;
         e.preventDefault();
 
         let imgUrl = "";
-        if(file) imgUrl = await upload( )
+        if (file) imgUrl = await upload()
 
         console.log(userData);
         const formdata = new FormData();
-        formdata.append('product_image',file);
-        setUserData({...userData, file})
+        formdata.append('product_image', file);
+        setUserData({ ...userData, file })
 
         try {
-            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/products/addproduct", userData);
+            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/products/addproduct", userData);
             //console.log(response.data);
             setSucc(response.data[0].successmsg);
             console.log(response.data);
@@ -369,8 +376,8 @@ return res.data;
             setErr(err.response.data);
         }
     }
-     
-console.log(file);
+
+    console.log(file);
     return (
         <>
 
@@ -501,7 +508,7 @@ const Task = () => {
         setErr(null);
         setSucc(null);
         try {
-            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/tasks/addtask", userData);
+            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/tasks/addtask", userData);
             //console.log(response.data);
             setSucc(response.data[0].successmsg);
             console.log(response.data);
@@ -591,7 +598,7 @@ const Carving = (props) => {
         setErr(null);
         setSucc(null);
         try {
-            const response = await axios.post("http://amaronsoftware.com/monumanagerapi/api/carvings/addcarving", userData);
+            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/carvings/addcarving", userData);
             //console.log(response.data);
             setSucc(response.data);
             console.log(response);
@@ -765,15 +772,16 @@ const Status = () => {
 
     const listOfItems = (e) => {
         e.preventDefault();
-        if(inputList === ""){
-alert("Please enter new status.")
+        if (inputList === "") {
+            alert("Please enter new status.")
         }
-        else{        setItems((oldItems) => {
-            return [...oldItems, inputList];
-        });
-        setInputList("");
-        console.log(userData);
-    }
+        else {
+            setItems((oldItems) => {
+                return [...oldItems, inputList];
+            });
+            setInputList("");
+            console.log(userData);
+        }
     }
 
 
@@ -784,7 +792,7 @@ alert("Please enter new status.")
         setSucc(null);
         e.preventDefault();
         try {
-            const response = await axios.put("http://amaronsoftware.com/monumanagerapi/api/jobs/updatejobstatus", userData);
+            const response = await axios.put("https://amaronsoftware.com/monumanagerapi/api/jobs/updatejobstatus", userData);
             //console.log(response.data);
             setSucc(response.data);
         } catch (err) {
