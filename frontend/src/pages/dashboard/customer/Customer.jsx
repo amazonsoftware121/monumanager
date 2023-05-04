@@ -336,7 +336,7 @@ const Product = () => {
         setUserData({ ...userData, [name]: value });
     };
 
-    const upload = async () => {
+/*    const upload = async () => {
         try {
             const formData = new FormData();
             formData.append("file", file);
@@ -346,7 +346,7 @@ const Product = () => {
             console.log(err)
         }
     };
-
+*/
     const { currentUser } = useContext(AuthContext);
 
     const queryClient = useQueryClient();
@@ -356,15 +356,24 @@ const Product = () => {
         setSucc(null);
         e.preventDefault();
 
-        let imgUrl = "";
-        if (file) imgUrl = await upload()
+       // let imgUrl = "";
+        // if (file) imgUrl = await upload()
 
-        console.log(userData);
+        
+
+        try {
+            //const formData = new FormData();
+            //formData.append("file", file);
+            console.log(userData);
         const formdata = new FormData();
         formdata.append('product_image', file);
         setUserData({ ...userData, file })
-
-        try {
+            const res = await makeRequest.post("/products/addproduct", userData);
+            return res.data;
+        } catch (err) {
+            console.log(err)
+        }
+        /*try {
             const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/products/addproduct", userData);
             //console.log(response.data);
             setSucc(response.data[0].successmsg);
@@ -374,10 +383,10 @@ const Product = () => {
             //setUserData({ ...userData, ["currentCustomerid"]: currcustomerId });
         } catch (err) {
             setErr(err.response.data);
-        }
+        }*/
     }
 
-    console.log(file);
+   // console.log(file);
     return (
         <>
 
