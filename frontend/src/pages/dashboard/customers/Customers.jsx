@@ -12,12 +12,11 @@ const Customers = () => {
         return res.data;
     })
     );
-console.log(data);
-
+    console.log(data);
   return (
     <div className='customers'>
     <h3 className='text-center mt-5 text-uppercase'>Customers</h3>
-    <table class="table table-striped">
+    <table className="table table-striped">
     <thead>
       <tr>
         <th>Id</th>
