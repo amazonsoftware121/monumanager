@@ -10,6 +10,9 @@ import { AuthContext } from "../../../context/authContext";
 import { makeRequest } from '../../../axios';
 import { useMutation, useQueryClient } from "react-query";
 
+import { useQuery } from 'react-query';
+import { ThreeDots } from  'react-loader-spinner'
+
 const Customer = (props) => {
     const { userData, setUserData } = useContext(StepperContext);
     const [order, setOrder] = useState(false);
@@ -24,7 +27,7 @@ const Customer = (props) => {
     const toggleDisplay = async () => {
 
         try {
-            const response = await axios.get("https://amaronsoftware.com/monumanagerapi/api/jobs/recentjobs");
+            const response = await makeRequest.get("/jobs/recentjobs");
             setRecentOrders(response.data.data);
         } catch (err) {
             setErr(err.response.data);
@@ -59,7 +62,7 @@ const Customer = (props) => {
         setSucc(null);
         e.preventDefault();
         try {
-            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/customers/addcustomer", userData);
+            const response = await makeRequest.post("/customers/addcustomer", userData);
             //console.log(response.data);
             setSucc(response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
@@ -90,7 +93,7 @@ const Customer = (props) => {
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["middle_name"] || ""} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} required />
+                                            <input type="text" value={userData["middle_name"] || ""} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Middlename</label>
                                         </div>
                                     </div>
@@ -121,13 +124,13 @@ const Customer = (props) => {
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="address" value={userData["address"] || ""} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} required />
+                                            <textarea name="address" value={userData["address"] || " "} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange}  />
                                             <label htmlFor="floatingInput">Address</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="notes" rows="4" value={userData["notes"] || ""} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} required />
+                                            <textarea name="notes" rows="4" value={userData["notes"] || " "} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange}  />
                                             <label htmlFor="floatingInput">Notes</label>
                                         </div>
                                     </div>
@@ -202,6 +205,14 @@ const Order = (props) => {
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
     const [jobid, setJobid] = useState(null);
+
+    const {isLoading, error, data } = useQuery(['services'], () =>
+    makeRequest.get("/jobs/orderservices").then(res=>{
+        return res.data;
+    })
+    );
+  console.log(data);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserData({ ...userData, [name]: value });
@@ -211,7 +222,7 @@ const Order = (props) => {
         setSucc(null);
         e.preventDefault();
         try {
-            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/jobs/addjob", userData);
+            const response = await makeRequest.post("/jobs/addjob", userData);
             setSucc(response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
             const jobId = response.data[0].lastInserId;
@@ -517,7 +528,7 @@ const Task = () => {
         setErr(null);
         setSucc(null);
         try {
-            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/tasks/addtask", userData);
+            const response = await makeRequest.post("/tasks/addtask", userData);
             //console.log(response.data);
             setSucc(response.data[0].successmsg);
             console.log(response.data);
@@ -607,7 +618,7 @@ const Carving = (props) => {
         setErr(null);
         setSucc(null);
         try {
-            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/carvings/addcarving", userData);
+            const response = await makeRequest.post("/carvings/addcarving", userData);
             //console.log(response.data);
             setSucc(response.data);
             console.log(response);
@@ -801,12 +812,14 @@ const Status = () => {
         setSucc(null);
         e.preventDefault();
         try {
-            const response = await axios.put("https://amaronsoftware.com/monumanagerapi/api/jobs/updatejobstatus", userData);
+            const response = await makeRequest.put("/jobs/updatejobstatus", userData);
             //console.log(response.data);
             setSucc(response.data);
+            console.log(response.data);
         } catch (err) {
             setErr(err.response.data);
         }
+        
     }
 
 

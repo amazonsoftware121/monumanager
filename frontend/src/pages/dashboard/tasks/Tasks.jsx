@@ -12,12 +12,46 @@ const Tasks = () => {
         return res.data;
     })
     );
+    //const {...resData} = data;
 console.log(data);
 
   return (
-    <div className='customers'>
+    <div className='tasks'>
     <h3 className='text-center mt-5 text-uppercase'>Tasks</h3>
-   </div>
+    <table className="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Description</th>
+        <th>Notes</th>
+        <th>Due Date</th>
+        <th>Creation Time</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+{error ? "Something went wrong!" :  (isLoading
+  ? <div className='d-grid justify-content-center text-center'><ThreeDots 
+height="80" 
+width="80" 
+radius="9"
+color="#4fa94d" 
+ariaLabel="three-dots-loading"
+wrapperStyle={{}}
+wrapperClassName=""
+visible={true}
+ /></div>
+  : data.map((task) => <tr> 
+  <td> {task.id} </td>
+  <td>{task.description}</td>
+  <td>{task.notes}</td>
+  <td>{task.due_date}</td>
+  <td>{task.creation_time}</td>
+  <td> <button className='btn btn-success mx-3' onClick={""}><FaEdit /></button> </td>
+   </tr> ))}
+  </tbody>
+  </table>
+    </div>
  
   )
 }
