@@ -46,6 +46,7 @@ const Customer = (props) => {
         const { name, value } = e.target;
         /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
         setUserData({ ...userData, [name]: value });
+        
     };
 
     const handleOnChange = () => {
@@ -55,6 +56,8 @@ const Customer = (props) => {
         else {
             setOrder(false);
         }
+
+        
     }
 
     const handleClick = async (e) => {
@@ -63,8 +66,7 @@ const Customer = (props) => {
         e.preventDefault();
         try {
             const response = await makeRequest.post("/customers/addcustomer", userData);
-            //console.log(response.data);
-            setSucc(response.data[0].successmsg);
+            setSucc(response.data[0].customername + " " + response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
             const currcustomerId = response.data[0].lastInserId;
 
@@ -72,6 +74,7 @@ const Customer = (props) => {
         } catch (err) {
             setErr(err.response.data);
         }
+        console.log(userData);
     }
 
 
@@ -276,7 +279,7 @@ const Order = (props) => {
 
                                 <div className="rightContent">
                                     <div className="title">Customer Info</div>
-                                    {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `Name: ${userData.first_name}  ${userData.middle_name} ${userData.last_name}`}
+                                    {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `Name: ${userData.first_name}  ${!userData.middle_name ? "" : userData.middle_name} ${userData.last_name}`}
                                 </div>
                             </div>
 
@@ -288,7 +291,7 @@ const Order = (props) => {
 
                                 <div className="rightContent">
                                     <div className="title">Product Info</div>
-                                    {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `Name: ${userData.first_name}  ${userData.middle_name} ${userData.last_name}`}
+                                    {!userData.product_description  ? "" : userData.product_description }
                                 </div>
                             </div>
                         </div>

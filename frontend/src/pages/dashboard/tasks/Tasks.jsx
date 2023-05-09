@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { makeRequest } from '../../../axios';
 import { FaEdit } from 'react-icons/fa';
 import { ThreeDots } from  'react-loader-spinner'
+import Moment from 'react-moment';
 
 
 const Tasks = () => {
@@ -23,9 +24,8 @@ console.log(data);
       <tr>
         <th>Id</th>
         <th>Description</th>
-        <th>Notes</th>
-        <th>Due Date</th>
         <th>Creation Time</th>
+        <th>Due Date</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -44,9 +44,9 @@ visible={true}
   : data.map((task) => <tr> 
   <td> {task.id} </td>
   <td>{task.description}</td>
-  <td>{task.notes}</td>
-  <td>{task.due_date}</td>
-  <td>{task.creation_time}</td>
+  
+  <td><Moment Moment format="D MMM YYYY" withTitle>{task.creation_time}</Moment></td>
+  <td><Moment Moment format="D MMM YYYY" withTitle>{task.due_date}</Moment></td>
   <td> <button className='btn btn-success mx-3' onClick={""}><FaEdit /></button> </td>
    </tr> ))}
   </tbody>

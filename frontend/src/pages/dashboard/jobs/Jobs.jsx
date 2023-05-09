@@ -15,7 +15,7 @@ console.log(data);
 return (
   <div className='jobs'>
   <h3 className='text-center mt-5 text-uppercase'>Jobs</h3>
-  <table class="table table-striped">
+  <table className="table table-striped">
   <thead>
     <tr>
       <th>Id</th>
@@ -26,7 +26,7 @@ return (
   </thead>
   <tbody>
 {error ? "Something went wrong!" :  (isLoading
-? <div className='d-grid justify-content-center text-center'><ThreeDots 
+? <ThreeDots 
 height="80" 
 width="80" 
 radius="9"
@@ -35,7 +35,7 @@ ariaLabel="three-dots-loading"
 wrapperStyle={{}}
 wrapperClassName=""
 visible={true}
-/></div>
+/>
 : data.map((jobs) => <tr> 
 <td> {jobs.id} </td>
 <td>{jobs.status}</td>
