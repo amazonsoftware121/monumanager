@@ -338,17 +338,20 @@ const Product = () => {
     const { userData, setUserData } = useContext(StepperContext);
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
-    const [file, setFile] = useState(null);
+    const [productImage, setProductImage] = useState("");
+    //console.log(productImage, 342);
 
-    const handleFile = (e) => {
-        setFile(e.target.files[0]);
-    }
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
         setUserData({ ...userData, [name]: value });
     };
+
+    const handleFile = (e) => {
+        setProductImage(e.target.files[0]);
+    }
 
 /*    const upload = async () => {
         try {
@@ -362,31 +365,42 @@ const Product = () => {
     };
 */
     const { currentUser } = useContext(AuthContext);
-
     const queryClient = useQueryClient();
-
     const handleClick = async (e) => {
         setErr(null);
         setSucc(null);
         e.preventDefault();
-
+        
        // let imgUrl = "";
         // if (file) imgUrl = await upload()
 
         
+        const formData = new FormData();
+        formData.append('product_description', userData["product_description"]);
+        formData.append('product_color', userData["product_color"]);
+        formData.append('product_size', userData["product_size"]);
+        formData.append('product_qty_on_hand', userData["product_qty_on_hand"]);
+        formData.append('product_price', userData["product_price"]);
+        formData.append('product_options', userData["product_options"]);
+        formData.append('product_notes', userData["product_notes"]);
+        formData.append('product_image', productImage );
 
-        try {
-            //const formData = new FormData();
-            //formData.append("file", file);
-            console.log(userData);
-        const formdata = new FormData();
-        formdata.append('product_image', file);
-        setUserData({ ...userData, file })
-            const res = await makeRequest.post("/products/addproduct", userData);
-            return res.data;
+        console.log(formData);
+ 
+       /* try {
+                
+            
+      
+        
+        
+            const res = await makeRequest.post("/products/addproduct", formData);
+            setSucc([res]);
+            console.log(succ);
+            //return res.data;
+
         } catch (err) {
             console.log(err)
-        }
+        }*/
         /*try {
             const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/products/addproduct", userData);
             //console.log(response.data);
@@ -399,7 +413,7 @@ const Product = () => {
             setErr(err.response.data);
         }*/
     }
-
+   // console.log(userData);
    // console.log(file);
     return (
         <>
@@ -435,13 +449,13 @@ const Product = () => {
 
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["product_size"]} name="product_size" className="form-control" placeholder="Options" onChange={handleChange} required />
+                                            <input type="text" value={userData["product_size"] || ""} name="product_size" className="form-control" placeholder="Options" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Size </label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <input type="number" value={userData["product_qty_on_hand"]} name="product_qty_on_hand" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                            <input type="number" value={userData["product_qty_on_hand"] || ""} name="product_qty_on_hand" className="form-control" placeholder="phone" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Qty On Hand</label>
                                         </div>
 
@@ -449,7 +463,7 @@ const Product = () => {
                                     <div className='col-6'>
 
                                         <div className="form-floating mb-3">
-                                            <input type="number" value={userData["product_price"]} name="product_price" className="form-control" placeholder="email" onChange={handleChange} required />
+                                            <input type="number" value={userData["product_price"] || ""} name="product_price" className="form-control" placeholder="email" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Price</label>
                                         </div>
                                     </div>
