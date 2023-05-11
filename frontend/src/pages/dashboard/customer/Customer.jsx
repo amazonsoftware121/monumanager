@@ -384,23 +384,24 @@ const Product = () => {
         formData.append('product_options', userData["product_options"]);
         formData.append('product_notes', userData["product_notes"]);
         formData.append('product_image', productImage );
+        formData.append('currentjobid', userData["currentjobid"] );
 
-        console.log(formData);
+        //console.log(formData);
  
-       /* try {
+       try {
                 
             
       
         
         
             const res = await makeRequest.post("/products/addproduct", formData);
-            setSucc([res]);
+            setSucc(res.data);
             console.log(succ);
             //return res.data;
 
         } catch (err) {
             console.log(err)
-        }*/
+        }
         /*try {
             const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/products/addproduct", userData);
             //console.log(response.data);

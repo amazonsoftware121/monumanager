@@ -17,6 +17,7 @@ const Tasks = () => {
 console.log(data);
 
   return (
+    <>
     <div className='tasks'>
     <h3 className='text-center mt-5 text-uppercase'>Tasks</h3>
     <table className="table table-striped">
@@ -41,18 +42,20 @@ wrapperStyle={{}}
 wrapperClassName=""
 visible={true}
  /></div>
-  : data.map((task) => <tr> 
+  : data.map((task, key) => {
+  return (
+    <tr key={task.id}> 
+    
   <td> {task.id} </td>
   <td>{task.description}</td>
-  
-  <td><Moment Moment format="D MMM YYYY" withTitle>{task.creation_time}</Moment></td>
-  <td><Moment Moment format="D MMM YYYY" withTitle>{task.due_date}</Moment></td>
-  <td> <button className='btn btn-success mx-3' onClick={""}><FaEdit /></button> </td>
-   </tr> ))}
+  <td><Moment format="D MMM YYYY" withTitle>{task.creation_time}</Moment></td>
+  <td><Moment format="D MMM YYYY" withTitle>{task.due_date}</Moment></td>
+  <td> <button className='btn btn-success mx-3' ><FaEdit /></button> </td>
+   </tr>)} ))}
   </tbody>
   </table>
     </div>
- 
+    </>
   )
 }
 
