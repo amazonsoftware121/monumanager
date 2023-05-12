@@ -66,7 +66,7 @@ const Customer = (props) => {
         e.preventDefault();
         try {
             const response = await makeRequest.post("/customers/addcustomer", userData);
-            setSucc(response.data[0].customername + " " + response.data[0].successmsg);
+            setSucc( response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
             const currcustomerId = response.data[0].lastInserId;
 
