@@ -66,7 +66,8 @@ const Customer = (props) => {
         e.preventDefault();
         try {
             const response = await makeRequest.post("/customers/addcustomer", userData);
-            setSucc( response.data[0].successmsg);
+            const ccName = `${userData?.first_name} ${userData?.middle_name} ${userData?.last_name}`;
+            setSucc( ccName + " " + response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
             const currcustomerId = response.data[0].lastInserId;
 
@@ -159,7 +160,13 @@ const Customer = (props) => {
                     </div>
                     <div className='col-5'>
                         <div className='cardItem shadow p-3 mx-3'>
+
+
+
+
                             <div className='recentOrderWrapper'>
+
+                            { /*
                                 <div className='recentOrderButton'>
                                     <div className="form-check form-switch">
                                         <input onClick={toggleDisplay} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onChange={handleOnChange} />
@@ -178,6 +185,8 @@ const Customer = (props) => {
 
                                     </ul>
                                 </div> : ""}
+
+*/}
                                 <div className='addOrder mt-5'>
                                     {!userData["currentCustomerid"] ? "Please Enter customer info to add order." : <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button>}
 
@@ -187,6 +196,10 @@ const Customer = (props) => {
 
 
                             </div>
+
+
+
+
                         </div>
                     </div>
                 </div>
@@ -308,12 +321,12 @@ const Order = (props) => {
                         <h3>Services</h3>
 
                         <div className="serviceList">
-                            <ul>
+                           { /*<ul>
                                 <li><span><FaHome /></span> Task 1 </li>
                                 <li><span><FaHome /></span> Task 2 </li>
                                 <li><span><FaHome /></span> Task 3 </li>
                                 <li><span><FaHome /></span> Task 4 </li>
-                            </ul>
+                            </ul> */}
 
                         </div>
 
@@ -490,11 +503,11 @@ const Product = () => {
 
                             <div className='col-6'>
                                 <div className="mb-3">
-                                    <div className='text-center'>
+                                    <div className='text-center' htmlFor="product_image">
                                         <img src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' width={200} />
                                     </div>
                                     <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
-                                    <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleFile} />
+                                    <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleFile} required />
                                 </div>
                             </div>
 
@@ -973,6 +986,8 @@ const OrderServices = (props) => {
                 </div>
                 <div className='col-md-7'>
                     <div className='orderServicesList'>
+                      
+                      { /*
                         <ul>
                             <li>
                                 <span className='icon'><FaHome /></span> <span>Task A</span>
@@ -1018,6 +1033,8 @@ const OrderServices = (props) => {
                             </li>
 
                         </ul>
+*/}
+
                     </div>
                 </div>
             </div>

@@ -84,6 +84,10 @@ function App() {
                     element: <Job />
                 },
                 {
+                    path: "/dashboard/job/:id",
+                    element: "Hello job id"
+                },
+                {
                     path: "/dashboard/search",
                     element: <Search />
                 },
@@ -116,9 +120,10 @@ function App() {
 
 
     return (
-        <div>
-            <RouterProvider router={router} />
-
+        <div className='app'>
+            <div className=''>
+                <RouterProvider router={router} />
+            </div>
         </div>
     );
 }
