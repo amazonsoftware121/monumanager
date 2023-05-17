@@ -85,7 +85,7 @@ function App() {
                 },
                 {
                     path: "/dashboard/job/:id",
-                    element: "Hello job id"
+                    element: <Job />
                 },
                 {
                     path: "/dashboard/search",

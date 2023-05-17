@@ -1,8 +1,10 @@
 import React from 'react'
 import { useQuery } from 'react-query';
 import { makeRequest } from '../../../axios';
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit,FaTrash } from 'react-icons/fa';
 import { ThreeDots } from  'react-loader-spinner'
+import {navigator} from 'react-router-dom'
+import {Link, useNavigate } from 'react-router-dom';
 
 
 const Customers = () => {
@@ -13,6 +15,23 @@ const Customers = () => {
     })
     );
     console.log(data);
+
+    const navigate = useNavigate();
+    const handleEdit = async (e) => {
+      navigate("/dashboard/job");
+    }
+  
+    const handleDelete = async (id)=>{
+/*try {
+  
+  const response = await makeRequest.post("/jobs/addjob", userData);
+  setSucc(response.data[0].successmsg);
+    console.log(data);
+} catch (error) {
+  console.log(error);
+}*/
+    }
+
   return (
     <div className='customers'>
     <h3 className='text-center mt-5 text-uppercase'>Customers</h3>
@@ -43,7 +62,7 @@ visible={true}
   <td>{customer.first_name} {customer.middle_name} {customer.last_name}</td>
   <td>{customer.email}</td>
   <td>{customer.phone}</td>
-  <td> <button className='btn btn-success mx-3' onClick={""}><FaEdit /></button> </td>
+  <td> <Link to={`/dashboard/job/${customer.id}`}><FaEdit /></Link> <FaTrash color="red" onClick={()=>handleDelete(customer.id)}/>  </td>
    </tr> ))}
   </tbody>
   </table>
