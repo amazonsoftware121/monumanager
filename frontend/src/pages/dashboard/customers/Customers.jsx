@@ -1,71 +1,122 @@
 import React from 'react'
 import { useQuery } from 'react-query';
 import { makeRequest } from '../../../axios';
-import { FaEdit,FaTrash } from 'react-icons/fa';
-import { ThreeDots } from  'react-loader-spinner'
-import {navigator} from 'react-router-dom'
-import {Link, useNavigate } from 'react-router-dom';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import { ThreeDots } from 'react-loader-spinner'
+import { navigator } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
+import { Alert } from "react-bootstrap";
+import DeleteConfirmation from "../../../components/DeleteConfirmation";
+import { useState } from 'react';
+
 
 
 const Customers = () => {
 
-    const {isLoading, error, data } = useQuery(['customers'], () =>
-    makeRequest.get("/customers/getcustomers").then(res=>{
-        return res.data;
-    })
-    );
-    console.log(data);
+  const [id, setId] = useState(null);
+  const [displayConfirmationModal, setDisplayConfirmationModal] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(null);
+  const [customerMessage, setCustomerMessage] = useState(null);
+const [customerData, setCustomerData] = useState(null);
 
-    const navigate = useNavigate();
-    const handleEdit = async (e) => {
-      navigate("/dashboard/job");
+  const showDeleteModal = (customerName,id) => {
+    setId(id);
+    setCustomerMessage(null);
+      setDeleteMessage(`Are you sure you want to delete '${customerName}'?`);
+    setDisplayConfirmationModal(true);
+  };
+
+// Hide the modal
+const hideConfirmationModal = () => {
+  setDisplayConfirmationModal(false);
+};
+
+
+ // Handle the actual deletion of the item
+ const submitDelete = async (id) => {
+
+  try {
+    const response = await makeRequest.delete("/customers/deletecustomer/"+id);
+    makeRequest.get("/customers/getcustomers").then(res => {
+      setCustomerData(res.data);
+    });
+    customerMessage(`The fruit' was deleted successfully.`);
+
+
+
+    setDisplayConfirmationModal(false);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+
+
+
+  const { isLoading, error, data } = useQuery(['customers'], () =>
+    makeRequest.get("/customers/getcustomers").then(res => {
+      setCustomerData(res.data);
+      return res.data;
+    })
+  );
+  console.log(data);
+
+  const navigate = useNavigate();
+
+  const handleEdit = async (e) => {
+    navigate("/dashboard/job");
+  }
+
+  const handleDelete = async (id) => {
+
+    try {
+
+      const response = await makeRequest.delete("/customers/deletecustomer/"+id);
+      window.location.reload();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
-  
-    const handleDelete = async (id)=>{
-/*try {
-  
-  const response = await makeRequest.post("/jobs/addjob", userData);
-  setSucc(response.data[0].successmsg);
-    console.log(data);
-} catch (error) {
-  console.log(error);
-}*/
-    }
+  }
 
   return (
     <div className='customers'>
-    <h3 className='text-center mt-5 text-uppercase'>Customers</h3>
-    <table className="table table-striped">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-{error ? "Something went wrong!" :  (isLoading
-  ? <div className='d-grid justify-content-center text-center'><ThreeDots 
-height="80" 
-width="80" 
-radius="9"
-color="#4fa94d" 
-ariaLabel="three-dots-loading"
-wrapperStyle={{}}
-wrapperClassName=""
-visible={true}
- /></div>
-  : data.map((customer) => <tr> 
-  <td> {customer.id} </td>
-  <td>{customer.first_name} {customer.middle_name} {customer.last_name}</td>
-  <td>{customer.email}</td>
-  <td>{customer.phone}</td>
-  <td> <Link to={`/dashboard/job/${customer.id}`}><FaEdit /></Link> <FaTrash color="red" onClick={()=>handleDelete(customer.id)}/>  </td>
-   </tr> ))}
-  </tbody>
-  </table>
+      <h3 className='text-center mt-5 text-uppercase'>Customers</h3>
+      {customerMessage && <Alert variant="success">{customerMessage}</Alert>}
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {error ? "Something went wrong!" : (isLoading
+            ? <div className='d-grid justify-content-center text-center'><ThreeDots
+              height="80"
+              width="80"
+              radius="9"
+              color="#4fa94d"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            /></div>
+            : customerData.map((customer) => <tr>
+              <td> {customer.id} </td>
+              <td>{customer.first_name} {customer.middle_name} {customer.last_name}</td>
+              <td>{customer.email}</td>
+              <td>{customer.phone}</td>
+              <td> <Link title="Edit" to={`/dashboard/job/${customer.id}`}><FaEdit /></Link> <span title='Delete' class="iconBtn" onClick={() => showDeleteModal(`${customer.first_name} ${customer.middle_name} ${customer.last_name}`,customer.id)}><FaTrash color="red" /></span>   </td>
+            </tr>))}
+        </tbody>
+      </table>
+      <DeleteConfirmation showModal={displayConfirmationModal} confirmModal={submitDelete} hideModal={hideConfirmationModal} id={id} message={deleteMessage}  />
     </div>
   )
 }
