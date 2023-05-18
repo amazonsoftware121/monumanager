@@ -32,7 +32,7 @@ const Tasks = () => {
   return (
     <>
       <div className='tasks'>
-        <h3 className='text-center mt-5 text-uppercase'>Tasks</h3>
+        <h3 className='text-center mt-5 text-uppercase'>Tasks</h3> 
         <table className="table table-striped">
           <thead>
             <tr>
