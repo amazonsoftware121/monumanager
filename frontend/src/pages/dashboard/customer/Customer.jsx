@@ -19,7 +19,7 @@ const Customer = (props) => {
 
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
-    const [recentOrders, setRecentOrders] = useState([]);
+    const [recentOrders, setRecentOrders] = useState("");
 
 
     const [display, setDisplay] = useState("false");
@@ -27,7 +27,7 @@ const Customer = (props) => {
     const toggleDisplay = async () => {
 
         try {
-            const response = await makeRequest.get("/jobs/recentjobs");
+            const response = await makeRequest.post("/jobs/recentjobs", {"customerId": 42});
             setRecentOrders(response.data.data);
         } catch (err) {
             setErr(err.response.data);
@@ -39,6 +39,8 @@ const Customer = (props) => {
         else {
             setDisplay(false);
         }
+
+      
     }
 
 
@@ -66,7 +68,8 @@ const Customer = (props) => {
         e.preventDefault();
         try {
             const response = await makeRequest.post("/customers/addcustomer", userData);
-            setSucc( response.data[0].successmsg);
+            const ccName = `${userData?.first_name} ${!userData.middle_name ? "" : userData.middle_name} ${userData?.last_name}`;
+            setSucc( ccName + " " + response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
             const currcustomerId = response.data[0].lastInserId;
 
@@ -148,6 +151,8 @@ const Customer = (props) => {
                                     <Button btnDesign="btn btn-primary" btnText="Archive" onClick={handleClick} />
 
                                     <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
+
+                                    <Button btnDesign="btn btn-success" btnText="Add" btnType="submit" />
                                 </div>
 
                                 <p className='custResponse text-danger'> {err && err}</p>
@@ -159,7 +164,13 @@ const Customer = (props) => {
                     </div>
                     <div className='col-5'>
                         <div className='cardItem shadow p-3 mx-3'>
+
+
+
+
                             <div className='recentOrderWrapper'>
+
+                            
                                 <div className='recentOrderButton'>
                                     <div className="form-check form-switch">
                                         <input onClick={toggleDisplay} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onChange={handleOnChange} />
@@ -168,16 +179,21 @@ const Customer = (props) => {
                                 </div>
                                 {!display ? <div className='recentOrders'>
                                     <ul>
-                                        {recentOrders.map((item, index) => {
+
+
+
+                                        {recentOrders.length>0 ? recentOrders.map((item, index) => {
                                             return (
-                                                <li key={index}><span><FaHome /> {item.id} </span>{item.notes}</li>
+                                                <li key={index}><span><FaHome /> {item.id} </span>Status: {item.status}</li>
+                                                
                                             )
-                                        })}
+                                        }) : "No Order Found" }
 
 
 
                                     </ul>
                                 </div> : ""}
+
                                 <div className='addOrder mt-5'>
                                     {!userData["currentCustomerid"] ? "Please Enter customer info to add order." : <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button>}
 
@@ -187,6 +203,10 @@ const Customer = (props) => {
 
 
                             </div>
+
+
+
+
                         </div>
                     </div>
                 </div>
@@ -195,11 +215,6 @@ const Customer = (props) => {
 
         </>
     )
-
-
-
-
-
 }
 
 const Order = (props) => {
@@ -308,12 +323,12 @@ const Order = (props) => {
                         <h3>Services</h3>
 
                         <div className="serviceList">
-                            <ul>
+                           { /*<ul>
                                 <li><span><FaHome /></span> Task 1 </li>
                                 <li><span><FaHome /></span> Task 2 </li>
                                 <li><span><FaHome /></span> Task 3 </li>
                                 <li><span><FaHome /></span> Task 4 </li>
-                            </ul>
+                            </ul> */}
 
                         </div>
 
@@ -490,11 +505,11 @@ const Product = () => {
 
                             <div className='col-6'>
                                 <div className="mb-3">
-                                    <div className='text-center'>
+                                    <div className='text-center' htmlFor="product_image">
                                         <img src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' width={200} />
                                     </div>
                                     <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
-                                    <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleFile} />
+                                    <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleFile} required />
                                 </div>
                             </div>
 
@@ -567,7 +582,7 @@ const Task = () => {
 
 
                                 <div className="form-floating mb-3">
-                                    <textarea id='task_description' className="form-control" style={{ height: "400px" }} name='task_description' onChange={handleChange} value={userData["task_description"] || ""} placeholder='Task Description' />
+                                    <textarea id='task_description' className="form-control" style={{ height: "400px" }} name='task_description' onChange={handleChange} value={userData["task_description"] || ""} placeholder='Task Description' required />
                                     <label htmlFor="task_description">Task Description</label>
                                 </div>
                             </div>
@@ -586,10 +601,12 @@ const Task = () => {
                                     <input type='date' className='form-control' value={userData["task_due_date"] || ""} name='task_due_date' required onChange={handleChange} placeholder='Due Date' />
                                     <label htmlFor='floatingInput'>Due Date</label>
                                 </div>
-                                <div className='mb-3'>{err && err}
-                                    {succ && succ}
-                                </div>
+
                                 <button type='submit' className='btn btn-success'>Save</button>
+                                <div className='mb-3'>
+                                <p className='text-danger'><strong>{err && err}</strong></p>
+                                    <p className='text-success'><strong>{succ && succ} </strong></p>
+                                </div>
 
                             </div>
 
@@ -724,7 +741,7 @@ const Carving = (props) => {
                         </div>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={userData["car_middle_name"] || ""} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} required />
+                                <input type="text" value={userData["car_middle_name"] || ""} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
                                 <label htmlFor="floatingInput">Middlename</label>
                             </div>
                         </div>
@@ -756,17 +773,14 @@ const Carving = (props) => {
 
                     <div className='col-12'>
                         <div className="form-floating mb-3">
-                            <textarea name="car_notes" rows="4" value={userData["car_notes"] || ""} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} />
+                            <textarea name="car_notes" rows="4" value={userData["car_notes"] || ""} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} required />
                             <label htmlFor="floatingInput">My Beloved Love</label>
                         </div>
                     </div>
                     <input type='hidden' value={userData.currentjobid} name='car_job_id' />
 
 
-                    <strong>{err && err}</strong>
 
-
-                    <strong> {succ && succ} </strong>
 
                     <div className='buttonWrapper'>
 
@@ -775,7 +789,9 @@ const Carving = (props) => {
 
                         <button className='btn btn-primary'>Save</button>
 
+                        <p className='custResponse text-danger'><strong> {err && err}</strong></p>
 
+<p className='custResponse text-success'><strong>{succ && succ}</strong></p>
 
 
 
@@ -973,6 +989,8 @@ const OrderServices = (props) => {
                 </div>
                 <div className='col-md-7'>
                     <div className='orderServicesList'>
+                      
+                      { /*
                         <ul>
                             <li>
                                 <span className='icon'><FaHome /></span> <span>Task A</span>
@@ -1018,6 +1036,8 @@ const OrderServices = (props) => {
                             </li>
 
                         </ul>
+*/}
+
                     </div>
                 </div>
             </div>

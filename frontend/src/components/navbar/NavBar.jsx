@@ -2,8 +2,13 @@ import './navbar.scss';
 import logo from '../../logo__white.png'
 import { Link } from "react-router-dom";
 import { FaSearch } from 'react-icons/fa';
+import { useContext } from 'react';
+import { AuthContext } from "../../context/authContext";
 
 const NavBar = () => {
+
+    const {currentUser, logout} = useContext(AuthContext);
+
   return (
     <div className='adminNavBar'>
     <nav className="navbar navbar-expand-lg bg-dark">
@@ -50,9 +55,9 @@ const NavBar = () => {
                             <Link className="nav-link" to="/">Contact</Link>
                         </li>
                     </ul>
-
+<span className='currentUser'>{currentUser?.username}</span>
                     <div className="ms-4">
-                        <Link to="/login" className="btn custom-btn custom-border-btn smoothscroll">Logout</Link>
+                        <span onClick={logout} className="btn custom-btn custom-border-btn smoothscroll">Logout</span>
                     </div>
                 </div>
             </div>

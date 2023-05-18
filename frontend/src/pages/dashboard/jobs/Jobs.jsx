@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { makeRequest } from '../../../axios';
 import { FaEdit } from 'react-icons/fa';
 import { ThreeDots } from  'react-loader-spinner'
+import { Link } from 'react-router-dom';
 
 const Jobs = () => {
   const {isLoading, error, data } = useQuery(['jobs'], () =>
@@ -26,7 +27,7 @@ return (
   </thead>
   <tbody>
 {error ? "Something went wrong!" :  (isLoading
-? <ThreeDots 
+? <tr><td width="100%"><ThreeDots 
 height="80" 
 width="80" 
 radius="9"
@@ -34,15 +35,13 @@ color="#4fa94d"
 ariaLabel="three-dots-loading"
 wrapperStyle={{}}
 wrapperClassName=""
-visible={true}
-/>
-: data.map((jobs) => <tr> 
+visible={true} /></td></tr>
+: data.map((jobs) => <tr key={jobs.id}> 
 <td> {jobs.id} </td>
 <td>{jobs.status}</td>
 <td>{jobs.notes}</td>
-<td> <button className='btn btn-success mx-3' onClick={""}><FaEdit /></button> </td>
- </tr> ))}
-</tbody>
+<td> <button className='btn btn-success mx-3'><Link to={`/dashboard/job/${jobs.id}`}><FaEdit /></Link></button> </td>
+ </tr>))}</tbody>
 </table>
   </div>
 )

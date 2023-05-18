@@ -1,52 +1,72 @@
 import React from 'react'
 import { useQuery } from 'react-query';
 import { makeRequest } from '../../../axios';
-import { FaEdit } from 'react-icons/fa';
-import { ThreeDots } from  'react-loader-spinner'
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import { ThreeDots } from 'react-loader-spinner'
+import { navigator } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const Customers = () => {
 
-    const {isLoading, error, data } = useQuery(['customers'], () =>
-    makeRequest.get("/customers/getcustomers").then(res=>{
-        return res.data;
+  const { isLoading, error, data } = useQuery(['customers'], () =>
+    makeRequest.get("/customers/getcustomers").then(res => {
+      return res.data;
     })
-    );
-    console.log(data);
+  );
+  console.log(data);
+
+  const navigate = useNavigate();
+  const handleEdit = async (e) => {
+    navigate("/dashboard/job");
+  }
+
+  const handleDelete = async (id) => {
+
+    try {
+
+      const response = await makeRequest.delete("/customers/deletecustomer/"+id);
+      window.location.reload();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className='customers'>
-    <h3 className='text-center mt-5 text-uppercase'>Customers</h3>
-    <table className="table table-striped">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-{error ? "Something went wrong!" :  (isLoading
-  ? <div className='d-grid justify-content-center text-center'><ThreeDots 
-height="80" 
-width="80" 
-radius="9"
-color="#4fa94d" 
-ariaLabel="three-dots-loading"
-wrapperStyle={{}}
-wrapperClassName=""
-visible={true}
- /></div>
-  : data.map((customer) => <tr> 
-  <td> {customer.id} </td>
-  <td>{customer.first_name} {customer.middle_name} {customer.last_name}</td>
-  <td>{customer.email}</td>
-  <td>{customer.phone}</td>
-  <td> <button className='btn btn-success mx-3' onClick={""}><FaEdit /></button> </td>
-   </tr> ))}
-  </tbody>
-  </table>
+      <h3 className='text-center mt-5 text-uppercase'>Customers</h3>
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {error ? "Something went wrong!" : (isLoading
+            ? <div className='d-grid justify-content-center text-center'><ThreeDots
+              height="80"
+              width="80"
+              radius="9"
+              color="#4fa94d"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            /></div>
+            : data.map((customer) => <tr>
+              <td> {customer.id} </td>
+              <td>{customer.first_name} {customer.middle_name} {customer.last_name}</td>
+              <td>{customer.email}</td>
+              <td>{customer.phone}</td>
+              <td> <Link title="Edit" to={`/dashboard/job/${customer.id}`}><FaEdit /></Link> <span title='Delete' class="iconBtn" onClick={() => handleDelete(customer.id)}><FaTrash color="red" /></span>   </td>
+            </tr>))}
+        </tbody>
+      </table>
     </div>
   )
 }
