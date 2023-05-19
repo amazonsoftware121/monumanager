@@ -3,20 +3,71 @@ import { useQuery } from 'react-query';
 import { makeRequest } from '../../../axios';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { ThreeDots } from 'react-loader-spinner'
-import { navigator } from 'react-router-dom'
 import { Link, useNavigate } from 'react-router-dom';
+import { Alert } from "react-bootstrap";
+import DeleteConfirmation from "../../../components/DeleteConfirmation";
+import { useState } from 'react';
+
 
 
 const Customers = () => {
 
   const { isLoading, error, data } = useQuery(['customers'], () =>
     makeRequest.get("/customers/getcustomers").then(res => {
+      setCustomerData(res.data);
       return res.data;
     })
   );
+
+  const [id, setId] = useState(null);
+  const [displayConfirmationModal, setDisplayConfirmationModal] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(null);
+  const [customerMessage, setCustomerMessage] = useState(null);
+const [customerData, setCustomerData] = useState(data);
+
+
+
+  const showDeleteModal = (customerName,id) => {
+    setId(id);
+    setCustomerMessage(null);
+      setDeleteMessage(`Are you sure you want to delete '${customerName}'?`);
+    setDisplayConfirmationModal(true);
+  };
+
+// Hide the modal
+const hideConfirmationModal = () => {
+  setDisplayConfirmationModal(false);
+};
+
+
+ // Handle the actual deletion of the item
+ const submitDelete = async (id) => {
+
+  try {
+    const response = await makeRequest.delete("/customers/deletecustomer/"+id);
+    makeRequest.get("/customers/getcustomers").then(res => {
+      setCustomerData(res.data);
+    });
+    setCustomerMessage(`Customer was deleted successfully.`);
+
+
+
+    setDisplayConfirmationModal(false);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+
+
+
+  
   console.log(data);
 
   const navigate = useNavigate();
+
   const handleEdit = async (e) => {
     navigate("/dashboard/job");
   }
@@ -36,6 +87,7 @@ const Customers = () => {
   return (
     <div className='customers'>
       <h3 className='text-center mt-5 text-uppercase'>Customers</h3>
+      {customerMessage && <Alert variant="success">{customerMessage}</Alert>}
       <table className="table table-striped">
         <thead>
           <tr>
@@ -58,15 +110,16 @@ const Customers = () => {
               wrapperClassName=""
               visible={true}
             /></div>
-            : data.map((customer) => <tr>
+            : customerData.map((customer) => <tr key={customer.id}>
               <td> {customer.id} </td>
               <td>{customer.first_name} {customer.middle_name} {customer.last_name}</td>
               <td>{customer.email}</td>
               <td>{customer.phone}</td>
-              <td> <Link title="Edit" to={`/dashboard/job/${customer.id}`}><FaEdit /></Link> <span title='Delete' class="iconBtn" onClick={() => handleDelete(customer.id)}><FaTrash color="red" /></span>   </td>
+              <td> <Link title="Edit" to={`/dashboard/job/${customer.id}`}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(`${customer.first_name} ${!customer.middle_name ? "" : customer.middle_name} ${customer.last_name}`,customer.id)}><FaTrash color="red" /></span>   </td>
             </tr>))}
         </tbody>
       </table>
+      <DeleteConfirmation showModal={displayConfirmationModal} confirmModal={submitDelete} hideModal={hideConfirmationModal} id={id} message={deleteMessage}  />
     </div>
   )
 }
