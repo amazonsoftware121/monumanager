@@ -3,7 +3,6 @@ import { useQuery } from 'react-query';
 import { makeRequest } from '../../../axios';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { ThreeDots } from 'react-loader-spinner'
-import { navigator } from 'react-router-dom'
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert } from "react-bootstrap";
 import DeleteConfirmation from "../../../components/DeleteConfirmation";
@@ -13,11 +12,20 @@ import { useState } from 'react';
 
 const Customers = () => {
 
+  const { isLoading, error, data } = useQuery(['customers'], () =>
+    makeRequest.get("/customers/getcustomers").then(res => {
+      setCustomerData(res.data);
+      return res.data;
+    })
+  );
+
   const [id, setId] = useState(null);
   const [displayConfirmationModal, setDisplayConfirmationModal] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(null);
   const [customerMessage, setCustomerMessage] = useState(null);
-const [customerData, setCustomerData] = useState(null);
+const [customerData, setCustomerData] = useState(data);
+
+
 
   const showDeleteModal = (customerName,id) => {
     setId(id);
@@ -40,7 +48,7 @@ const hideConfirmationModal = () => {
     makeRequest.get("/customers/getcustomers").then(res => {
       setCustomerData(res.data);
     });
-    customerMessage(`The fruit' was deleted successfully.`);
+    setCustomerMessage(`Customer was deleted successfully.`);
 
 
 
@@ -55,12 +63,7 @@ const hideConfirmationModal = () => {
 
 
 
-  const { isLoading, error, data } = useQuery(['customers'], () =>
-    makeRequest.get("/customers/getcustomers").then(res => {
-      setCustomerData(res.data);
-      return res.data;
-    })
-  );
+  
   console.log(data);
 
   const navigate = useNavigate();
@@ -84,7 +87,7 @@ const hideConfirmationModal = () => {
   return (
     <div className='customers'>
       <h3 className='text-center mt-5 text-uppercase'>Customers</h3>
-      {customerMessage && <Alert variant="success">{customerMessage}</Alert>}
+      {customerMessage && <p className="text-center text-success"><strong>{customerMessage}</strong></p>}
       <table className="table table-striped">
         <thead>
           <tr>
@@ -107,12 +110,12 @@ const hideConfirmationModal = () => {
               wrapperClassName=""
               visible={true}
             /></div>
-            : customerData.map((customer) => <tr>
+            : customerData.map((customer) => <tr key={customer.id}>
               <td> {customer.id} </td>
               <td>{customer.first_name} {customer.middle_name} {customer.last_name}</td>
               <td>{customer.email}</td>
               <td>{customer.phone}</td>
-              <td> <Link title="Edit" to={`/dashboard/job/${customer.id}`}><FaEdit /></Link> <span title='Delete' class="iconBtn" onClick={() => showDeleteModal(`${customer.first_name} ${customer.middle_name} ${customer.last_name}`,customer.id)}><FaTrash color="red" /></span>   </td>
+              <td> <Link title="Edit" to={`/dashboard/job/${customer.id}`}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(`${customer.first_name} ${!customer.middle_name ? "" : customer.middle_name} ${customer.last_name}`,customer.id)}><FaTrash color="red" /></span>   </td>
             </tr>))}
         </tbody>
       </table>
