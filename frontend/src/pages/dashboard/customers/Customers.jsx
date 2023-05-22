@@ -87,7 +87,7 @@ const hideConfirmationModal = () => {
   return (
     <div className='customers'>
       <h3 className='text-center mt-5 text-uppercase'>Customers</h3>
-      {customerMessage && <Alert variant="success">{customerMessage}</Alert>}
+      {customerMessage && <p className="text-center text-success"><strong>{customerMessage}</strong></p>}
       <table className="table table-striped">
         <thead>
           <tr>

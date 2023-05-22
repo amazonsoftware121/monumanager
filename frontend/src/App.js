@@ -84,7 +84,7 @@ function App() {
                     element: <Job />
                 },
                 {
-                    path: "/dashboard/job/:id",
+                    path: "/dashboard/job/:customerId",
                     element: <Job />
                 },
                 {

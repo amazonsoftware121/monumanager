@@ -3,6 +3,7 @@ import { useState, useContext } from 'react';
 import { StepperContext } from '../../../context/StepperContext';
 import { FaHome, FaPlus } from 'react-icons/fa';
 import dummy from "../../../images/dummy.jpg";
+import { Link, useNavigate,navigate,useParams } from 'react-router-dom';
 import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 import Button from '../../../components/Button';
@@ -11,7 +12,7 @@ import { makeRequest } from '../../../axios';
 import { useMutation, useQueryClient } from "react-query";
 
 import { useQuery } from 'react-query';
-import { ThreeDots } from  'react-loader-spinner'
+import { ThreeDots } from 'react-loader-spinner'
 
 const Customer = (props) => {
     const { userData, setUserData } = useContext(StepperContext);
@@ -20,14 +21,15 @@ const Customer = (props) => {
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
     const [recentOrders, setRecentOrders] = useState("");
-
-
     const [display, setDisplay] = useState("false");
+const[urlCustomerId, setUrlCustomerId] = useState(null);
+    const navigate = useNavigate();
+    let { customerId } = useParams();
 
     const toggleDisplay = async () => {
 
         try {
-            const response = await makeRequest.post("/jobs/recentjobs", {"customerId": 42});
+            const response = await makeRequest.post("/jobs/recentjobs", { "customerId": customerId });
             setRecentOrders(response.data.data);
         } catch (err) {
             setErr(err.response.data);
@@ -40,7 +42,7 @@ const Customer = (props) => {
             setDisplay(false);
         }
 
-      
+
     }
 
 
@@ -48,7 +50,7 @@ const Customer = (props) => {
         const { name, value } = e.target;
         /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
         setUserData({ ...userData, [name]: value });
-        
+
     };
 
     const handleOnChange = () => {
@@ -59,7 +61,7 @@ const Customer = (props) => {
             setOrder(false);
         }
 
-        
+
     }
 
     const handleClick = async (e) => {
@@ -69,11 +71,13 @@ const Customer = (props) => {
         try {
             const response = await makeRequest.post("/customers/addcustomer", userData);
             const ccName = `${userData?.first_name} ${!userData.middle_name ? "" : userData.middle_name} ${userData?.last_name}`;
-            setSucc( ccName + " " + response.data[0].successmsg);
+            setSucc(ccName + " " + response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
             const currcustomerId = response.data[0].lastInserId;
-
+            setUrlCustomerId(currcustomerId);
             setUserData({ ...userData, ["currentCustomerid"]: currcustomerId });
+            navigate(`/dashboard/job/${currcustomerId}`);
+
         } catch (err) {
             setErr(err.response.data);
         }
@@ -130,13 +134,13 @@ const Customer = (props) => {
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="address" value={userData["address"] || " "} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange}  />
+                                            <textarea name="address" value={userData["address"] || " "} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Address</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="notes" rows="4" value={userData["notes"] || " "} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange}  />
+                                            <textarea name="notes" rows="4" value={userData["notes"] || " "} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Notes</label>
                                         </div>
                                     </div>
@@ -170,7 +174,7 @@ const Customer = (props) => {
 
                             <div className='recentOrderWrapper'>
 
-                            
+
                                 <div className='recentOrderButton'>
                                     <div className="form-check form-switch">
                                         <input onClick={toggleDisplay} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onChange={handleOnChange} />
@@ -182,12 +186,12 @@ const Customer = (props) => {
 
 
 
-                                        {recentOrders.length>0 ? recentOrders.map((item, index) => {
+                                        {recentOrders.length > 0 ? recentOrders.map((item, index) => {
                                             return (
                                                 <li key={index}><span><FaHome /> {item.id} </span>Status: {item.status}</li>
-                                                
+
                                             )
-                                        }) : "No Order Found" }
+                                        }) : "No Order Found"}
 
 
 
@@ -195,7 +199,7 @@ const Customer = (props) => {
                                 </div> : ""}
 
                                 <div className='addOrder mt-5'>
-                                    {!userData["currentCustomerid"] ? "Please Enter customer info to add order." : <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button>}
+                                    {customerId && <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button>}
 
                                 </div>
 
@@ -223,13 +227,14 @@ const Order = (props) => {
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
     const [jobid, setJobid] = useState(null);
+    let { customerId } = useParams();
 
-    const {isLoading, error, data } = useQuery(['services'], () =>
-    makeRequest.get("/jobs/orderservices").then(res=>{
-        return res.data;
-    })
+    const { isLoading, error, data } = useQuery(['services'], () =>
+        makeRequest.get("/jobs/orderservices").then(res => {
+            return res.data;
+        })
     );
-  console.log(data);
+    console.log(data);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -306,7 +311,7 @@ const Order = (props) => {
 
                                 <div className="rightContent">
                                     <div className="title">Product Info</div>
-                                    {!userData.product_description  ? "" : userData.product_description }
+                                    {!userData.product_description ? "" : userData.product_description}
                                 </div>
                             </div>
                         </div>
@@ -323,7 +328,7 @@ const Order = (props) => {
                         <h3>Services</h3>
 
                         <div className="serviceList">
-                           { /*<ul>
+                            { /*<ul>
                                 <li><span><FaHome /></span> Task 1 </li>
                                 <li><span><FaHome /></span> Task 2 </li>
                                 <li><span><FaHome /></span> Task 3 </li>
@@ -356,7 +361,7 @@ const Product = () => {
     const [productImage, setProductImage] = useState("");
     //console.log(productImage, 342);
 
-    
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -368,28 +373,28 @@ const Product = () => {
         setProductImage(e.target.files[0]);
     }
 
-/*    const upload = async () => {
-        try {
-            const formData = new FormData();
-            formData.append("file", file);
-            const res = await makeRequest.post("/upload", formData);
-            return res.data;
-        } catch (err) {
-            console.log(err)
-        }
-    };
-*/
+    /*    const upload = async () => {
+            try {
+                const formData = new FormData();
+                formData.append("file", file);
+                const res = await makeRequest.post("/upload", formData);
+                return res.data;
+            } catch (err) {
+                console.log(err)
+            }
+        };
+    */
     const { currentUser } = useContext(AuthContext);
     const queryClient = useQueryClient();
     const handleClick = async (e) => {
         setErr(null);
         setSucc(null);
         e.preventDefault();
-        
-       // let imgUrl = "";
+
+        // let imgUrl = "";
         // if (file) imgUrl = await upload()
 
-        
+
         const formData = new FormData();
         formData.append('product_description', userData["product_description"]);
         formData.append('product_color', userData["product_color"]);
@@ -398,17 +403,17 @@ const Product = () => {
         formData.append('product_price', userData["product_price"]);
         formData.append('product_options', userData["product_options"]);
         formData.append('product_notes', userData["product_notes"]);
-        formData.append('product_image', productImage );
-        formData.append('currentjobid', userData["currentjobid"] );
+        formData.append('product_image', productImage);
+        formData.append('currentjobid', userData["currentjobid"]);
 
         //console.log(formData);
- 
-       try {
-                
-            
-      
-        
-        
+
+        try {
+
+
+
+
+
             const res = await makeRequest.post("/products/addproduct", formData);
             setSucc(res.data);
             console.log(succ);
@@ -429,8 +434,8 @@ const Product = () => {
             setErr(err.response.data);
         }*/
     }
-   // console.log(userData);
-   // console.log(file);
+    // console.log(userData);
+    // console.log(file);
     return (
         <>
 
@@ -604,7 +609,7 @@ const Task = () => {
 
                                 <button type='submit' className='btn btn-success'>Save</button>
                                 <div className='mb-3'>
-                                <p className='text-danger'><strong>{err && err}</strong></p>
+                                    <p className='text-danger'><strong>{err && err}</strong></p>
                                     <p className='text-success'><strong>{succ && succ} </strong></p>
                                 </div>
 
@@ -791,7 +796,7 @@ const Carving = (props) => {
 
                         <p className='custResponse text-danger'><strong> {err && err}</strong></p>
 
-<p className='custResponse text-success'><strong>{succ && succ}</strong></p>
+                        <p className='custResponse text-success'><strong>{succ && succ}</strong></p>
 
 
 
@@ -853,7 +858,7 @@ const Status = () => {
         } catch (err) {
             setErr(err.response.data);
         }
-        
+
     }
 
 
@@ -989,8 +994,8 @@ const OrderServices = (props) => {
                 </div>
                 <div className='col-md-7'>
                     <div className='orderServicesList'>
-                      
-                      { /*
+
+                        { /*
                         <ul>
                             <li>
                                 <span className='icon'><FaHome /></span> <span>Task A</span>
