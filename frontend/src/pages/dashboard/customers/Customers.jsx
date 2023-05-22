@@ -115,7 +115,7 @@ const hideConfirmationModal = () => {
               <td>{customer.first_name} {customer.middle_name} {customer.last_name}</td>
               <td>{customer.email}</td>
               <td>{customer.phone}</td>
-              <td> <Link title="Edit" to={`/dashboard/job/${customer.id}`}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(`${customer.first_name} ${!customer.middle_name ? "" : customer.middle_name} ${customer.last_name}`,customer.id)}><FaTrash color="red" /></span>   </td>
+              <td> <Link title="Edit" to={`/dashboard/customer/${customer.id}`}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(`${customer.first_name} ${!customer.middle_name ? "" : customer.middle_name} ${customer.last_name}`,customer.id)}><FaTrash color="red" /></span>   </td>
             </tr>))}
         </tbody>
       </table>

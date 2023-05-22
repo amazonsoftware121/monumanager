@@ -22,6 +22,8 @@ import Products from "./pages/dashboard/products/Products";
 import Carvings from "./pages/dashboard/carvings/Carvings";
 import Tasks from "./pages/dashboard/tasks/Tasks";
 import { QueryClient, QueryClientProvider } from 'react-query'
+import AddCustomer from './pages/dashboard/customer/AddCustomer';
+import { CustomerDetails } from './pages/dashboard/customer/Customer';
 
 
 function App() {
@@ -80,11 +82,11 @@ function App() {
                     element: <Dashboard />
                 },
                 {
-                    path: "/dashboard/job",
+                    path: "/dashboard/customer/addcustomer",
                     element: <Job />
                 },
                 {
-                    path: "/dashboard/job/:customerId",
+                    path: "/dashboard/customer/:customerId",
                     element: <Job />
                 },
                 {

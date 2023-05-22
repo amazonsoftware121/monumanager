@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [value, onChange] = useState(new Date());
   const navigate = useNavigate();
   const handleClick = async (e) => {
-    navigate("/dashboard/job");
+    navigate("/dashboard/customer/addcustomer");
   }
 
 
