@@ -10,7 +10,8 @@ import NavBar from './components/navbar/NavBar';
 import LeftBar from './components/leftBar/LeftBar';
 import Home from './pages/home/Home';
 import Dashboard from './pages/dashboard/Dashboard';
-import Job from "../src/pages/dashboard/job/Job"
+import Job from "../src/pages/dashboard/job/Job";
+import { Order } from './pages/dashboard/customer/Customer';
 import Search from "../src/pages/dashboard/search/Search"
 import './style.scss';
 import { useContext } from 'react';
@@ -22,6 +23,8 @@ import Products from "./pages/dashboard/products/Products";
 import Carvings from "./pages/dashboard/carvings/Carvings";
 import Tasks from "./pages/dashboard/tasks/Tasks";
 import { QueryClient, QueryClientProvider } from 'react-query'
+import AddCustomer from './pages/dashboard/customer/AddCustomer';
+import { CustomerDetails } from './pages/dashboard/customer/Customer';
 
 
 function App() {
@@ -80,12 +83,16 @@ function App() {
                     element: <Dashboard />
                 },
                 {
-                    path: "/dashboard/job",
+                    path: "/dashboard/customer/addcustomer",
                     element: <Job />
                 },
                 {
-                    path: "/dashboard/job/:customerId",
+                    path: "/dashboard/customer/:customerId",
                     element: <Job />
+                },
+                {
+                    path: "/dashboard/order/:orderid",
+                    element: <Order />
                 },
                 {
                     path: "/dashboard/search",
