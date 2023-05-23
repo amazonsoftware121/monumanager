@@ -216,7 +216,7 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
 
                                         {recentOrders.length > 0 ? recentOrders.map((item, index) => {
                                             return (
-                                                <li key={index}><span><FaHome /> {item.id} </span>Status: {item.status}</li>
+                                                <li key={index}><span><FaHome /><Link to={`/dashboard/order/${item.id}`} >{item.notes}</Link>  </span>{item.status ? "Status:" + item.status : ""}</li>
 
                                             )
                                         }) : "No Order Found"}
@@ -258,22 +258,37 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
 
 const Order = (props) => {
 
-    const { userData, setUserData } = useContext(StepperContext);
+    //const { userData, setUserData } = useContext(StepperContext);
+
+    const [userData, setUserData] = useState("");
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
-    const [jobid, setJobid] = useState(null);
-    let { customerId } = useParams();
+    const [orderDetail, setOrderDetails] = useState("");
+    let { orderid } = useParams();
 
     const { isLoading, error, data } = useQuery(['services'], () =>
         makeRequest.get("/jobs/orderservices").then(res => {
             return res.data;
         })
     );
+
+
+    useEffect(() => {
+        makeRequest.get("/jobs/getorderdetails/"+orderid)
+    .then(res => {
+        const data = res.data[0];
+        setOrderDetails(data);
+    })
+     .catch(err => console.log(err));
+        },[]
+    );
+
+
     console.log(data);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUserData({ ...userData,"currentCustomerid": customerId , [name]: value });
+        setUserData({ ...userData,"currentCustomerid": orderid , [name]: value });
     };
     const handleClick = async (e) => {
         setErr(null);

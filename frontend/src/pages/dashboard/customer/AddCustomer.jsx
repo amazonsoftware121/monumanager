@@ -4,19 +4,15 @@ import { makeRequest } from '../../../axios';
 import Button from '../../../components/Button';
 const AddCustomer = () => {
 
-    const { customerData, setCustomerData } = useState({
-        first_name: "",
-        last_name: ""
-    });
+    const [customerData, setCustomerData ] = useState("");
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
-
+    const [singleCustomer, setSingleCustomer] = useState("");
     
 const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
         setCustomerData({ ...customerData, [name]: value });
 
     };
@@ -31,8 +27,12 @@ const navigate = useNavigate();
             setSucc(ccName + " " + response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
             const currcustomerId = response.data[0].lastInserId;
-            setCustomerData({ ...customerData, ["currentCustomerid"]: currcustomerId });
-            navigate(`/dashboard/customer/${currcustomerId}`);
+            makeRequest.get("/customers/getsinglecustomer/"+currcustomerId)
+    .then(res => {
+        const data = res.data[0];
+        setSingleCustomer(data);
+        navigate(`/dashboard/customer/${currcustomerId}`);
+    })
 
         } catch (err) {
             setErr(err.response.data);
@@ -53,7 +53,7 @@ const navigate = useNavigate();
                            <div className='row'>
                                <div className='col-4'>
                                    <div className="form-floating mb-3">
-                                       <input type="text" value={customerData["first_name"]} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} required />
+                                       <input type="text" value={customerData.first_name ? customerData.first_name : ""} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} required />
                                        <label htmlFor="floatingInput">Firstname</label>
                                    </div>
                                </div>
