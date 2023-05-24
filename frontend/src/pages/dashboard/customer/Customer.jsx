@@ -15,7 +15,7 @@ import { useQuery } from 'react-query';
 import { ThreeDots } from 'react-loader-spinner'
 import TopNav from '../../../components/TopNav';
 const Customer = (props) => {
-    const { userData, setUserData } = useContext(StepperContext);
+    const [userData, setUserData ] = useState("");
     const [order, setOrder] = useState(false);
 
     const [err, setErr] = useState(null);
@@ -24,19 +24,20 @@ const Customer = (props) => {
     const [display, setDisplay] = useState("false");
 const[urlCustomerId, setUrlCustomerId] = useState(null);
     const navigate = useNavigate();
-    const [singleCustomer, setSingleCustomer] = useState("");
+    
     let { customerId } = useParams();
 
     
     
     useEffect(() => {
+        if(customerId){
         makeRequest.get("/customers/getsinglecustomer/"+customerId)
     .then(res => {
         const data = res.data[0];
-        setSingleCustomer(data);
+        setUserData(data);
     })
      .catch(err => console.log(err));
-        },[]
+    }},[]
     );
 
 
@@ -95,7 +96,7 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
             makeRequest.get("/customers/getsinglecustomer/"+currcustomerId)
     .then(res => {
         const data = res.data[0];
-        setSingleCustomer(data);
+        setUserData(data);
         navigate(`/dashboard/customer/${currcustomerId}`);
     })
             
@@ -125,19 +126,19 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
                                 <div className='row'>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={customerId ? singleCustomer.first_name : userData["first_name"] || ""} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} required />
+                                            <input type="text" value={userData["first_name"] || ""} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Firstname</label>
                                         </div>
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={customerId ? singleCustomer.middle_name : userData["middle_name"] || ""} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
+                                            <input type="text" value={userData["middle_name"] || ""} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Middlename</label>
                                         </div>
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={customerId ? singleCustomer.last_name : userData["last_name"] || ""} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                            <input type="text" value={userData["last_name"] || ""} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Lastname</label>
                                         </div>
                                     </div>
@@ -146,14 +147,14 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={customerId ? singleCustomer.phone : userData["phone"] || ""} name="phone" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                            <input type="text" value={userData["phone"] || ""} name="phone" className="form-control" placeholder="phone" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Phone</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
 
                                         <div className="form-floating mb-3">
-                                            <input type="email" value={customerId ? singleCustomer.email : userData["email"] || ""} name="email" className="form-control" placeholder="email" onChange={handleChange} required disabled = {customerId && true} />
+                                            <input type="email" value={userData["email"] || ""} name="email" className="form-control" placeholder="email" onChange={handleChange} required disabled = {customerId && true} />
                                             <label htmlFor="floatingInput">Email</label>
                                         </div>
                                     </div>
@@ -162,13 +163,13 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="address" value={customerId ? singleCustomer.address : userData["address"] || " "} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
+                                            <textarea name="address" value={userData["address"] || " "} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Address</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="notes" rows="4" value={customerId ? singleCustomer.notes : userData["notes"] || " "} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                            <textarea name="notes" rows="4" value={userData["notes"] || " "} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Notes</label>
                                         </div>
                                     </div>
@@ -216,7 +217,7 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
 
                                         {recentOrders.length > 0 ? recentOrders.map((item, index) => {
                                             return (
-                                                <li key={index}><span><FaHome /><Link to={`/dashboard/order/${item.id}`} >{item.notes}</Link>  </span>{item.status ? "Status:" + item.status : ""}</li>
+                                                <li key={index}><FaHome /><Link to={`/dashboard/order/${item.id}`} >{item.notes}</Link>{item.status ? "Status:" + item.status : ""}</li>
 
                                             )
                                         }) : "No Order Found"}
@@ -227,7 +228,7 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
                                 </div> : ""}
 
                                 <div className='addOrder mt-5'>
-                                    {customerId && <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button>}
+                                    {customerId && <Link to={`/dashboard/customer/${customerId}/addorder`} className='btn btn-secondary'  > Add Order</Link>}
 
                                 </div>
 
@@ -265,6 +266,7 @@ const Order = (props) => {
     const [succ, setSucc] = useState(null);
     const [orderDetail, setOrderDetails] = useState("");
     let { orderid } = useParams();
+    let{customerId} = useParams();
 
     const { isLoading, error, data } = useQuery(['services'], () =>
         makeRequest.get("/jobs/orderservices").then(res => {
@@ -280,6 +282,15 @@ const Order = (props) => {
         setOrderDetails(data);
     })
      .catch(err => console.log(err));
+
+
+     makeRequest.get("/jobs/getorderdetails/"+orderid)
+     .then(res => {
+         const data = res.data[0];
+         setOrderDetails(data);
+     })
+      .catch(err => console.log(err));
+
         },[]
     );
 
@@ -288,7 +299,7 @@ const Order = (props) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUserData({ ...userData,"currentCustomerid": orderid , [name]: value });
+        setUserData({ ...userData,"currentCustomerid": customerId , [name]: value });
     };
     const handleClick = async (e) => {
         setErr(null);

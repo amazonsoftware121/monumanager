@@ -91,6 +91,10 @@ function App() {
                     element: <Job />
                 },
                 {
+                    path: "/dashboard/customer/:customerId/addorder",
+                    element: <Order />
+                },
+                {
                     path: "/dashboard/order/:orderid",
                     element: <Order />
                 },
