@@ -1303,7 +1303,7 @@
       }
   }
   .addService{
-      margin-top: 50px;
+      margin-left: 50px;
   }
 }
 
@@ -1406,4 +1406,12 @@ img{
 }
 .iconBtn{
   cursor: pointer;
+}
+.recentOrders ul li svg{
+  flex: none;
+}
+.recentOrders a{
+  color: #000;
+  font-weight: 500;
+  margin-left: 5px;
 }

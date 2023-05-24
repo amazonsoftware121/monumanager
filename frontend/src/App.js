@@ -11,7 +11,7 @@ import LeftBar from './components/leftBar/LeftBar';
 import Home from './pages/home/Home';
 import Dashboard from './pages/dashboard/Dashboard';
 import Job from "../src/pages/dashboard/job/Job";
-import { Order } from './pages/dashboard/customer/Customer';
+import { Carving, Customer, Order, OrderServices, Product, Status, Task } from './pages/dashboard/customer/Customer';
 import Search from "../src/pages/dashboard/search/Search"
 import './style.scss';
 import { useContext } from 'react';
@@ -84,15 +84,40 @@ function App() {
                 },
                 {
                     path: "/dashboard/customer/addcustomer",
-                    element: <Job />
+                    element: <Customer />
                 },
                 {
                     path: "/dashboard/customer/:customerId",
-                    element: <Job />
+                    element: <Customer />
                 },
                 {
-                    path: "/dashboard/order/:orderid",
+                    path: "/dashboard/customer/:customerId/addorder",
                     element: <Order />
+                },
+                
+                {
+                    path: "/dashboard/customer/:customerId/order/:orderid",
+                    element: <Order />
+                },
+                {
+                    path: "/dashboard/customer/:customerId/order/:orderid/orderservices",
+                    element: <OrderServices />
+                },
+                {
+                    path: "/dashboard/customer/:customerId/order/:orderid/addtask",
+                    element: <Task />
+                },
+                {
+                    path: "/dashboard/customer/:customerId/order/:orderid/addcarving",
+                    element: <Carving />
+                },
+                {
+                    path: "/dashboard/customer/:customerId/order/:orderid/addproduct",
+                    element: <Product />
+                },
+                {
+                    path: "/dashboard/customer/:customerId/order/:orderid/status",
+                    element: <Status />
                 },
                 {
                     path: "/dashboard/search",

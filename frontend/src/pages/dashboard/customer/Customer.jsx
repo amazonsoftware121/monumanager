@@ -3,7 +3,7 @@ import { useState, useContext, useEffect } from 'react';
 import { StepperContext } from '../../../context/StepperContext';
 import { FaHome, FaPlus } from 'react-icons/fa';
 import dummy from "../../../images/dummy.jpg";
-import { Link, useNavigate,navigate,useParams } from 'react-router-dom';
+import { Link, useNavigate,useParams } from 'react-router-dom';
 import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 import Button from '../../../components/Button';
@@ -15,7 +15,7 @@ import { useQuery } from 'react-query';
 import { ThreeDots } from 'react-loader-spinner'
 import TopNav from '../../../components/TopNav';
 const Customer = (props) => {
-    const { userData, setUserData } = useContext(StepperContext);
+    const [userData, setUserData ] = useState("");
     const [order, setOrder] = useState(false);
 
     const [err, setErr] = useState(null);
@@ -24,19 +24,20 @@ const Customer = (props) => {
     const [display, setDisplay] = useState("false");
 const[urlCustomerId, setUrlCustomerId] = useState(null);
     const navigate = useNavigate();
-    const [singleCustomer, setSingleCustomer] = useState("");
+    
     let { customerId } = useParams();
 
     
     
     useEffect(() => {
+        if(customerId){
         makeRequest.get("/customers/getsinglecustomer/"+customerId)
     .then(res => {
         const data = res.data[0];
-        setSingleCustomer(data);
+        setUserData(data);
     })
      .catch(err => console.log(err));
-        },[]
+    }},[]
     );
 
 
@@ -95,7 +96,7 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
             makeRequest.get("/customers/getsinglecustomer/"+currcustomerId)
     .then(res => {
         const data = res.data[0];
-        setSingleCustomer(data);
+        setUserData(data);
         navigate(`/dashboard/customer/${currcustomerId}`);
     })
             
@@ -116,7 +117,7 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
         <>
 
             <div className='customer'>
-           
+           {customerId ? <TopNav prevStep={`/dashboard/customers`} /> : <TopNav prevStep={`/dashboard`} />}
                 <h2 className='text-center my-3'>Customer</h2>
                 <div className='row'>
                     <div className='col-7'>
@@ -125,19 +126,19 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
                                 <div className='row'>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={customerId ? singleCustomer.first_name : userData["first_name"] || ""} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} required />
+                                            <input type="text" value={userData["first_name"] || ""} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Firstname</label>
                                         </div>
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={customerId ? singleCustomer.middle_name : userData["middle_name"] || ""} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
+                                            <input type="text" value={userData["middle_name"] || ""} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Middlename</label>
                                         </div>
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={customerId ? singleCustomer.last_name : userData["last_name"] || ""} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                            <input type="text" value={userData["last_name"] || ""} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Lastname</label>
                                         </div>
                                     </div>
@@ -146,14 +147,14 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={customerId ? singleCustomer.phone : userData["phone"] || ""} name="phone" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                            <input type="text" value={userData["phone"] || ""} name="phone" className="form-control" placeholder="phone" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Phone</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
 
                                         <div className="form-floating mb-3">
-                                            <input type="email" value={customerId ? singleCustomer.email : userData["email"] || ""} name="email" className="form-control" placeholder="email" onChange={handleChange} required disabled = {customerId && true} />
+                                            <input type="email" value={userData["email"] || ""} name="email" className="form-control" placeholder="email" onChange={handleChange} required disabled = {customerId && true} />
                                             <label htmlFor="floatingInput">Email</label>
                                         </div>
                                     </div>
@@ -162,13 +163,13 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="address" value={customerId ? singleCustomer.address : userData["address"] || " "} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
+                                            <textarea name="address" value={userData["address"] || " "} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Address</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="notes" rows="4" value={customerId ? singleCustomer.notes : userData["notes"] || " "} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                            <textarea name="notes" rows="4" value={userData["notes"] || " "} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Notes</label>
                                         </div>
                                     </div>
@@ -216,7 +217,7 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
 
                                         {recentOrders.length > 0 ? recentOrders.map((item, index) => {
                                             return (
-                                                <li key={index}><span><FaHome /><Link to={`/dashboard/order/${item.id}`} >{item.notes}</Link>  </span>{item.status ? "Status:" + item.status : ""}</li>
+                                                <li key={index}><FaHome /><Link to={`/dashboard/customer/${customerId}/order/${item.id}`} >{item.notes}</Link>{item.status ?  "Status:" + item.status : ""}</li>
 
                                             )
                                         }) : "No Order Found"}
@@ -227,7 +228,7 @@ const[urlCustomerId, setUrlCustomerId] = useState(null);
                                 </div> : ""}
 
                                 <div className='addOrder mt-5'>
-                                    {customerId && <button onClick={() => props.showOrder(2)} className='btn btn-secondary'  > Add Order</button>}
+                                    {customerId && <Link to={`/dashboard/customer/${customerId}/addorder`} className='btn btn-secondary'  > Add Order</Link>}
 
                                 </div>
 
@@ -265,41 +266,65 @@ const Order = (props) => {
     const [succ, setSucc] = useState(null);
     const [orderDetail, setOrderDetails] = useState("");
     let { orderid } = useParams();
+    let{customerId} = useParams();
+    const navigate = useNavigate();
 
-    const { isLoading, error, data } = useQuery(['services'], () =>
+/*    const { isLoading, error, data } = useQuery(['services'], () =>
         makeRequest.get("/jobs/orderservices").then(res => {
             return res.data;
         })
     );
+*/
+
+
+
+
 
 
     useEffect(() => {
-        makeRequest.get("/jobs/getorderdetails/"+orderid)
+       if(orderid) {
+        makeRequest.get("/jobs/getjob/"+orderid)
     .then(res => {
         const data = res.data[0];
         setOrderDetails(data);
     })
      .catch(err => console.log(err));
-        },[]
+
+    }
+    makeRequest.get("/customers/getsinglecustomer/"+customerId)
+    .then(res => {
+        const data = res.data[0];
+        setUserData(data);
+    })
+     .catch(err => console.log(err));
+}
+    ,[]
     );
 
 
-    console.log(data);
+    console.log(orderDetail);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUserData({ ...userData,"currentCustomerid": orderid , [name]: value });
+        setUserData({ ...userData,"currentCustomerid": customerId , [name]: value });
     };
+
     const handleClick = async (e) => {
         setErr(null);
         setSucc(null);
         e.preventDefault();
         try {
+            if(!orderid){
             const response = await makeRequest.post("/jobs/addjob", userData);
             setSucc(response.data[0].successmsg);
             console.log(response.data[0].lastInserId);
             const jobId = response.data[0].lastInserId;
             setUserData({ ...userData, ["currentjobid"]: jobId });
+            navigate(`/dashboard/customer/${customerId}/order/${jobId}`);
+            }
+            else{
+
+            }
         } catch (err) {
             setErr(err.response.data);
         }
@@ -307,6 +332,7 @@ const Order = (props) => {
     return (
         <>
             <div className="order">
+            <TopNav prevStep={`/dashboard/customer/${customerId}`} />
                 <h2 className='text-center my-3'>Order</h2>
 
                 <div className="row">
@@ -315,12 +341,12 @@ const Order = (props) => {
 
                             <div className=''>
                                 <div className="form-floating mb-3">
-                                    <textarea value={userData["order_notes"]} name="order_notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                    <textarea value={orderDetail.notes} name="order_notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                     <label htmlFor="floatingInput">Order Description</label>
                                 </div>
                             </div>
 
-                            <input type='hidden' value={userData.currentCustomerid} name='order_customer_id' />
+                            
 
 
                             {/*<div className='col-6'>
@@ -332,7 +358,12 @@ const Order = (props) => {
                             </div>*/}
 
 
-                            <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
+<div className='d-flex justify-content-between'> <div><Button btnDesign="btn btn-success" btnText="Save" btnType="submit" /> </div> <div className="addService">
+{orderid  && <button className="btn btn-secondary" onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`)}> <FaPlus /> Add Service</button> }
+                        </div>
+                        
+                        
+                        </div>                            
                             <p className='custResponse text-danger'> {err && err}</p>
 
                             <p className='custResponse text-success'>{succ && succ}</p>
@@ -349,7 +380,7 @@ const Order = (props) => {
 
                                 <div className="rightContent">
                                     <div className="title">Customer Info</div>
-                                    {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `Name: ${userData.first_name}  ${!userData.middle_name ? "" : userData.middle_name} ${userData.last_name}`}
+                                    {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `${userData.first_name}  ${!userData.middle_name ? "" : userData.middle_name} ${userData.last_name}`}
                                 </div>
                             </div>
 
@@ -367,16 +398,15 @@ const Order = (props) => {
                         </div>
 
 
-                        <div className="addService float-end">
-                            <button className="btn btn-secondary" onClick={() => props.showOrder(4)}> <FaPlus /> Add Service</button>
-                        </div>
+                      
 
 
                     </div>
 
                     <div className="col-4 px-5">
-                        <h3>Services</h3>
 
+                        <h3>Services</h3>
+                        
                         <div className="serviceList">
                             { /*<ul>
                                 <li><span><FaHome /></span> Task 1 </li>
@@ -387,11 +417,11 @@ const Order = (props) => {
 
                         </div>
 
-                        <button className="btn btn-success" onClick={() => props.showOrder(3)}  > Status </button>
+                       {orderid ? <div><button className="btn btn-success" onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/status`)}  > Status </button> <p className='mt-3'><strong>Order Status: </strong> {orderDetail.status ? `${orderDetail.status}` : "Status: Not Updated"} </p></div> : "" }
 
 
 
-
+                    
 
 
                     </div>
@@ -405,10 +435,11 @@ const Order = (props) => {
 }
 
 const Product = () => {
-    const { userData, setUserData } = useContext(StepperContext);
+    const [productData, setProductData ] = useState("");
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
     const [productImage, setProductImage] = useState("");
+const {customerId, orderid } = useParams();
     //console.log(productImage, 342);
 
 
@@ -416,7 +447,7 @@ const Product = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
-        setUserData({ ...userData, [name]: value });
+        setProductData({ ...productData, [name]: value });
     };
 
     const handleFile = (e) => {
@@ -446,15 +477,15 @@ const Product = () => {
 
 
         const formData = new FormData();
-        formData.append('product_description', userData["product_description"]);
-        formData.append('product_color', userData["product_color"]);
-        formData.append('product_size', userData["product_size"]);
-        formData.append('product_qty_on_hand', userData["product_qty_on_hand"]);
-        formData.append('product_price', userData["product_price"]);
-        formData.append('product_options', userData["product_options"]);
-        formData.append('product_notes', userData["product_notes"]);
+        formData.append('product_description', productData["product_description"]);
+        formData.append('product_color', productData["product_color"]);
+        formData.append('product_size', productData["product_size"]);
+        formData.append('product_qty_on_hand', productData["product_qty_on_hand"]);
+        formData.append('product_price', productData["product_price"]);
+        formData.append('product_options', productData["product_options"]);
+        formData.append('product_notes', productData["product_notes"]);
         formData.append('product_image', productImage);
-        formData.append('currentjobid', userData["currentjobid"]);
+        formData.append('currentjobid', productData["currentjobid"]);
 
         //console.log(formData);
 
@@ -464,7 +495,7 @@ const Product = () => {
 
 
 
-            const res = await makeRequest.post("/products/addproduct", formData);
+            const res = await makeRequest.post(`/products/addproduct/${orderid}`, formData);
             setSucc(res.data);
             console.log(succ);
             //return res.data;
@@ -473,23 +504,24 @@ const Product = () => {
             console.log(err)
         }
         /*try {
-            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/products/addproduct", userData);
+            const response = await axios.post("https://amaronsoftware.com/monumanagerapi/api/products/addproduct", productData);
             //console.log(response.data);
             setSucc(response.data[0].successmsg);
             console.log(response.data);
             //const currcustomerId = response.data[0].lastInserId;
 
-            //setUserData({ ...userData, ["currentCustomerid"]: currcustomerId });
+            //productserData({ ...productData, ["currentCustomerid"]: currcustomerId });
         } catch (err) {
             setErr(err.response.data);
         }*/
     }
-    // console.log(userData);
+    // console.log(productData);
     // console.log(file);
     return (
         <>
 
             <div className='customer'>
+            <TopNav prevStep={`/dashboard/customer/${customerId}/order/${orderid}/orderservices`} />
                 <h2 className='text-center my-3'>Product</h2>
 
                 <div className='cardItem shadow p-3 mx-3'>
@@ -497,7 +529,7 @@ const Product = () => {
                         <div className='row'>
                             <div className='col-6'>
                                 <div className="form-floating mb-3">
-                                    <textarea type="text" rows="4" value={userData["product_description"] || ""} style={{ height: "112px" }} name="product_description" className="form-control" placeholder="Description" onChange={handleChange} required />
+                                    <textarea type="text" rows="4" value={productData["product_description"] || ""} style={{ height: "112px" }} name="product_description" className="form-control" placeholder="Description" onChange={handleChange} required />
                                     <label htmlFor="floatingInput">Description</label>
                                 </div>
                             </div>
@@ -508,9 +540,9 @@ const Product = () => {
 
                                             <select className="form-select form-control" aria-label="Default select example" name='product_color' onChange={handleChange}>
                                                 <option defaultValue={"Color"}>Color</option>
-                                                <option value={userData["product_color"]} >Red</option>
-                                                <option value={userData["product_color"]}>Black</option>
-                                                <option value={userData["product_color"]}>Gray</option>
+                                                <option value={productData["product_color"]} >Red</option>
+                                                <option value={productData["product_color"]}>Black</option>
+                                                <option value={productData["product_color"]}>Gray</option>
                                             </select>
                                         </div>
 
@@ -520,13 +552,13 @@ const Product = () => {
 
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["product_size"] || ""} name="product_size" className="form-control" placeholder="Options" onChange={handleChange} required />
+                                            <input type="text" value={productData["product_size"] || ""} name="product_size" className="form-control" placeholder="Options" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Size </label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <input type="number" value={userData["product_qty_on_hand"] || ""} name="product_qty_on_hand" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                            <input type="number" value={productData["product_qty_on_hand"] || ""} name="product_qty_on_hand" className="form-control" placeholder="phone" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Qty On Hand</label>
                                         </div>
 
@@ -534,7 +566,7 @@ const Product = () => {
                                     <div className='col-6'>
 
                                         <div className="form-floating mb-3">
-                                            <input type="number" value={userData["product_price"] || ""} name="product_price" className="form-control" placeholder="email" onChange={handleChange} required />
+                                            <input type="number" value={productData["product_price"] || ""} name="product_price" className="form-control" placeholder="email" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Price</label>
                                         </div>
                                     </div>
@@ -545,11 +577,11 @@ const Product = () => {
                         <div className='row'>
                             <div className='col-6'>
                                 <div className="form-floating mb-3">
-                                    <textarea value={userData["product_options"]} style={{ height: "100px" }} name="product_options" className="form-control" placeholder="Options" onChange={handleChange} required />
+                                    <textarea value={productData["product_options"]} style={{ height: "100px" }} name="product_options" className="form-control" placeholder="Options" onChange={handleChange} required />
                                     <label htmlFor="floatingInput">Options</label>
                                 </div>
                                 <div className="form-floating mb-3">
-                                    <textarea name="product_notes" rows="4" value={userData["product_notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                    <textarea name="product_notes" rows="4" value={productData["product_notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                     <label htmlFor="floatingInput">Notes</label>
                                 </div>
 
@@ -601,22 +633,23 @@ const Product = () => {
 }
 
 const Task = () => {
-    const { userData, setUserData } = useContext(StepperContext);
+    const [taskData, setTaskData ] = useState("");
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
-
+const navigate = useNavigate();
+const {orderid, customerId} = useParams();
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUserData({ ...userData, [name]: value });
+        setTaskData({ ...taskData, [name]: value });
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(userData);
+        console.log(taskData);
         setErr(null);
         setSucc(null);
         try {
-            const response = await makeRequest.post("/tasks/addtask", userData);
+            const response = await makeRequest.post(`/tasks/addtask/${orderid}`, taskData);
             //console.log(response.data);
             setSucc(response.data[0].successmsg);
             console.log(response.data);
@@ -627,6 +660,7 @@ const Task = () => {
 
     return (
         <div className='task'>
+         <TopNav prevStep={`/dashboard/customer/${customerId}/order/${orderid}/orderservices`} />
             <h2 className='text-center my-3'>Task</h2>
             <div className='mainDiv'>
                 <div className="mainWrapper">
@@ -637,23 +671,23 @@ const Task = () => {
 
 
                                 <div className="form-floating mb-3">
-                                    <textarea id='task_description' className="form-control" style={{ height: "400px" }} name='task_description' onChange={handleChange} value={userData["task_description"] || ""} placeholder='Task Description' required />
+                                    <textarea id='task_description' className="form-control" style={{ height: "400px" }} name='task_description' onChange={handleChange} value={taskData["task_description"] || ""} placeholder='Task Description' required />
                                     <label htmlFor="task_description">Task Description</label>
                                 </div>
                             </div>
                             <div className='col-4'>
                                 <div className='form-floating mb-3'>
-                                    <input id='task_notes' type='text' className='form-control' value={userData["task_notes"] || ""} name='task_notes' required onChange={handleChange} placeholder="Here's Something" />
+                                    <input id='task_notes' type='text' className='form-control' value={taskData["task_notes"] || ""} name='task_notes' required onChange={handleChange} placeholder="Here's Something" />
                                     <label htmlFor="task_notes">Here's Something</label>
                                 </div>
 
                                 <div className='form-floating mb-3'>
-                                    <input type='date' className='form-control' value={userData["task_creation_date"] || ""} name='task_creation_date' required onChange={handleChange} placeholder='Creation Date' />
+                                    <input type='date' className='form-control' value={taskData["task_creation_date"] || ""} name='task_creation_date' required onChange={handleChange} placeholder='Creation Date' />
                                     <label htmlFor='floatingInput'>Creation Date</label>
                                 </div>
 
                                 <div className='form-floating mb-3'>
-                                    <input type='date' className='form-control' value={userData["task_due_date"] || ""} name='task_due_date' required onChange={handleChange} placeholder='Due Date' />
+                                    <input type='date' className='form-control' value={taskData["task_due_date"] || ""} name='task_due_date' required onChange={handleChange} placeholder='Due Date' />
                                     <label htmlFor='floatingInput'>Due Date</label>
                                 </div>
 
@@ -693,22 +727,23 @@ const CarvingType = () => {
 
 
 const Carving = (props) => {
-    const { userData, setUserData } = useContext(StepperContext);
+    const [carvingData, setCarvingData ] = useState("");
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
+    const {customerId,orderid} = useParams();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUserData({ ...userData, [name]: value });
+        setCarvingData({ ...carvingData, [name]: value });
     };
 
     const handleClick = async (e) => {
         e.preventDefault();
-        console.log(userData);
+        console.log(carvingData);
         setErr(null);
         setSucc(null);
         try {
-            const response = await makeRequest.post("/carvings/addcarving", userData);
+            const response = await makeRequest.post(`/carvings/addcarving/${orderid}`, carvingData);
             //console.log(response.data);
             setSucc(response.data);
             console.log(response);
@@ -718,7 +753,8 @@ const Carving = (props) => {
     }
     //    console.log(inputs)
     return (
-        <div className='carving' style={{ maxWidth: "1000px", margin: "0 auto" }}>
+        <div className='carving' style={{ margin: "0 auto" }}>
+         <TopNav prevStep={`/dashboard/customer/${customerId}/order/${orderid}/orderservices`} />
             <h2 className='text-center my-3'>Carving</h2>
 
 
@@ -790,19 +826,19 @@ const Carving = (props) => {
                     <div className='row'>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={userData["car_first_name"] || ""} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange} required />
+                                <input type="text" value={carvingData["car_first_name"] || ""} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">First Name</label>
                             </div>
                         </div>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={userData["car_middle_name"] || ""} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
+                                <input type="text" value={carvingData["car_middle_name"] || ""} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
                                 <label htmlFor="floatingInput">Middlename</label>
                             </div>
                         </div>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={userData["car_last_name"] || ""} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                <input type="text" value={carvingData["car_last_name"] || ""} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">Lastname</label>
                             </div>
                         </div>
@@ -811,14 +847,14 @@ const Carving = (props) => {
                     <div className='row'>
                         <div className='col-6'>
                             <div className="form-floating mb-3">
-                                <input type="date" value={userData["car_birth_date"] || ""} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                <input type="date" value={carvingData["car_birth_date"] || ""} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">Birth Date</label>
                             </div>
                         </div>
                         <div className='col-6'>
 
                             <div className="form-floating mb-3">
-                                <input type="date" value={userData["car_passing_date"] || ""} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange} required />
+                                <input type="date" value={carvingData["car_passing_date"] || ""} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange} required />
                                 <label htmlFor="floatingInput">Passing Date</label>
                             </div>
                         </div>
@@ -828,11 +864,11 @@ const Carving = (props) => {
 
                     <div className='col-12'>
                         <div className="form-floating mb-3">
-                            <textarea name="car_notes" rows="4" value={userData["car_notes"] || ""} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} required />
+                            <textarea name="car_notes" rows="4" value={carvingData["car_notes"] || ""} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} required />
                             <label htmlFor="floatingInput">My Beloved Love</label>
                         </div>
                     </div>
-                    <input type='hidden' value={userData.currentjobid} name='car_job_id' />
+                    <input type='hidden' value={carvingData.currentjobid} name='car_job_id' />
 
 
 
@@ -860,9 +896,12 @@ const Carving = (props) => {
 }
 
 const Status = () => {
-    const { userData, setUserData } = useContext(StepperContext);
+
+    const [userData, setUserData] = useState("");
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
+    const {orderid} = useParams();
+    const {customerId} = useParams();
     const handleChange = (e) => {
         console.log(e)
         const { name, value } = e.target;
@@ -901,7 +940,7 @@ const Status = () => {
         setSucc(null);
         e.preventDefault();
         try {
-            const response = await makeRequest.put("/jobs/updatejobstatus", userData);
+            const response = await makeRequest.put(`/jobs/updatejobstatus/${orderid}`, userData);
             //console.log(response.data);
             setSucc(response.data);
             console.log(response.data);
@@ -917,6 +956,7 @@ const Status = () => {
     return (
         <>
             <div className='status'>
+            <TopNav prevStep={`/dashboard/customer/${customerId}/order/${orderid}`} />
 
                 <h2 className='text-center my-3'>Status</h2>
 
@@ -1020,8 +1060,8 @@ const Status = () => {
 }
 
 const OrderServices = (props) => {
-
-    const {customerId} = useParams();
+const navigate = useNavigate();
+    const {customerId,orderid} = useParams();
 
     const {isLoading, error, data } = useQuery(['carvings'], () =>
     makeRequest.get("/jobs/jobdetails/"+customerId).then(res=>{
@@ -1029,9 +1069,11 @@ const OrderServices = (props) => {
     })
     );
   console.log(data);
+  console.log(orderid);
 
     return (
         <div className='orderServices'>
+        <TopNav prevStep={`/dashboard/customer/${customerId}/order/${orderid}`} />
             <h2 className='text-center my-3'>Order Services</h2>
             <h5 className='h5 text-center'>List of Tasks, products, carving and the rest associated with this job</h5>
 
@@ -1041,13 +1083,13 @@ const OrderServices = (props) => {
                     <div className='servicesList'>
                         <ul>
                             <li>
-                                <button className='btn btn-primary btn-lg btn-ext-lg' onClick={() => props.showOrder(5)} > + Carving</button>
+                                <button className='btn btn-primary btn-lg btn-ext-lg' onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/addcarving`)} > + Carving</button>
                             </li>
                             <li>
-                                <button className='btn btn-success btn-lg btn-ext-lg' onClick={() => props.showOrder(7)}> + Task</button>
+                                <button className='btn btn-success btn-lg btn-ext-lg' onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/addtask`)}> + Task</button>
                             </li>
                             <li>
-                                <button className='btn btn-info text-white btn-lg btn-ext-lg' onClick={() => props.showOrder(8)}> + Product</button>
+                                <button className='btn btn-info text-white btn-lg btn-ext-lg' onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/addproduct`)}> + Product</button>
                             </li>
                         </ul>
                     </div>
@@ -1140,4 +1182,4 @@ visible={true}
 
 
 export default Customer;
-export { Status, Order, OrderServices, Carving, CarvingType, Task, Product }
+export { Customer, Status, Order, OrderServices, Carving, CarvingType, Task, Product }

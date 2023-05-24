@@ -100,7 +100,7 @@ const hideConfirmationModal = () => {
         </thead>
         <tbody>
           {error ? "Something went wrong!" : (isLoading
-            ? <div className='d-grid justify-content-center text-center'><ThreeDots
+            ? <tr><td width="100%"><ThreeDots
               height="80"
               width="80"
               radius="9"
@@ -109,7 +109,7 @@ const hideConfirmationModal = () => {
               wrapperStyle={{}}
               wrapperClassName=""
               visible={true}
-            /></div>
+            /></td></tr>
             : customerData.map((customer) => <tr key={customer.id}>
               <td> {customer.id} </td>
               <td>{customer.first_name} {customer.middle_name} {customer.last_name}</td>
@@ -124,4 +124,4 @@ const hideConfirmationModal = () => {
   )
 }
 
-export default Customers
+export default Customers;
