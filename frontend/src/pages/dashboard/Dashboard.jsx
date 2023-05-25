@@ -9,10 +9,15 @@ import dummy from "../../images/dummy.jpg";
 const Dashboard = () => {
   const [value, onChange] = useState(new Date());
   const navigate = useNavigate();
+  const [search, setSearch] = useState("Search");
   const handleClick = async (e) => {
     navigate("/dashboard/customer/addcustomer");
   }
 
+const handleChange = (e) =>{
+e.preventDefault();
+setSearch(e.target.value);
+}
 
   return (
     <>
@@ -31,7 +36,7 @@ const Dashboard = () => {
                     <div className="container shadow py-4 d-flex flex-column align-items-center">
 
                       <div className="input-group pb-3">
-                        <input className="form-control form-control-lg border-end-0 border rounded-pill" type="search" value="search" id="example-search-input" />
+                        <input className="form-control form-control-lg border-end-0 border rounded-pill" type="search" value={search} id="example-search-input" onChange={handleChange} placeholder='Search' />
                         <span className="input-group-append">
                           <button className="btn btn-lg btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5" type="button">
                             <FaSearch />

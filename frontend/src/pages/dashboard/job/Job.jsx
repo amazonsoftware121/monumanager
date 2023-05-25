@@ -1,3 +1,4 @@
+/*
 import "./job.scss";
 import Customer,{ Status,Order,OrderServices,Carving,CarvingType,Task, Product } from "../customer/Customer"
 import StepperControl from "../../../components/StepperControl"
@@ -57,10 +58,10 @@ newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
     <>
       <div className="jobFormWrapper">
      
-        {/* Stepper */}
+        
 
         <div className="container horizontal">
-          { /* Navigation Controls */}
+          
 
           <StepperControl 
           handleClick={handleClick}
@@ -71,7 +72,7 @@ newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
           />
         
 
-{/* Display Components */}
+
 <div>
 
 
@@ -94,3 +95,4 @@ newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
 }
 
 export  default Job 
+*/
