@@ -114,7 +114,7 @@ visible={true} /></td></tr>
 <td> {job.id} </td>
 <td>{job.status}</td>
 <td>{job.notes}</td>
-<td> <Link title="Edit" to={`/dashboard/job/${job.id}`}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(job.notes, job.id)}><FaTrash color="red" /></span>   </td>
+<td> <Link title="Edit" to={`/dashboard/customer/${job.customer_id}/order/${job.id}`}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(job.notes, job.id)}><FaTrash color="red" /></span>   </td>
 
  </tr>))}</tbody>
 </table>
