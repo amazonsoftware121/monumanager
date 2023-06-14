@@ -259,9 +259,7 @@ const Customer = (props) => {
 
 
 const Order = (props) => {
-
     //const { userData, setUserData } = useContext(StepperContext);
-
     const [userData, setUserData] = useState("");
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
@@ -354,13 +352,13 @@ const Order = (props) => {
 
 
 
-                            {/*<div className='col-6'>
+                            { /*<div className='col-6'>
                                 <div className="mb-3">
                                     <label htmlFor="orderDueDate" className="form-label">Order Due Date</label>
                                     <input type='date' value={userData["order_due_date"] || ""} id='order_due_date' name="order_due_date" className="form-control" placeholder="notes" onChange={handleChange} />
 
                                 </div>
-                            </div>*/}
+                            </div>*/ }
 
 
                             <div className='d-flex justify-content-between'> <div><Button btnDesign="btn btn-success" btnText="Save" btnType="submit" /> </div> <div className="addService">
