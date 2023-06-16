@@ -1419,3 +1419,23 @@ img{
   font-weight: 500;
   margin-left: 5px;
 }
+.searchPage{
+  .searchBoxInput{
+    padding: 15px;
+    width: 50%;
+    margin: 0 auto;
+    display: inline-block;
+  }
+  ul{
+    margin-top: 15px;
+    padding: 0;
+    li{
+      list-style: none;
+      padding: 10px 0;
+      a{
+        color: #000;
+      }
+    }
+  }
+
+}
