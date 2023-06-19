@@ -336,10 +336,36 @@ const Order = (props) => {
         <>
             <div className="order">
                 <TopNav prevStep={`/dashboard/customer/${customerId}`} />
-                <h2 className='text-center my-3'>Order</h2>
+                <h2 className='text-center my-3'>Order Info</h2>
 
                 <div className="row">
-                    <div className="col-8 px-5">
+                    <div className="col-8 px-5 mt-3">
+
+<div className='row'>
+                        <div className="col-md-8 order_info mb-5">
+                            <div className="item">
+                                <div className="rightContent">
+                                    <div className="customer_info">
+                                    <h6 className="title"><strong>CUSTOMER INFO </strong></h6>
+                                        <p><strong>Customer Name: </strong>                                     {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `${userData.first_name}  ${!userData.middle_name ? "" : userData.middle_name} ${userData.last_name}`}
+                                        <br/>
+                                        <strong>Phone: </strong> {userData.phone}<br/>
+                                    <strong>Email: </strong> {userData.email}</p>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+</div>
+
+<div className='col-md-4'>
+    
+    {orderid ? <div> <p className='mt-3'><strong>Order Status: </strong> {orderDetail.status ? `${orderDetail.status}` : "Not Updated"} </p> <button className="btn btn-success" onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/status`)}  > Change Status </button></div> : ""}
+    <p></p>
+</div>
+                          
+                        </div>
+
                         <form onSubmit={handleClick}>
 
                             <div className=''>
@@ -375,51 +401,28 @@ const Order = (props) => {
 
 
 
-                        <div className="latestUpdate mt-5">
-                            <div className="item">
-                                <div className="leftContent">
-                                    <img src={dummy} alt='' width={75} height={75} />
-                                </div>
-
-                                <div className="rightContent">
-                                    <div className="title">Customer Info</div>
-                                    {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `${userData.first_name}  ${!userData.middle_name ? "" : userData.middle_name} ${userData.last_name}`}
-                                </div>
-                            </div>
-
-
-                            <div className="item">
-                                <div className="leftContent">
-                                    <img src={dummy} alt='' width={75} height={75} />
-                                </div>
-
-                                <div className="rightContent">
-                                    <div className="title">Product Info</div>
-                                    {!userData.product_description ? "" : userData.product_description}
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <div className="col-4 px-5">
-                        <h3>Services</h3>
+                    <div className="col-4 px-5 sidebar">
+                    <div className='sidebar_inner'>
+                        <h5>Services</h5>
                         <div className="serviceList">
-                        <ul>
-                            {error ? "Something went wrong!" : (isLoading
-                                ? <ThreeDots
-                                    height="80"
-                                    width="80"
-                                    radius="9"
-                                    color="#4fa94d"
-                                    ariaLabel="three-dots-loading"
-                                    wrapperStyle={{}}
-                                    wrapperClassName=""
-                                    visible={true}
-                                /> : jobTasks.map((jobtask) => <li key={jobtask.id}>
-                                    <Link title="Edit" to={`/dashboard/customer/${customerId}/order/${orderid}/task/${jobtask.id}`} state={jobtask}> <span><FaHome /> </span> {jobtask.description}</Link>
-                                </li>))}
-                                </ul>
+                            <ul>
+                                {error ? "Something went wrong!" : (isLoading
+                                    ? <ThreeDots
+                                        height="80"
+                                        width="80"
+                                        radius="9"
+                                        color="#4fa94d"
+                                        ariaLabel="three-dots-loading"
+                                        wrapperStyle={{}}
+                                        wrapperClassName=""
+                                        visible={true}
+                                    /> : jobTasks.map((jobtask) => <li key={jobtask.id}>
+                                        <Link title="Edit" to={`/dashboard/customer/${customerId}/order/${orderid}/task/${jobtask.id}`} state={jobtask}> <span><FaHome /> </span> Task:  {jobtask.description}</Link>
+                                    </li>))}
+                            </ul>
                         </div>
-                        {orderid ? <div><button className="btn btn-success" onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/status`)}  > Status </button> <p className='mt-3'><strong>Order Status: </strong> {orderDetail.status ? `${orderDetail.status}` : "Status: Not Updated"} </p></div> : ""}
+                        </div>
                     </div>
                 </div>
             </div>
