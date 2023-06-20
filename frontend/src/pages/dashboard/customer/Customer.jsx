@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { useQuery } from 'react-query';
 import { ThreeDots } from 'react-loader-spinner'
 import TopNav from '../../../components/TopNav';
+
 const Customer = (props) => {
     const [userData, setUserData] = useState("");
     const [order, setOrder] = useState(false);
@@ -23,6 +24,7 @@ const Customer = (props) => {
     const [recentOrders, setRecentOrders] = useState("");
     const [display, setDisplay] = useState("false");
     const [urlCustomerId, setUrlCustomerId] = useState(null);
+    const[alrcust, setAlrcust] = useState(null);
     const navigate = useNavigate();
 
     let { customerId } = useParams();
@@ -108,7 +110,8 @@ const Customer = (props) => {
         }
 
         catch (err) {
-            setErr(err.response.data);
+            setErr(err.response.data[0].msg);
+            setAlrcust(err.response.data[0].custid);
         }
         console.log(userData);
     }
@@ -189,7 +192,7 @@ const Customer = (props) => {
                                     {!customerId && <Button btnDesign="btn btn-success" btnText="Add" btnType="submit" />}
                                 </div>
 
-                                <p className='custResponse text-danger'> {err && err}</p>
+                                <p className='custResponse text-danger'> {err && (<span dangerouslySetInnerHTML={{ __html: `${err} Please <a href="/dashboard/customer/${alrcust}"> click here</a> for existing customer.` }} />) }</p>
 
                                 <p className='custResponse text-success'>{succ && succ}</p>
 
@@ -436,6 +439,7 @@ const Product = () => {
     const [succ, setSucc] = useState(null);
     const [productImage, setProductImage] = useState("");
     const { customerId, orderid } = useParams();
+    const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProductData({ ...productData, [name]: value });
@@ -467,6 +471,7 @@ const Product = () => {
         try {
             const res = await makeRequest.post(`/products/addproduct/${orderid}`, formData);
             setSucc(res.data);
+            navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
         } catch (err) {
             console.log(err)
         }
@@ -560,11 +565,12 @@ const Task = () => {
     const [succ, setSucc] = useState(null);
     const navigate = useNavigate();
     const { orderid, customerId } = useParams();
+    const currentDate = new Date().toISOString().split('T')[0];
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setTaskData({ ...taskData, [name]: value });
+        setTaskData({ ...taskData, [name]: value, ["task_creation_date"]: currentDate });
     }
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(taskData);
@@ -574,6 +580,7 @@ const Task = () => {
             const response = await makeRequest.post(`/tasks/addtask/${orderid}`, taskData);
             setSucc(response.data[0].successmsg);
             console.log(response.data);
+            navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
         } catch (err) {
             setErr(err.response.data);
         }
@@ -600,7 +607,7 @@ const Task = () => {
                                 </div>
 
                                 <div className='form-floating mb-3'>
-                                    <input type='date' className='form-control' value={taskData["task_creation_date"] || ""} name='task_creation_date' required onChange={handleChange} placeholder='Creation Date' />
+                                    <input type='date' className='form-control'  value={taskData["task_creation_date"] || currentDate} name='task_creation_date' required onChange={handleChange} placeholder='Creation Date' />
                                     <label htmlFor='floatingInput'>Creation Date</label>
                                 </div>
 
@@ -635,6 +642,7 @@ const Carving = (props) => {
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
     const { customerId, orderid } = useParams();
+    const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCarvingData({ ...carvingData, [name]: value });
@@ -649,6 +657,7 @@ const Carving = (props) => {
             //console.log(response.data);
             setSucc(response.data);
             console.log(response);
+            navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
         } catch (err) {
             setErr(err.response.data);
         }
@@ -760,6 +769,8 @@ const Status = () => {
     const [succ, setSucc] = useState(null);
     const { orderid } = useParams();
     const { customerId } = useParams();
+
+    const navigate = useNavigate();
     const handleChange = (e) => {
         console.log(e)
         const { name, value } = e.target;
@@ -791,6 +802,7 @@ const Status = () => {
             const response = await makeRequest.put(`/jobs/updatejobstatus/${orderid}`, userData);
             setSucc(response.data);
             console.log(response.data);
+            navigate(`/dashboard/customer/${customerId}/order/${orderid}`);
         } catch (err) {
             setErr(err.response.data);
         }
