@@ -95,12 +95,12 @@ return (
                 <tr>
                   <td>{product.id}</td>
                   <td>{product.description}</td>
-                  <td>{product.color}</td>
-                  <td>{product.options}</td>
-                  <td>{product.price}</td>
-                  <td>{product.quantity_on_hand}</td>
+                  <td>{product.color == "undefined" ? "N/A" :  product.color}</td>
+                  <td>{product.options == "undefined" ? "N/A" : product.options}</td>
+                  <td>{!product.price  ? "N/A" : product.price}</td>
+                  <td>{ !product.quantity_on_hand  ? "N/A" : product.quantity_on_hand}</td>
                   <td><img src={`https://amaronsoftware.com/monumanagerapi/static/${product.image}`} width={50} /></td>
-                  <td>{product.size}</td>
+                  <td>{product.size == "undefined" ? "N/A" : product.size}</td>
                  
                   <td> <Link title="Edit" to={`/dashboard/product/${product.job_id}/${product.id}`} state={product}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(` ${product.description}`,product.id)}><FaTrash color="red" /></span>   </td>
                 </tr>

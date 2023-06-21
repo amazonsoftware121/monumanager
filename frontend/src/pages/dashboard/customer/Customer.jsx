@@ -24,7 +24,7 @@ const Customer = (props) => {
     const [recentOrders, setRecentOrders] = useState("");
     const [display, setDisplay] = useState("false");
     const [urlCustomerId, setUrlCustomerId] = useState(null);
-    const[alrcust, setAlrcust] = useState(null);
+    const [alrcust, setAlrcust] = useState(null);
     const navigate = useNavigate();
 
     let { customerId } = useParams();
@@ -192,7 +192,7 @@ const Customer = (props) => {
                                     {!customerId && <Button btnDesign="btn btn-success" btnText="Add" btnType="submit" />}
                                 </div>
 
-                                <p className='custResponse text-danger'> {err && (<span dangerouslySetInnerHTML={{ __html: `${err} Please <a href="/dashboard/customer/${alrcust}"> click here</a> for existing customer.` }} />) }</p>
+                                <p className='custResponse text-danger'> {err && (<span dangerouslySetInnerHTML={{ __html: `${err} Please <a href="/dashboard/customer/${alrcust}"> click here</a> for existing customer.` }} />)}</p>
 
                                 <p className='custResponse text-success'>{succ && succ}</p>
 
@@ -344,29 +344,29 @@ const Order = (props) => {
                 <div className="row">
                     <div className="col-8 px-5 mt-3">
 
-<div className='row'>
-                        <div className="col-md-8 order_info mb-5">
-                            <div className="item">
-                                <div className="rightContent">
-                                    <div className="customer_info">
-                                    <h6 className="title"><strong>CUSTOMER INFO </strong></h6>
-                                        <p><strong>Customer Name: </strong>                                     {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `${userData.first_name}  ${!userData.middle_name ? "" : userData.middle_name} ${userData.last_name}`}
-                                        <br/>
-                                        <strong>Phone: </strong> {userData.phone}<br/>
-                                    <strong>Email: </strong> {userData.email}</p>
+                        <div className='row'>
+                            <div className="col-md-8 order_info mb-5">
+                                <div className="item">
+                                    <div className="rightContent">
+                                        <div className="customer_info">
+                                            <h6 className="title"><strong>CUSTOMER INFO </strong></h6>
+                                            <p><strong>Customer Name: </strong>                                     {!userData.first_name && !userData.middle_name && !userData.last_name ? "" : `${userData.first_name}  ${!userData.middle_name ? "" : userData.middle_name} ${userData.last_name}`}
+                                                <br />
+                                                <strong>Phone: </strong> {userData.phone}<br />
+                                                <strong>Email: </strong> {userData.email}</p>
+                                        </div>
+
                                     </div>
-                                    
                                 </div>
+
                             </div>
 
-</div>
+                            <div className='col-md-4'>
 
-<div className='col-md-4'>
-    
-    {orderid ? <div> <p className='mt-3'><strong>Order Status: </strong> {orderDetail.status ? `${orderDetail.status}` : "Not Updated"} </p> <button className="btn btn-success" onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/status`)}  > Change Status </button></div> : ""}
-    <p></p>
-</div>
-                          
+                                {orderid ? <div> <p className='mt-3'><strong>Order Status: </strong> {orderDetail.status ? `${orderDetail.status}` : "Not Updated"} </p> <button className="btn btn-success" onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/status`)}  > Change Status </button></div> : ""}
+                                <p></p>
+                            </div>
+
                         </div>
 
                         <form onSubmit={handleClick}>
@@ -406,25 +406,25 @@ const Order = (props) => {
 
                     </div>
                     <div className="col-4 px-5 sidebar">
-                    <div className='sidebar_inner'>
-                        <h5>Services</h5>
-                        <div className="serviceList">
-                            <ul>
-                                {error ? "Something went wrong!" : (isLoading
-                                    ? <ThreeDots
-                                        height="80"
-                                        width="80"
-                                        radius="9"
-                                        color="#4fa94d"
-                                        ariaLabel="three-dots-loading"
-                                        wrapperStyle={{}}
-                                        wrapperClassName=""
-                                        visible={true}
-                                    /> : jobTasks.map((jobtask) => <li key={jobtask.id}>
-                                        <Link title="Edit" to={`/dashboard/customer/${customerId}/order/${orderid}/task/${jobtask.id}`} state={jobtask}> <span><FaHome /> </span> Task:  {jobtask.description}</Link>
-                                    </li>))}
-                            </ul>
-                        </div>
+                        <div className='sidebar_inner'>
+                            <h5>Services</h5>
+                            <div className="serviceList">
+                                <ul>
+                                    {error ? "Something went wrong!" : (isLoading
+                                        ? <ThreeDots
+                                            height="80"
+                                            width="80"
+                                            radius="9"
+                                            color="#4fa94d"
+                                            ariaLabel="three-dots-loading"
+                                            wrapperStyle={{}}
+                                            wrapperClassName=""
+                                            visible={true}
+                                        /> : jobTasks.map((jobtask) => <li key={jobtask.id}>
+                                            <Link title="Edit" to={`/dashboard/customer/${customerId}/order/${orderid}/task/${jobtask.id}`} state={jobtask}> <span><FaHome /> </span> Task:  {jobtask.description}</Link>
+                                        </li>))}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -440,6 +440,13 @@ const Product = () => {
     const [productImage, setProductImage] = useState("");
     const { customerId, orderid } = useParams();
     const navigate = useNavigate();
+
+    const { isLoading, error, data } = useQuery(['products'], () =>
+        makeRequest.get("/products/getproducts").then(res => {
+            return res.data;
+        })
+    );
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProductData({ ...productData, [name]: value });
@@ -481,79 +488,111 @@ const Product = () => {
             <div className='customer'>
                 <TopNav prevStep={`/dashboard/customer/${customerId}/order/${orderid}/orderservices`} />
                 <h2 className='text-center my-3'>Product</h2>
-                <div className='cardItem shadow p-3 mx-3'>
-                    <form onSubmit={handleClick}>
-                        <div className='row'>
-                            <div className='col-6'>
-                                <div className="form-floating mb-3">
-                                    <textarea type="text" rows="4" value={productData["product_description"] || ""} style={{ height: "112px" }} name="product_description" className="form-control" placeholder="Description" onChange={handleChange} required />
-                                    <label htmlFor="floatingInput">Description</label>
-                                </div>
-                            </div>
-                            <div className='col-6'>
+                <div className='row'>
+                    <div className='col-md-8'>
+
+                        <div className='cardItem shadow p-3 mx-3'>
+                            <h4>Create Product</h4>
+                            <form onSubmit={handleClick}>
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <select className="form-select form-control" aria-label="Default select example" name='product_color' onChange={handleChange}>
-                                                <option defaultValue={"Color"}>Color</option>
-                                                <option value={productData["product_color"]} >Red</option>
-                                                <option value={productData["product_color"]}>Black</option>
-                                                <option value={productData["product_color"]}>Gray</option>
-                                            </select>
+                                            <textarea type="text" rows="4" value={productData["product_description"] || ""} style={{ height: "112px" }} name="product_description" className="form-control" placeholder="Description" onChange={handleChange} required />
+                                            <label htmlFor="floatingInput">Description</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
-                                        <div className="form-floating mb-3">
-                                            <input type="text" value={productData["product_size"] || ""} name="product_size" className="form-control" placeholder="Options" onChange={handleChange} required />
-                                            <label htmlFor="floatingInput">Size </label>
-                                        </div>
-                                    </div>
-                                    <div className='col-6'>
-                                        <div className="form-floating mb-3">
-                                            <input type="number" value={productData["product_qty_on_hand"] || ""} name="product_qty_on_hand" className="form-control" placeholder="phone" onChange={handleChange} required />
-                                            <label htmlFor="floatingInput">Qty On Hand</label>
-                                        </div>
-                                    </div>
-                                    <div className='col-6'>
-                                        <div className="form-floating mb-3">
-                                            <input type="number" value={productData["product_price"] || ""} name="product_price" className="form-control" placeholder="email" onChange={handleChange} required />
-                                            <label htmlFor="floatingInput">Price</label>
-                                        </div>
-                                    </div>
+                                        <div className='row'>
+                                            <div className='col-6'>
+                                                <div className="form-floating mb-3">
+                                                    <select className="form-select form-control" aria-label="Default select example" name='product_color' onChange={handleChange}>
+                                                        <option defaultValue={"Color"}>Color</option>
+                                                        <option value={productData["product_color"]} >Red</option>
+                                                        <option value={productData["product_color"]}>Black</option>
+                                                        <option value={productData["product_color"]}>Gray</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className='col-6'>
+                                                <div className="form-floating mb-3">
+                                                    <input type="text" value={productData["product_size"] || ""} name="product_size" className="form-control" placeholder="Options" onChange={handleChange} />
+                                                    <label htmlFor="floatingInput">Size </label>
+                                                </div>
+                                            </div>
+                                            <div className='col-6'>
+                                                <div className="form-floating mb-3">
+                                                    <input type="number" value={productData["product_qty_on_hand"] || ""} name="product_qty_on_hand" className="form-control" placeholder="phone" onChange={handleChange} />
+                                                    <label htmlFor="floatingInput">Qty On Hand</label>
+                                                </div>
+                                            </div>
+                                            <div className='col-6'>
+                                                <div className="form-floating mb-3">
+                                                    <input type="number" value={productData["product_price"] || ""} name="product_price" className="form-control" placeholder="email" onChange={handleChange} />
+                                                    <label htmlFor="floatingInput">Price</label>
+                                                </div>
+                                            </div>
 
-                                </div>
-                            </div>
-                        </div>
-                        <div className='row'>
-                            <div className='col-6'>
-                                <div className="form-floating mb-3">
-                                    <textarea value={productData["product_options"]} style={{ height: "100px" }} name="product_options" className="form-control" placeholder="Options" onChange={handleChange} required />
-                                    <label htmlFor="floatingInput">Options</label>
-                                </div>
-                                <div className="form-floating mb-3">
-                                    <textarea name="product_notes" rows="4" value={productData["product_notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
-                                    <label htmlFor="floatingInput">Notes</label>
-                                </div>
-                            </div>
-                            <div className='col-6'>
-                                <div className="mb-3">
-                                    <div className='text-center' htmlFor="product_image">
-                                        <img src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' width={200} />
+                                        </div>
                                     </div>
-                                    <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
-                                    <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleFile} required />
                                 </div>
-                            </div>
+                                <div className='row'>
+                                    <div className='col-6'>
+                                        <div className="form-floating mb-3">
+                                            <textarea value={productData["product_options"]} style={{ height: "100px" }} name="product_options" className="form-control" placeholder="Options" onChange={handleChange} />
+                                            <label htmlFor="floatingInput">Options</label>
+                                        </div>
+                                        <div className="form-floating mb-3">
+                                            <textarea name="product_notes" rows="4" value={productData["product_notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                            <label htmlFor="floatingInput">Notes</label>
+                                        </div>
+                                    </div>
+                                    <div className='col-6'>
+                                        <div className="mb-3">
+                                            <div className='text-center' htmlFor="product_image">
+                                                <img src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' width={200} />
+                                            </div>
+                                            <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
+                                            <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleFile} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='buttonWrapper'>
+                                    <Button btnDesign="btn btn-primary" btnText="Archive" onClick={handleClick} />
+                                    <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
+                                    <Button btnDesign="btn btn-success" btnText="Add" btnType="submit" />
+                                </div>
+                                <p className='custResponse text-danger'> {err && err}</p>
+                                <p className='custResponse text-success'>{succ && succ}</p>
+                            </form>
                         </div>
-                        <div className='buttonWrapper'>
-                            <Button btnDesign="btn btn-primary" btnText="Archive" onClick={handleClick} />
-                            <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
-                            <Button btnDesign="btn btn-success" btnText="Add" btnType="submit" />
-                        </div>
-                        <p className='custResponse text-danger'> {err && err}</p>
-                        <p className='custResponse text-success'>{succ && succ}</p>
-                    </form>
+                    </div>
+                    <div className='col-md-4 px-5 sidebar'>
+                        <div className='sidebar_inner'>
+                            <h5>Select Products</h5>
+                            <ul>
+                                {error ? "Something went wrong!" : (isLoading
+                                    ? <ThreeDots
+                                        height="80"
+                                        width="80"
+                                        radius="9"
+                                        color="#4fa94d"
+                                        ariaLabel="three-dots-loading"
+                                        wrapperStyle={{}}
+                                        wrapperClassName=""
+                                        visible={true}
+                                    /> : data.map((product) => { return (
+                                        <li>
+                                    <input type='checkbox' value={product.id}  /> {product.description}
+                                    
+                                    </li> ) }))}
+                                    </ul>
+
+</div>
+
+
+                    </div>
                 </div>
+
             </div>
         </>
     )
@@ -570,7 +609,7 @@ const Task = () => {
         const { name, value } = e.target;
         setTaskData({ ...taskData, [name]: value, ["task_creation_date"]: currentDate });
     }
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(taskData);
@@ -602,17 +641,17 @@ const Task = () => {
                             </div>
                             <div className='col-4'>
                                 <div className='form-floating mb-3'>
-                                    <input id='task_notes' type='text' className='form-control' value={taskData["task_notes"] || ""} name='task_notes' required onChange={handleChange} placeholder="Here's Something" />
+                                    <input id='task_notes' type='text' className='form-control' value={taskData["task_notes"] || ""} name='task_notes' onChange={handleChange} placeholder="Here's Something" />
                                     <label htmlFor="task_notes">Here's Something</label>
                                 </div>
 
                                 <div className='form-floating mb-3'>
-                                    <input type='date' className='form-control'  value={taskData["task_creation_date"] || currentDate} name='task_creation_date' required onChange={handleChange} placeholder='Creation Date' />
+                                    <input type='date' className='form-control' value={taskData["task_creation_date"] || currentDate} name='task_creation_date' required onChange={handleChange} placeholder='Creation Date' />
                                     <label htmlFor='floatingInput'>Creation Date</label>
                                 </div>
 
                                 <div className='form-floating mb-3'>
-                                    <input type='date' className='form-control' value={taskData["task_due_date"] || ""} name='task_due_date' required onChange={handleChange} placeholder='Due Date' />
+                                    <input type='date' className='form-control' value={taskData["task_due_date"] || ""} name='task_due_date' onChange={handleChange} placeholder='Due Date' />
                                     <label htmlFor='floatingInput'>Due Date</label>
                                 </div>
                                 <button type='submit' className='btn btn-success'>Save</button>
@@ -715,7 +754,7 @@ const Carving = (props) => {
                     <div className='row'>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={carvingData["car_first_name"] || ""} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange} required />
+                                <input type="text" value={carvingData["car_first_name"] || ""} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange}  />
                                 <label htmlFor="floatingInput">First Name</label>
                             </div>
                         </div>
@@ -735,21 +774,21 @@ const Carving = (props) => {
                     <div className='row'>
                         <div className='col-6'>
                             <div className="form-floating mb-3">
-                                <input type="date" value={carvingData["car_birth_date"] || ""} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                <input type="date" value={carvingData["car_birth_date"] || ""} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange}  />
                                 <label htmlFor="floatingInput">Birth Date</label>
                             </div>
                         </div>
                         <div className='col-6'>
                             <div className="form-floating mb-3">
-                                <input type="date" value={carvingData["car_passing_date"] || ""} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange} required />
+                                <input type="date" value={carvingData["car_passing_date"] || ""} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange}  />
                                 <label htmlFor="floatingInput">Passing Date</label>
                             </div>
                         </div>
                     </div>
                     <div className='col-12'>
                         <div className="form-floating mb-3">
-                            <textarea name="car_notes" rows="4" value={carvingData["car_notes"] || ""} style={{ height: "150px" }} className="form-control" placeholder="My Beloved Love" onChange={handleChange} required />
-                            <label htmlFor="floatingInput">My Beloved Love</label>
+                            <textarea name="car_notes" rows="4" value={carvingData["car_notes"] || ""} style={{ height: "150px" }} className="form-control"  onChange={handleChange} />
+                            <label htmlFor="floatingInput"></label>
                         </div>
                     </div>
                     <div className='buttonWrapper'>
@@ -944,7 +983,11 @@ const OrderServices = (props) => {
                                         visible={true}
                                     />
                                     : data.map((jobdetail, key) =>
-                                        <li key={key}> <p> <span className='icon'><FaHome /></span> {`${jobdetail.type}: ${jobdetail.description}`} </p> </li>
+                                        <li key={key}> <p> <span className='icon'><FaHome /></span>
+                                         <Link to={jobdetail.type == "task" ? `/dashboard/customer/${customerId}/order/${orderid}/task/${jobdetail.id}` : jobdetail.type == "product" ? `/dashboard/customer/${customerId}/order/${orderid}/product/${jobdetail.id}` : jobdetail.type == "carving" ? `/dashboard/customer/${customerId}/order/${orderid}/carving/${jobdetail.id}` : "" }>
+                                         {`${jobdetail.type}: ${jobdetail.description}`}
+                                         </Link>
+                                          </p> </li>
                                     ))}
                             </ul>
                         </div>

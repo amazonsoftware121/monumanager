@@ -108,11 +108,23 @@ function App() {
                     element: <Task />
                 },
                 {
+                    path: "/dashboard/customer/:customerId/order/:orderid/task/:taskid",
+                    element: <Task />
+                },
+                {
                     path: "/dashboard/customer/:customerId/order/:orderid/addcarving",
                     element: <Carving />
                 },
                 {
+                    path: "/dashboard/customer/:customerId/order/:orderid/carving/:carvingid",
+                    element: <Carving />
+                },
+                {
                     path: "/dashboard/customer/:customerId/order/:orderid/addproduct",
+                    element: <Product />
+                },
+                {
+                    path: "/dashboard/customer/:customerId/order/:orderid/product/:productid",
                     element: <Product />
                 },
                 {
