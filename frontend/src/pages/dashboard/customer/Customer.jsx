@@ -441,6 +441,24 @@ const Product = () => {
     const { customerId, orderid } = useParams();
     const navigate = useNavigate();
 
+    let { productId } = useParams();
+
+
+
+    useEffect(() => {
+        if (productId) {
+            makeRequest.get("/products/getproduct/" + productId)
+                .then(res => {
+                    const data = res.data[0];
+                    setProductData(data);
+                })
+                .catch(err => console.log(err));
+        }
+    }, []
+    );
+
+    console.log(productData);
+
     const { isLoading, error, data } = useQuery(['products'], () =>
         makeRequest.get("/products/getproducts").then(res => {
             return res.data;
@@ -597,6 +615,163 @@ const Product = () => {
         </>
     )
 }
+
+
+
+const EditProduct = () =>{
+
+    const [productData, setProductData] = useState("");
+    const [err, setErr] = useState(null);
+    const [productImage, setProductImage] = useState("");
+    const [succ, setSucc] = useState(null);
+    const navigate = useNavigate();
+
+    let { productid } = useParams();
+
+
+
+    useEffect(() => {
+        if (productid) {
+            makeRequest.get("/products/getproduct/" + productid)
+                .then(res => {
+                    const data = res.data[0];
+                    setProductData(data);
+                })
+                .catch(err => console.log(err));
+        }
+    }, []
+    );
+
+    console.log(productData);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setProductData({ ...productData, [name]: value });
+    };
+
+    const handleFile = (e) => {
+        setProductImage(e.target.files[0]);
+    }
+
+
+    const queryClient = useQueryClient();
+    const handleClick = async (e) => {
+        e.preventDefault();
+/*        setErr(null);
+        setSucc(null);
+        
+
+        const formData = new FormData();
+        formData.append('product_description', productData["product_description"]);
+        formData.append('product_color', productData["product_color"]);
+        formData.append('product_size', productData["product_size"]);
+        formData.append('product_qty_on_hand', productData["product_qty_on_hand"]);
+        formData.append('product_price', productData["product_price"]);
+        formData.append('product_options', productData["product_options"]);
+        formData.append('product_notes', productData["product_notes"]);
+        formData.append('product_image', productImage);
+
+        try {
+            const res = await makeRequest.post(`/products/updateproduct/${productid}`, formData);
+            setSucc(res.data);
+            navigate(`/dashboard/products`);
+        } catch (err) {
+            console.log(err)
+        }*/
+    }
+    return (
+        <>
+            <div className='customer'>
+                
+                <h2 className='text-center my-3'>Product</h2>
+                <div className='row'>
+                    <div className='col-md-12'>
+
+                        <div className='cardItem shadow p-3 mx-3'>
+                            <h4>Update Product</h4>
+                            <form onSubmit={handleClick}>
+                                <div className='row'>
+                                    <div className='col-6'>
+                                        <div className="form-floating mb-3">
+                                            <textarea type="text" rows="4" value={productData["product_description"] || productData.description } style={{ height: "112px" }} name="product_description" className="form-control" placeholder="Description" onChange={handleChange} required />
+                                            <label htmlFor="floatingInput">Description</label>
+                                        </div>
+                                    </div>
+                                    <div className='col-6'>
+                                        <div className='row'>
+                                            <div className='col-6'>
+                                                <div className="form-floating mb-3">
+                                                    <select className="form-select form-control" aria-label="Default select example" name='product_color' onChange={handleChange}>
+                                                        <option defaultValue={"Color"}>Color</option>
+                                                        
+                                                        <option value={productData["product_color"]} selected={productData.color === "Red"} >Red</option>
+                                                        <option value={productData["product_color"]} selected={productData.color === "Black"}>Black</option>
+                                                        <option value={productData["product_color"]} selected={productData.color === "Gray"}>Gray</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className='col-6'>
+                                                <div className="form-floating mb-3">
+                                                    <input type="text" value={productData["product_size"] || productData.size=="undefined" ? "" : productData.size} name="product_size" className="form-control" placeholder="Options" onChange={handleChange} />
+                                                    <label htmlFor="floatingInput">Size </label>
+                                                </div>
+                                            </div>
+                                            <div className='col-6'>
+                                                <div className="form-floating mb-3">
+                                                    <input type="number" value={productData["product_qty_on_hand"] || productData.quantity_on_hand==0 ? "" : productData.quantity_on_hand} name="product_qty_on_hand" className="form-control" placeholder="phone" onChange={handleChange} />
+                                                    <label htmlFor="floatingInput">Qty On Hand</label>
+                                                </div>
+                                            </div>
+                                            <div className='col-6'>
+                                                <div className="form-floating mb-3">
+                                                    <input type="number" value={productData["product_price"] || productData.price==0 ? "" : productData.price} name="product_price" className="form-control" placeholder="email" onChange={handleChange} />
+                                                    <label htmlFor="floatingInput">Price</label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className='col-6'>
+                                        <div className="form-floating mb-3">
+                                            <textarea value={productData["product_options"] || productData.options=="undefined" ? "" : productData.options} style={{ height: "100px" }} name="product_options" className="form-control" placeholder="Options" onChange={handleChange} />
+                                            <label htmlFor="floatingInput">Options</label>
+                                        </div>
+                                        <div className="form-floating mb-3">
+                                            <textarea name="product_notes" rows="4" value={productData["product_notes"] || productData.notes=="undefined" ? "" : productData.notes} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                            <label htmlFor="floatingInput">Notes</label>
+                                        </div>
+                                    </div>
+                                    <div className='col-6'>
+                                        <div className="mb-3">
+                                            <div className='text-center' htmlFor="product_image">
+                                                <img src={`https://amaronsoftware.com/monumanagerapi/static/${productData.image}`} width={200} />
+                                            </div>
+                                            <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
+                                            <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleFile} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='buttonWrapper'>
+                                    <Button btnDesign="btn btn-primary" btnText="Archive" onClick={handleClick} />
+                                    <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
+                                    <Button btnDesign="btn btn-success" btnText="Add" btnType="submit" />
+                                </div>
+                                <p className='custResponse text-danger'> {err && err}</p>
+                                <p className='custResponse text-success'>{succ && succ}</p>
+                            </form>
+                        </div>
+                    </div>
+                 
+                </div>
+
+            </div>
+        </>
+    )
+
+}
+
 
 const Task = () => {
     const [taskData, setTaskData] = useState("");
@@ -999,4 +1174,4 @@ const OrderServices = (props) => {
     )
 }
 export default Customer;
-export { Customer, Status, Order, OrderServices, Carving, CarvingType, Task, Product }
+export { Customer, Status, Order, OrderServices, Carving, CarvingType, Task, Product, EditProduct }

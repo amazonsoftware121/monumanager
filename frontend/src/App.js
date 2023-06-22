@@ -25,7 +25,7 @@ import Tasks from "./pages/dashboard/tasks/Tasks";
 import { QueryClient, QueryClientProvider } from 'react-query'
 import AddCustomer from './pages/dashboard/customer/AddCustomer';
 import { CustomerDetails } from './pages/dashboard/customer/Customer';
-
+import { EditProduct } from './pages/dashboard/customer/Customer';
 
 function App() {
     const { currentUser } = useContext(AuthContext);
@@ -124,8 +124,8 @@ function App() {
                     element: <Product />
                 },
                 {
-                    path: "/dashboard/customer/:customerId/order/:orderid/product/:productid",
-                    element: <Product />
+                    path: "/dashboard/product/edit/:productid",
+                    element: <EditProduct />
                 },
                 {
                     path: "/dashboard/customer/:customerId/order/:orderid/status",

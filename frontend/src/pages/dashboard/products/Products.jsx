@@ -102,7 +102,7 @@ return (
                   <td><img src={`https://amaronsoftware.com/monumanagerapi/static/${product.image}`} width={50} /></td>
                   <td>{product.size == "undefined" ? "N/A" : product.size}</td>
                  
-                  <td> <Link title="Edit" to={`/dashboard/product/${product.job_id}/${product.id}`} state={product}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(` ${product.description}`,product.id)}><FaTrash color="red" /></span>   </td>
+                  <td> <Link title="Edit" to={`/dashboard/product/edit/${product.id}`} state={product}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(` ${product.description}`,product.id)}><FaTrash color="red" /></span>   </td>
                 </tr>
 )
               }))}
