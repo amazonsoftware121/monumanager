@@ -649,10 +649,13 @@ const EditProduct = () =>{
         setProductData({ ...productData, [name]: value });
     };
 
+    
     const handleFile = (e) => {
         setProductImage(e.target.files[0]);
     }
-
+const prevBtn = () =>{
+    navigate(-1);
+}
 
     const queryClient = useQueryClient();
     const handleClick = async (e) => {
@@ -683,6 +686,7 @@ const EditProduct = () =>{
         <>
             <div className='customer'>
                 
+                <TopNav prevStep={-1} />
                 <h2 className='text-center my-3'>Product</h2>
                 <div className='row'>
                     <div className='col-md-12'>
@@ -844,6 +848,132 @@ const Task = () => {
 }
 
 
+
+const EditTask = () => {
+    const [taskData, setTaskData] = useState("");
+    const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
+    const navigate = useNavigate();
+    const [prevCreationDate, setPrevCreationDate]  = useState("");
+    const [prevDueDate, setPrevDueDate]  = useState("");
+    
+    const currentDate = new Date().toISOString().split('T')[0];
+const {taskid} = useParams();
+
+
+const { isLoading, error, data } = useQuery(['carvings'], () =>
+makeRequest.get("/tasks/gettask/" + taskid).then(res => {
+    const data = res.data[0];
+    setTaskData(data);
+    const dateString = data.creation_time;
+const dd =    new Date(dateString).toISOString().split('T')[0]
+setPrevCreationDate(dd);
+})
+);
+
+  /*  useEffect(() => {
+        if (taskid) {
+            makeRequest.get("/tasks/gettask/" + taskid)
+                .then(res => {
+                    const data = res.data[0];
+                    setTaskData(data);
+                })
+                .catch(err => console.log(err));
+        }
+    }, []
+    );
+*/
+    //console.log(taskData);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setTaskData({ ...taskData, [name]: value, ["task_creation_date"]: currentDate });
+    }
+
+    
+
+
+//console.log(prevCreationDate);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(taskData);
+        setErr(null);
+        setSucc(null);
+    /*    try {
+            const response = await makeRequest.post(`/tasks/addtask/${orderid}`, taskData);
+            setSucc(response.data[0].successmsg);
+            console.log(response.data);
+            navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
+        } catch (err) {
+            setErr(err.response.data);
+        }
+        */
+    }
+
+    return (
+        <div className='task'>
+            <TopNav prevStep={-1} />
+            <h2 className='text-center my-3'>Edit Task</h2>
+
+            {error ? "Something went wrong!" : (isLoading
+                                    ? <ThreeDots
+                                        height="80"
+                                        width="80"
+                                        radius="9"
+                                        color="#4fa94d"
+                                        ariaLabel="three-dots-loading"
+                                        wrapperStyle={{}}
+                                        wrapperClassName=""
+                                        visible={true}
+                                    />
+                                    :
+
+            <div className='mainDiv'>
+                <div className="mainWrapper">
+                    <form onSubmit={handleSubmit} >
+                        <div className='row'>
+                            <div className='col-8'>
+                                <div className="form-floating mb-3">
+                                    <textarea id='task_description' className="form-control" style={{ height: "400px" }} name='task_description' onChange={handleChange} value={taskData["task_description"] || taskData.description} placeholder='Task Description' required />
+                                    <label htmlFor="task_description">Task Description</label>
+                                </div>
+                            </div>
+                            <div className='col-4'>
+                                <div className='form-floating mb-3'>
+                                    <input id='task_notes' type='text' className='form-control' value={taskData["task_notes"] || taskData.notes=="undefined" ? "" : taskData.notes} name='task_notes' onChange={handleChange} placeholder="Here's Something" />
+                                    <label htmlFor="task_notes">Here's Something</label>
+                                </div>
+
+                                <div className='form-floating mb-3'>
+                                    <input type='date' className='form-control' value={taskData["task_creation_date"] || prevCreationDate } name='task_creation_date' required onChange={handleChange} placeholder='Creation Date' />
+                                    <label htmlFor='floatingInput'>Creation Date</label>
+                                </div>
+
+                                <div className='form-floating mb-3'>
+                                    <input type='date' className='form-control' value={taskData["task_due_date"] || ""} name='task_due_date' onChange={handleChange} placeholder='Due Date' />
+                                    <label htmlFor='floatingInput'>Due Date</label>
+                                </div>
+                                <button type='submit' className='btn btn-success'>Save</button>
+                                <div className='mb-3'>
+                                    <p className='text-danger'><strong>{err && err}</strong></p>
+                                    <p className='text-success'><strong>{succ && succ} </strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+            )}
+
+
+        </div>
+    )
+}
+
+
 const CarvingType = () => {
     return (
         <div>CarvingType</div>
@@ -976,6 +1106,163 @@ const Carving = (props) => {
         </div>
     )
 }
+
+
+
+
+const EditCarving = (props) => {
+    const [carvingData, setCarvingData] = useState("");
+    const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
+
+const {carvingid} = useParams();
+
+    const navigate = useNavigate();
+    const [prevBirthDate, setPrevBirthDate]  = useState("");
+    const [prevPassingDate, setPrevPassingDate]  = useState("");
+    const [prevDueDate, setPrevDueDate]  = useState("");
+    
+    const currentDate = new Date().toISOString().split('T')[0];
+const {taskid} = useParams();
+
+
+const { isLoading, error, data } = useQuery(['carvings'], () =>
+makeRequest.get("/carvings/getcarving/" + carvingid).then(res => {
+    const data = res.data[0];
+    setCarvingData(data);
+    const dateString = data.Birth_time;
+const dd =    new Date(dateString).toISOString().split('T')[0]
+setPrevBirthDate(dd);
+})
+);
+
+console.log(carvingData)
+
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setCarvingData({ ...carvingData, [name]: value });
+    };
+    const handleClick = async (e) => {
+        e.preventDefault();
+        console.log(carvingData);
+        setErr(null);
+        setSucc(null);
+    /*    try {
+            const response = await makeRequest.post(`/carvings/addcarving/${orderid}`, carvingData);
+            //console.log(response.data);
+            setSucc(response.data);
+            console.log(response);
+            navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
+        } catch (err) {
+            setErr(err.response.data);
+        }*/
+    }
+    return (
+        <div className='carving' style={{ margin: "0 auto" }}>
+            <TopNav prevStep={-1} />
+            <h2 className='text-center my-3'>Carving</h2>
+            <div className='cardItem shadow p-3 mx-3'>
+                <form onSubmit={handleClick}>
+                    <div className='carTopSection'>
+                        <div className='' onChange={handleChange}>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" id="inlineradio1" value="Front" name='car_side' />
+                                <label className="form-check-label" htmlFor="inlineradio1">Front</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" id="inlineradio2" value="Back" name='car_side' />
+                                <label className="form-check-label" htmlFor="inlineradio2">Back</label>
+                            </div>
+                        </div>
+                        <div className='carPosition'>
+                            <h5 className='h4 text-center my-3'>Position</h5>
+                            <div className='carvingPositionWrap' onChange={handleChange}>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Left" name='car_position' />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Top Center" name='car_position' />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Right" name='car_position' />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Center Left" name='car_position' />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Center Center" name='car_position' />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Center Right" name='car_position' />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Left" name='car_position' />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Center" name='car_position' />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Right" name='car_position' />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-4'>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={carvingData["car_first_name"] || carvingData.first_name} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange}  />
+                                <label htmlFor="floatingInput">First Name</label>
+                            </div>
+                        </div>
+                        <div className='col-4'>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={carvingData["car_middle_name"] || ""} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
+                                <label htmlFor="floatingInput">Middlename</label>
+                            </div>
+                        </div>
+                        <div className='col-4'>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={carvingData["car_last_name"] || carvingData.last_name} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                <label htmlFor="floatingInput">Lastname</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-6'>
+                            <div className="form-floating mb-3">
+                                <input type="date" value={carvingData["car_birth_date"] || ""} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange}  />
+                                <label htmlFor="floatingInput">Birth Date</label>
+                            </div>
+                        </div>
+                        <div className='col-6'>
+                            <div className="form-floating mb-3">
+                                <input type="date" value={carvingData["car_passing_date"] || ""} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange}  />
+                                <label htmlFor="floatingInput">Passing Date</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='col-12'>
+                        <div className="form-floating mb-3">
+                            <textarea name="car_notes" rows="4" value={carvingData["car_notes"] || carvingData.other_details} style={{ height: "150px" }} className="form-control"  onChange={handleChange} />
+                            <label htmlFor="floatingInput"></label>
+                        </div>
+                    </div>
+                    <div className='buttonWrapper'>
+                        <button className='btn btn-primary'>Save</button>
+                        <p className='custResponse text-danger'><strong> {err && err}</strong></p>
+                        <p className='custResponse text-success'><strong>{succ && succ}</strong></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}
+
+
+
+
 
 const Status = () => {
     const [userData, setUserData] = useState("");
@@ -1159,7 +1446,7 @@ const OrderServices = (props) => {
                                     />
                                     : data.map((jobdetail, key) =>
                                         <li key={key}> <p> <span className='icon'><FaHome /></span>
-                                         <Link to={jobdetail.type == "task" ? `/dashboard/customer/${customerId}/order/${orderid}/task/${jobdetail.id}` : jobdetail.type == "product" ? `/dashboard/customer/${customerId}/order/${orderid}/product/${jobdetail.id}` : jobdetail.type == "carving" ? `/dashboard/customer/${customerId}/order/${orderid}/carving/${jobdetail.id}` : "" }>
+                                         <Link to={jobdetail.type == "task" ? `/dashboard/customer/${customerId}/order/${orderid}/task/${jobdetail.id}` : jobdetail.type == "product" ? `/dashboard/product/edit/${jobdetail.id}` : jobdetail.type == "carving" ? `/dashboard/customer/${customerId}/order/${orderid}/carving/${jobdetail.id}` : "" }>
                                          {`${jobdetail.type}: ${jobdetail.description}`}
                                          </Link>
                                           </p> </li>
@@ -1174,4 +1461,4 @@ const OrderServices = (props) => {
     )
 }
 export default Customer;
-export { Customer, Status, Order, OrderServices, Carving, CarvingType, Task, Product, EditProduct }
+export { Customer, Status, Order, OrderServices, Carving,EditCarving, CarvingType, Task,EditTask, Product, EditProduct }
