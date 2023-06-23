@@ -14,10 +14,10 @@ const Dashboard = () => {
     navigate("/dashboard/customer/addcustomer");
   }
 
-const handleChange = (e) =>{
-e.preventDefault();
-setSearch(e.target.value);
-}
+  const handleChange = (e) => {
+    e.preventDefault();
+    setSearch(e.target.value);
+  }
 
   return (
     <>
@@ -31,7 +31,7 @@ setSearch(e.target.value);
                 <div className='col-6 '>
 
 
-                  <div className="calender">
+                 { /* <div className="calender">
 
                     <div className="container shadow py-4 d-flex flex-column align-items-center">
 
@@ -49,20 +49,20 @@ setSearch(e.target.value);
                     </div>
 
 
-                  </div>
+                  </div> */ }
                 </div>
 
 
 
                 <div className="col-6 px-5">
-                  <div className="topButton d-flex justify-content-center mb-4">
+                 { <div className="topButton d-flex justify-content-center mb-4">
                     <div className="buttonInner">
-                    <Link to={"/dashboard/search"} >
-                      <button className='btn btn-primary btn-lg'>
-                       
-                        <FaSearch />
-                        
-                      </button>
+                      <Link to={"/dashboard/search"} >
+                        <button className='btn btn-primary btn-lg'>
+
+                          <FaSearch />
+
+                        </button>
                       </Link>
 
                       <button className='btn btn-success btn-lg mx-3' onClick={handleClick}>
@@ -77,11 +77,11 @@ setSearch(e.target.value);
 
 
                     </div>
-                  </div>
+                  </div>}
 
 
 
-                  <div className="latestUpdate">
+                { /* <div className="latestUpdate">
                     <div className="item">
                       <div className="leftContent">
                         <img src={dummy} alt='' width={75} height={75} />
@@ -162,27 +162,11 @@ setSearch(e.target.value);
                         <p>Secondar text</p>
                       </div>
                     </div>
-
-
-
-
-
-
-
-
-
-
-                  </div>
-
+                  </div> */}
 
 
                 </div>
-
-
-
-
               </div>
-
             </div>
           </div>
         </div>

@@ -123,5 +123,5 @@ const hideConfirmationModal = () => {
     </div>
   )
 }
-
+ 
 export default Customers;

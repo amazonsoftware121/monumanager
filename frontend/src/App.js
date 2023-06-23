@@ -11,7 +11,7 @@ import LeftBar from './components/leftBar/LeftBar';
 import Home from './pages/home/Home';
 import Dashboard from './pages/dashboard/Dashboard';
 import Job from "../src/pages/dashboard/job/Job";
-import { Carving, Customer, Order, OrderServices, Product, Status, Task } from './pages/dashboard/customer/Customer';
+import { Carving,EditCarving, Customer, EditTask, Order, OrderServices, Product, Status, Task } from './pages/dashboard/customer/Customer';
 import Search from "../src/pages/dashboard/search/Search"
 import './style.scss';
 import { useContext } from 'react';
@@ -25,7 +25,7 @@ import Tasks from "./pages/dashboard/tasks/Tasks";
 import { QueryClient, QueryClientProvider } from 'react-query'
 import AddCustomer from './pages/dashboard/customer/AddCustomer';
 import { CustomerDetails } from './pages/dashboard/customer/Customer';
-
+import { EditProduct } from './pages/dashboard/customer/Customer';
 
 function App() {
     const { currentUser } = useContext(AuthContext);
@@ -108,12 +108,28 @@ function App() {
                     element: <Task />
                 },
                 {
+                    path: "/dashboard/customer/:customerId/order/:orderid/task/:taskid",
+                    element: <Task />
+                },
+                {
+                    path: "/dashboard/task/edit/:taskid",
+                    element: <EditTask />
+                },
+                {
                     path: "/dashboard/customer/:customerId/order/:orderid/addcarving",
+                    element: <Carving />
+                },
+                {
+                    path: "/dashboard/customer/:customerId/order/:orderid/carving/:carvingid",
                     element: <Carving />
                 },
                 {
                     path: "/dashboard/customer/:customerId/order/:orderid/addproduct",
                     element: <Product />
+                },
+                {
+                    path: "/dashboard/product/edit/:productid",
+                    element: <EditProduct />
                 },
                 {
                     path: "/dashboard/customer/:customerId/order/:orderid/status",
@@ -138,6 +154,10 @@ function App() {
                 {
                     path: "/dashboard/carvings",
                     element: <Carvings />
+                },
+                {
+                    path: "/dashboard/carving/edit/:carvingid",
+                    element: <EditCarving />
                 },
                 {
                     path: "/dashboard/products",

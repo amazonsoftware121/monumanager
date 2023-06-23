@@ -63,7 +63,7 @@ const Tasks = () => {
                     <td>{task.description}</td>
                     <td><Moment format="D MMM YYYY" withTitle>{task.creation_time}</Moment></td>
                     <td><Moment format="D MMM YYYY" withTitle>{task.due_date}</Moment></td>
-                    <td> <Link title="Edit" to={`/dashboard/job/${task.id}`}><FaEdit /></Link> <span title='Delete' class="iconBtn" onClick={() => handleDelete(task.id)}><FaTrash color="red" /></span>   </td>
+                    <td> <Link title="Edit" to={`/dashboard/task/edit/${task.id}`}><FaEdit /></Link> <span title='Delete' class="iconBtn" onClick={() => handleDelete(task.id)}><FaTrash color="red" /></span>   </td>
                   </tr>)
               }))}
           </tbody>
