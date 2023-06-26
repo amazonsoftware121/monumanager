@@ -8,7 +8,6 @@ import { Alert } from "react-bootstrap";
 import DeleteConfirmation from "../../../components/DeleteConfirmation";
 import { useState } from 'react';
 
-
 const Products = () => {
   const { isLoading, error, data } = useQuery(['products'], () =>
     makeRequest.get("/products/getproducts").then(res => {
@@ -42,14 +41,11 @@ const hideConfirmationModal = () => {
 
   try {
     const response = await makeRequest.delete("/products/deleteproduct/"+id);
-    setProductMessage(`Product was deleted successfully.`);
-
-
-
-    setDisplayConfirmationModal(false);
     makeRequest.get("/products/getproducts").then(res => {
       setProductData(res.data);
     });
+    setProductMessage(`Product was deleted successfully.`);
+    setDisplayConfirmationModal(false);
     
   } catch (error) {
     console.log(error);

@@ -421,7 +421,7 @@ const Order = (props) => {
                                             wrapperClassName=""
                                             visible={true}
                                         /> : jobTasks.map((jobtask) => <li key={jobtask.id}>
-                                            <Link title="Edit" to={`/dashboard/customer/${customerId}/order/${orderid}/task/${jobtask.id}`} state={jobtask}> <span><FaHome /> </span> Task:  {jobtask.description}</Link>
+                                            <Link title="Edit" to={`/dashboard/task/edit/${jobtask.id}`} state={jobtask}> <span><FaHome /> </span> Task:  {jobtask.description}</Link>
                                         </li>))}
                                 </ul>
                             </div>
@@ -1443,10 +1443,9 @@ const OrderServices = (props) => {
                                         wrapperStyle={{}}
                                         wrapperClassName=""
                                         visible={true}
-                                    />
-                                    : data.map((jobdetail, key) =>
+                                    /> : data && data.map((jobdetail, key) =>
                                         <li key={key}> <p> <span className='icon'><FaHome /></span>
-                                         <Link to={jobdetail.type == "task" ? `/dashboard/customer/${customerId}/order/${orderid}/task/${jobdetail.id}` : jobdetail.type == "product" ? `/dashboard/product/edit/${jobdetail.id}` : jobdetail.type == "carving" ? `/dashboard/customer/${customerId}/order/${orderid}/carving/${jobdetail.id}` : "" }>
+                                         <Link to={jobdetail.type == "task" ? `/dashboard/task/edit/${jobdetail.id}` : jobdetail.type == "product" ? `/dashboard/product/edit/${jobdetail.id}` : jobdetail.type == "carving" ? `/dashboard/carving/edit/${jobdetail.id}` : "" }>
                                          {`${jobdetail.type}: ${jobdetail.description}`}
                                          </Link>
                                           </p> </li>
