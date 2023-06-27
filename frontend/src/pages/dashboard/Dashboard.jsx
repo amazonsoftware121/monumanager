@@ -5,6 +5,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { FaSearch, FaPlus, FaCog } from 'react-icons/fa';
 import dummy from "../../images/dummy.jpg";
+import Search from './search/Search';
 
 const Dashboard = () => {
   const [value, onChange] = useState(new Date());
@@ -167,6 +168,7 @@ const Dashboard = () => {
 
                 </div>
               </div>
+              <Search />
             </div>
           </div>
         </div>

@@ -8,8 +8,6 @@ import { Alert } from "react-bootstrap";
 import DeleteConfirmation from "../../../components/DeleteConfirmation";
 import { useState } from 'react';
 
-
-
 const Customers = () => {
 
   const { isLoading, error, data } = useQuery(['customers'], () =>
@@ -49,9 +47,6 @@ const hideConfirmationModal = () => {
       setCustomerData(res.data);
     });
     setCustomerMessage(`Customer was deleted successfully.`);
-
-
-
     setDisplayConfirmationModal(false);
   } catch (error) {
     console.log(error);
@@ -72,17 +67,7 @@ const hideConfirmationModal = () => {
     navigate("/dashboard/job");
   }
 
-  const handleDelete = async (id) => {
 
-    try {
-
-      const response = await makeRequest.delete("/customers/deletecustomer/"+id);
-      window.location.reload();
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   return (
     <div className='customers'>
