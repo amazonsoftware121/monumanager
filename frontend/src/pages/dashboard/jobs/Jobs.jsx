@@ -1,30 +1,29 @@
-import React from 'react'
-import { useQuery } from 'react-query';
 import { makeRequest } from '../../../axios';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { ThreeDots } from 'react-loader-spinner'
-import { navigator } from 'react-router-dom'
+import {GrStatusInfo } from 'react-icons/gr';
+import { TbNotes } from 'react-icons/tb';
+import { ThreeDots } from 'react-loader-spinner';
+import { navigator } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert } from "react-bootstrap";
 import DeleteConfirmation from "../../../components/DeleteConfirmation";
-import { useState } from 'react';
-
+import { useState,useEffect } from 'react';
+import PageTitle from '../../../components/PageTitle';
 const Jobs = () => {
-  const {isLoading, error, data } = useQuery(['jobs'], () =>
+  const[jobData, setJobData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(()=>{
   makeRequest.get("/jobs/getjobs").then(res=>{
-      return res.data;
+      setJobData(res.data);
+      setIsLoading(false);
   })
-  );
-console.log(data);
-
-
+});
 
 
 const [id, setId] = useState(null);
   const [displayConfirmationModal, setDisplayConfirmationModal] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(null);
   const [jobMessage, setJobMessage] = useState(null);
-const [jobData, setJobData] = useState(data);
 
 
 
@@ -59,16 +58,7 @@ const hideConfirmationModal = () => {
   }
 };
 
-
-
-
-
-
-  
-  console.log(data);
-
-  const navigate = useNavigate();
-
+const navigate = useNavigate();
   const handleEdit = async (e) => {
     navigate("/dashboard/job");
   }
@@ -89,35 +79,21 @@ const hideConfirmationModal = () => {
 
 return (
   <div className='jobs'>
-  <h3 className='text-center mt-5 text-uppercase'>Jobs</h3>
-  <table className="table table-striped">
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>Status</th>
-      <th>Notes</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-{error ? "Something went wrong!" :  (isLoading
-? <tr><td width="100%"><ThreeDots 
-height="80" 
-width="80" 
-radius="9"
-color="#4fa94d" 
-ariaLabel="three-dots-loading"
-wrapperStyle={{}}
-wrapperClassName=""
-visible={true} /></td></tr>
-: data.map((job) => <tr key={job.id}> 
-<td> {job.id} </td>
-<td>{job.status}</td>
-<td>{job.notes}</td>
-<td> <Link title="Edit" to={`/dashboard/customer/${job.customer_id}/order/${job.id}`}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(job.notes, job.id)}><FaTrash color="red" /></span>   </td>
+  <PageTitle title={"Jobs"} />
 
- </tr>))}</tbody>
-</table>
+  
+  
+  <div className='row'>
+{ jobData.map((job) => <div className='col-md-3' key={job.id}> 
+<div class="card mb-3">
+      <div class="card-body">
+      <h6 class="card-title">{job.notes}</h6>
+<p className='card-text'><GrStatusInfo className='me-2' />{job.status ? job.status : "Not Updated"}</p>
+
+<div class="d-flex justify-content-between">  <Link title="Edit" to={`/dashboard/customer/${job.customer_id}/order/${job.id}`}><FaEdit /></Link> <span title='Delete' className="iconBtn" onClick={() => showDeleteModal(job.notes, job.id)}><FaTrash color="red" /></span>   </div>
+
+</div>
+</div> </div>)}</div>
 <DeleteConfirmation showModal={displayConfirmationModal} confirmModal={submitDelete} hideModal={hideConfirmationModal} id={id} message={deleteMessage}  />
   </div>
 )

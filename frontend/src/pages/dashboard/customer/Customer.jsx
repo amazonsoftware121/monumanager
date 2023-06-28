@@ -338,7 +338,7 @@ const Order = (props) => {
     return (
         <>
             <div className="order">
-                <TopNav prevStep={`/dashboard/customer/${customerId}`} />
+                <TopNav prevStep={-1} />
                 <h2 className='text-center my-3'>Order Info</h2>
 
                 <div className="row">

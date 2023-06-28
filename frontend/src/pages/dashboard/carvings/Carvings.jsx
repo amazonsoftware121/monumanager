@@ -5,6 +5,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { ThreeDots } from  'react-loader-spinner'
 import { Link } from 'react-router-dom'
 import Moment from 'react-moment';
+import PageTitle from '../../../components/PageTitle';
 
 
 
@@ -32,7 +33,8 @@ const [succ, setSucc] = useState("");
   return (
     <>
    <div className='carvings'>
-  <h3 className='text-center mt-5 text-uppercase'>Carvings</h3>
+   <PageTitle title={"Carvings"} />
+
   <table className="table table-striped">
   <thead>
     <tr>

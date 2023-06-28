@@ -6,6 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { FaSearch, FaPlus, FaCog } from 'react-icons/fa';
 import dummy from "../../images/dummy.jpg";
 import Search from './search/Search';
+import PageTitle from '../../components/PageTitle';
 
 const Dashboard = () => {
   const [value, onChange] = useState(new Date());
@@ -24,6 +25,7 @@ const Dashboard = () => {
     <>
 
       <div className="adminContent">
+      
         <div className="">
           <div className="row flex-nowrap">
             <div className="rightBar col py-3">
@@ -168,9 +170,13 @@ const Dashboard = () => {
 
                 </div>
               </div>
+              <PageTitle title={"Dashboard"} />
               <Search />
             </div>
+
+
           </div>
+          
         </div>
       </div>
 

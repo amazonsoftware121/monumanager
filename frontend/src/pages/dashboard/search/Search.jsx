@@ -1,8 +1,10 @@
 import { makeRequest } from '../../../axios';
-import { FaHouseUser } from 'react-icons/fa';
+import { FaEye, FaHouseUser } from 'react-icons/fa';
+import { FaEdit, FaTrash,FaUser,FaEnvelope, FaPhoneAlt } from 'react-icons/fa';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import PageTitle from '../../../components/PageTitle';
 
 const Search = () => {
   const [filter, setFilter] = useState('');
@@ -51,7 +53,7 @@ const Search = () => {
     <>
       
       <div className='searchPage'>
-     
+
         <div className='searchData row'>
           
           <div className='col-md-12'>
@@ -171,18 +173,29 @@ const Search = () => {
         />
         </div>
 
-              <ul>
+              <div className='row mt-5'>
                 {filteredData.map((customer) => (
-                  <li key={customer.id}>
+                  
+                  <div className='col-md-3' key={customer.id}>
+                  <div class="card mb-3">
+      <div class="card-body">
                     <Link
                       title='Edit'
                       to={`/dashboard/customer/${customer.id}`}
                     >
-                      <FaHouseUser /> {customer.first_name} {customer.middle_name} {customer.last_name}
+            <h6 class="card-title"><small className='me-2'><FaUser /></small>{customer.first_name} {customer.middle_name} {customer.last_name}</h6>
+            <p class="card-text customerEmail"><FaEnvelope className='me-2' />{customer.email}</p>
+            <p class="card-text"><FaPhoneAlt className='me-2' />{customer.phone}</p>
+            
+
+
+
                     </Link>
-                  </li>
+                    </div>
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
             
             

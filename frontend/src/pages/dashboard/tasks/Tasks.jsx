@@ -5,6 +5,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { ThreeDots } from 'react-loader-spinner'
 import Moment from 'react-moment';
 import { Link } from 'react-router-dom'
+import PageTitle from '../../../components/PageTitle';
 
 
 const Tasks = () => {
@@ -32,7 +33,9 @@ const Tasks = () => {
   return (
     <>
       <div className='tasks'>
-        <h3 className='text-center mt-5 text-uppercase'>Tasks</h3> 
+
+      <PageTitle title={"Tasks"} />
+        
         <table className="table table-striped">
           <thead>
             <tr>

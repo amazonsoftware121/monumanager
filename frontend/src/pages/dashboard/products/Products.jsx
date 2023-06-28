@@ -6,6 +6,7 @@ import { ThreeDots } from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import DeleteConfirmation from '../../../components/DeleteConfirmation';
+import PageTitle from '../../../components/PageTitle';
 
 const Products = () => {
   const queryClient = useQueryClient();
@@ -49,7 +50,8 @@ const Products = () => {
   return (
     <>
       <div className="products">
-        <h3 className="text-center mt-5 text-uppercase">Products</h3>
+      <PageTitle title={"Products"} />
+        
         {productMessage && (
           <p className="text-center text-success">
             <strong>{productMessage}</strong>
