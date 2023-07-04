@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useState, useEffect } from "react";
+import { makeRequest } from "../axios";
 
 export const AuthContext = createContext();
 
@@ -9,7 +10,7 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (inputs) => {
-    const res = await axios.post("https://amaronsoftware.com/monumanagerapi/api/auth/login", inputs, {
+    const res = await makeRequest.post("/auth/login", inputs, {
       withCredentials: true,
     });
 
@@ -17,7 +18,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const logout = async (inputs) => {
-    await axios.post("https://amaronsoftware.com/monumanagerapi/api/auth/logout");
+    await makeRequest.post("/auth/logout");
     setCurrentUser(null);
   }
 

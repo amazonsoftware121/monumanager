@@ -86,6 +86,7 @@ const Products = () => {
               </tr>
             ) : (
               data.map((product) => (
+                
                 <tr>
                   <td>{product.id}</td>
                   <td>{product.description}</td>
