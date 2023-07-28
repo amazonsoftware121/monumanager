@@ -1,10 +1,22 @@
 @import "../../style.scss";
-    .leftBar{
-    background-color: #e5e5e5 !important;
-    box-shadow: 0 0px 5px 0px #b2b2b299;
+
+.leftBar {
+    background-color: #fff !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    margin: 20px;
     padding-top: 20px;
-    .nav-link{
-        color: #000;
-        font-weight: 500;
+
+    ul {
+        width: 100%;
+        padding: 15px;
+        li {
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            .nav-link {
+                color: #000;
+                font-weight: 500;
+            }
+        }
     }
-    }
+}
