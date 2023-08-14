@@ -1127,7 +1127,7 @@ const Carving = (props) => {
                         </div>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={carvingData["car_last_name"] || ""} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                <input type="text" value={carvingData["car_last_name"] || ""} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} />
                                 <label htmlFor="floatingInput">Lastname</label>
                             </div>
                         </div>
@@ -1196,10 +1196,14 @@ console.log(carvingData)
 
 
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setCarvingData({ ...carvingData, [name]: value });
-    };
+const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCarvingData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
     const handleClick = async (e) => {
         e.preventDefault();
         console.log(carvingData);
@@ -1234,33 +1238,42 @@ console.log(carvingData)
                         </div>
                         <div className='carPosition'>
                             <h5 className='h4 text-center my-3'>Position</h5>
-                            <div className='carvingPositionWrap' onChange={handleChange}>
+                            <div className='carvingPositionWrap'>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Left" name='car_position' />
+                                <input
+  className="form-check-input"
+  type="radio"
+  id="inlineradio1"
+  checked={carvingData.position === 'Top Left'}
+  value="Top Left"
+  name='car_position'
+  onChange={handleChange}
+/>
+
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Top Center" name='car_position' />
+                                    <input className="form-check-input" type="radio" id="inlineradio1" checked={carvingData.position === 'Top Center'} value="Top Center" name='car_position' onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Right" name='car_position' />
+                                    <input className="form-check-input" type="radio" id="inlineradio2" checked={carvingData.position === 'Top Right'} value="Top Right" name='car_position' onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Center Left" name='car_position' />
+                                    <input className="form-check-input" type="radio" id="inlineradio3" checked={carvingData.position === 'Center Left'} value="Center Left" name='car_position' onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Center Center" name='car_position' />
+                                    <input className="form-check-input" type="radio" id="inlineradio4" checked={carvingData.position === 'Center Center'} value="Center Center" name='car_position' onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Center Right" name='car_position' />
+                                    <input className="form-check-input" type="radio" id="inlineradio5" checked={carvingData.position === 'Center Right'} value="Center Right" name='car_position' onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Left" name='car_position' />
+                                    <input className="form-check-input" type="radio" id="inlineradio6" checked={carvingData.position === 'Bottom Left'} value="Bottom Left" name='car_position' onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Center" name='car_position' />
+                                    <input className="form-check-input" type="radio" id="inlineradio7" checked={carvingData.position === 'Bottom Center'} value="Bottom Center" name='car_position' onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Right" name='car_position' />
+                                    <input className="form-check-input" type="radio" id="inlineradio8" checked={carvingData.position === 'Bottom Right'} value="Bottom Right" name='car_position' onChange={handleChange} />
                                 </div>
                             </div>
                         </div>
@@ -1280,7 +1293,7 @@ console.log(carvingData)
                         </div>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={carvingData["car_last_name"] || carvingData.last_name} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                <input type="text" value={carvingData["car_last_name"] || carvingData.last_name} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} />
                                 <label htmlFor="floatingInput">Lastname</label>
                             </div>
                         </div>
@@ -1502,8 +1515,9 @@ const OrderServices = (props) => {
                                     /> : data && data.map((jobdetail, key) =>
                                         <li key={key}> <p> <span className='icon'><FaHome /></span>
                                          <Link to={jobdetail.type == "task" ? `/dashboard/task/edit/${jobdetail.id}` : jobdetail.type == "product" ? `/dashboard/product/edit/${jobdetail.id}` : jobdetail.type == "carving" ? `/dashboard/carving/edit/${jobdetail.id}` : "" }>
-                                         {`${jobdetail.type}: ${jobdetail.description}`}
+                                         { jobdetail.type=="carving" ? `${jobdetail.type}: ${jobdetail.description == null ? "Not Updated" : ""}` : jobdetail.type=="task" ? `${jobdetail.type}: ${jobdetail.description}` : ""}
                                          </Link>
+                                         
                                           </p> </li>
                                     ))}
                             </ul>
