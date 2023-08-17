@@ -22,7 +22,7 @@ const Customer = (props) => {
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
     const [recentOrders, setRecentOrders] = useState("");
-    const [display, setDisplay] = useState("false");
+    const [display, setDisplay] = useState(true);
     const [urlCustomerId, setUrlCustomerId] = useState(null);
     const [alrcust, setAlrcust] = useState(null);
     const navigate = useNavigate();
@@ -69,7 +69,6 @@ const Customer = (props) => {
         const { name, value } = e.target;
         /*setInputs({ ...inputs, [e.target.name]: e.target.value });*/
         setUserData({ ...userData, [name]: value });
-
     };
 
     const handleOnChange = () => {
@@ -210,7 +209,7 @@ const Customer = (props) => {
 
                                 <div className='recentOrderButton'>
                                     <div className="form-check form-switch">
-                                        <input onClick={toggleDisplay} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onChange={handleOnChange} />
+                                        <input onClick={toggleDisplay} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"  />
                                         <label className="form-check-label" htmlFor="flexSwitchCheckDefault"><strong>Show Recent Orders</strong></label>
                                     </div>
                                 </div>
