@@ -11,7 +11,7 @@ import LeftBar from './components/leftBar/LeftBar';
 import Home from './pages/home/Home';
 import Dashboard from './pages/dashboard/Dashboard';
 import Job from "../src/pages/dashboard/job/Job";
-import { Carving, Customer, Order, OrderServices, Product, Status, Task } from './pages/dashboard/customer/Customer';
+import { Carving,EditCarving, Customer, EditTask, Order, OrderServices, Product, Status, Task } from './pages/dashboard/customer/Customer';
 import Search from "../src/pages/dashboard/search/Search"
 import './style.scss';
 import { useContext } from 'react';
@@ -112,15 +112,15 @@ function App() {
                     element: <Task />
                 },
                 {
-                    path: "/dashboard/task/edit/:taskId",
-                    element: <Task />
+                    path: "/dashboard/task/edit/:taskid",
+                    element: <EditTask />
                 },
                 {
                     path: "/dashboard/customer/:customerId/order/:orderid/addcarving",
                     element: <Carving />
                 },
                 {
-                    path: "/dashboard/carving/edit/:carvingId",
+                    path: "/dashboard/customer/:customerId/order/:orderid/carving/:carvingid",
                     element: <Carving />
                 },
                 {
@@ -128,8 +128,8 @@ function App() {
                     element: <Product />
                 },
                 {
-                    path: "/dashboard/product/edit/:productId",
-                    element: <Product />
+                    path: "/dashboard/product/edit/:productid",
+                    element: <EditProduct />
                 },
                 {
                     path: "/dashboard/customer/:customerId/order/:orderid/status",

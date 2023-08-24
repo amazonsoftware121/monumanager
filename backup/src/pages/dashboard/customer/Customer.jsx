@@ -16,15 +16,7 @@ import { ThreeDots } from 'react-loader-spinner'
 import TopNav from '../../../components/TopNav';
 
 const Customer = (props) => {
-    const [userData, setUserData] = useState({
-        first_name: '',
-        middle_name: '',
-        last_name: '',
-        phone: '',
-        email: '',
-        address: '',
-        notes: ''
-    });
+    const [userData, setUserData] = useState("");
     const [order, setOrder] = useState(false);
 
     const [err, setErr] = useState(null);
@@ -34,27 +26,17 @@ const Customer = (props) => {
     const [urlCustomerId, setUrlCustomerId] = useState(null);
     const [alrcust, setAlrcust] = useState(null);
     const navigate = useNavigate();
-    const [isEditMode, setIsEditMode] = useState(false);
+
     let { customerId } = useParams();
 
 
 
     useEffect(() => {
         if (customerId) {
-            setIsEditMode(true);
             makeRequest.get("/customers/getsinglecustomer/" + customerId)
                 .then(res => {
                     const data = res.data[0];
-                    console.log(data);
-                    setUserData({
-                        first_name: data.first_name,
-                        middle_name: data.middle_name,
-                        last_name: data.last_name,
-                        phone: data.phone,
-                        email: data.email,
-                        address: data.address,
-                        notes: data.notes
-                    });
+                    setUserData(data);
                 })
                 .catch(err => console.log(err));
         }
@@ -100,36 +82,32 @@ const Customer = (props) => {
 
     }
 
-    const handleSubmit = async (e) => {
+    const handleClick = async (e) => {
         setErr(null);
         setSucc(null);
         e.preventDefault();
         try {
-            if (isEditMode) {
-
-
-                const response = await makeRequest.put(`/customers/editcustomer/${customerId}`, userData);
-                const ccName = `${userData?.first_name} ${!userData.middle_name ? "" : userData.middle_name} ${userData?.last_name}`;
-                setSucc(ccName + " Updated");
-            }
-            else {
-               
+            if (!customerId) {
                 const response = await makeRequest.post("/customers/addcustomer", userData);
                 const ccName = `${userData?.first_name} ${!userData.middle_name ? "" : userData.middle_name} ${userData?.last_name}`;
                 setSucc(ccName + " " + response.data[0].successmsg);
                 console.log(response.data[0].lastInserId);
-                customerId = response.data[0].lastInserId;
-                setUrlCustomerId(customerId);
-                setUserData({ ...userData, ["currentCustomerid"]: customerId });
-                makeRequest.get("/customers/getsinglecustomer/" + customerId)
+                const currcustomerId = response.data[0].lastInserId;
+                setUrlCustomerId(currcustomerId);
+                setUserData({ ...userData, ["currentCustomerid"]: currcustomerId });
+                makeRequest.get("/customers/getsinglecustomer/" + currcustomerId)
                     .then(res => {
                         const data = res.data[0];
                         setUserData(data);
-                        navigate(`/dashboard/customers/`);
-                    })                
-                
+                        navigate(`/dashboard/customer/${currcustomerId}`);
+                    })
+
+            }
+            else {
+
+            }
         }
-    }
+
         catch (err) {
             setErr(err.response.data[0].msg);
             setAlrcust(err.response.data[0].custid);
@@ -147,23 +125,23 @@ const Customer = (props) => {
                 <div className='row'>
                     <div className='col-7'>
                         <div className='cardItem shadow p-3 mx-3'>
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={handleClick}>
                                 <div className='row'>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["first_name"]} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} required />
+                                            <input type="text" value={userData["first_name"] || ""} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Firstname</label>
                                         </div>
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["middle_name"]} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
+                                            <input type="text" value={userData["middle_name"] || ""} name="middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Middlename</label>
                                         </div>
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["last_name"]} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                            <input type="text" value={userData["last_name"] || ""} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Lastname</label>
                                         </div>
                                     </div>
@@ -172,14 +150,14 @@ const Customer = (props) => {
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["phone"]} name="phone" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                            <input type="text" value={userData["phone"] || ""} name="phone" className="form-control" placeholder="phone" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Phone</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
 
                                         <div className="form-floating mb-3">
-                                            <input type="email" value={userData["email"]} name="email" className="form-control" placeholder="email" onChange={handleChange} required disabled={customerId && true} />
+                                            <input type="email" value={userData["email"] || ""} name="email" className="form-control" placeholder="email" onChange={handleChange} required disabled={customerId && true} />
                                             <label htmlFor="floatingInput">Email</label>
                                         </div>
                                     </div>
@@ -188,13 +166,13 @@ const Customer = (props) => {
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="address" value={userData["address"] } className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
+                                            <textarea name="address" value={userData["address"] || " "} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Address</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="notes" rows="4" value={userData["notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                            <textarea name="notes" rows="4" value={userData["notes"] || " "} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Notes</label>
                                         </div>
                                     </div>
@@ -206,7 +184,7 @@ const Customer = (props) => {
                                 <div className='buttonWrapper'>
 
 
-                                    <Button btnDesign="btn btn-primary" btnText="Archive" onClick={handleSubmit} />
+                                    <Button btnDesign="btn btn-primary" btnText="Archive" onClick={handleClick} />
 
                                     <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
 
@@ -287,7 +265,7 @@ const Order = (props) => {
     const [userData, setUserData] = useState("");
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
-    const [orderDetail, setOrderDetails] = useState({});
+    const [orderDetail, setOrderDetails] = useState("");
     const [jobTasks, setJobTasks] = useState([]);
     let { orderid } = useParams();
     let { customerId } = useParams();
@@ -311,7 +289,7 @@ const Order = (props) => {
 
     useEffect(() => {
         if (orderid) {
-            makeRequest.get(`/jobs/getjob/${orderid}`)
+            makeRequest.get("/jobs/getjob/" + orderid)
                 .then(res => {
                     const data = res.data[0];
                     setOrderDetails(data);
@@ -341,16 +319,16 @@ const Order = (props) => {
         setSucc(null);
         e.preventDefault();
         try {
-            if (orderid) {
-                
-            }
-            else {
+            if (!orderid) {
                 const response = await makeRequest.post("/jobs/addjob", userData);
                 setSucc(response.data[0].successmsg);
                 console.log(response.data[0].lastInserId);
                 const jobId = response.data[0].lastInserId;
                 setUserData({ ...userData, ["currentjobid"]: jobId });
                 navigate(`/dashboard/customer/${customerId}/order/${jobId}`);
+            }
+            else {
+
             }
         } catch (err) {
             setErr(err.response.data);
@@ -405,7 +383,7 @@ const Order = (props) => {
                             { /*<div className='col-6'>
                                 <div className="mb-3">
                                     <label htmlFor="orderDueDate" className="form-label">Order Due Date</label>
-                                    <input type='date' value={userData["order_due_date"]} id='order_due_date' name="order_due_date" className="form-control" placeholder="notes" onChange={handleChange} />
+                                    <input type='date' value={userData["order_due_date"] || ""} id='order_due_date' name="order_due_date" className="form-control" placeholder="notes" onChange={handleChange} />
 
                                 </div>
                             </div>*/ }
@@ -512,23 +490,13 @@ const Product = () => {
         formData.append('product_notes', productData["product_notes"]);
         formData.append('product_image', productImage);
         formData.append('currentjobid', productData["currentjobid"]);
-if(customerId){
-    try {
-        const res = await makeRequest.put(`/products/updateproduct/${productId}`, formData);
-        setSucc(res.data);
-    } catch (err) {
-        console.log(err)
-    }
 
-    }
-        else{
-            try {
-                const res = await makeRequest.post(`/products/addproduct/${orderid}`, formData);
-                setSucc(res.data);
-                navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
-            } catch (err) {
-                console.log(err)
-            }           
+        try {
+            const res = await makeRequest.post(`/products/addproduct/${orderid}`, formData);
+            setSucc(res.data);
+            navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
+        } catch (err) {
+            console.log(err)
         }
     }
     return (
@@ -545,7 +513,7 @@ if(customerId){
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea type="text" rows="4" value={productData["product_description"]} style={{ height: "112px" }} name="product_description" className="form-control" placeholder="Description" onChange={handleChange} required />
+                                            <textarea type="text" rows="4" value={productData["product_description"] || ""} style={{ height: "112px" }} name="product_description" className="form-control" placeholder="Description" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Description</label>
                                         </div>
                                     </div>
@@ -596,12 +564,9 @@ if(customerId){
                                     </div>
                                     <div className='col-6'>
                                         <div className="mb-3">
-{productId ? `` : <div className='text-center' htmlFor="product_image">
+                                            <div className='text-center' htmlFor="product_image">
                                                 <img src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' width={200} />
-                                            </div>}
-                                            
-
-
+                                            </div>
                                             <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
                                             <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleFile} />
                                         </div>
@@ -652,8 +617,214 @@ if(customerId){
 
 
 
+const EditProduct = () => {
+  const [productData, setProductData] = useState({});
+  const [err, setErr] = useState(null);
+  const [succ, setSucc] = useState(null);
+  const [productImage, setProductImage] = useState(null);
+  const navigate = useNavigate();
+  const { productid } = useParams();
+
+  useEffect(() => {
+    if (productid) {
+      makeRequest.get(`/products/getproduct/${productid}`)
+        .then(res => {
+          const data = res.data[0];
+          setProductData(data);
+        })
+        .catch(err => console.log(err));
+    }
+  }, [productid]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProductData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+
+    console.log(productData)
+
+  };
+
+  const handleFile = (e) => {
+    setProductImage(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErr(null);
+    setSucc(null);
+    if (productImage) {
+      //formData.append('product_image', productImage);
+    }
+
+    try {
+      const res = await makeRequest.put(`/products/updateproduct/${productid}`, productData);
+      setSucc(res.data);
+      navigate(-1);
+    } catch (err) {
+      setErr(err.response.data);
+    }
+  };
 
 
+  
+
+  return (
+    <>
+      <div className='customer'>
+        <TopNav prevStep={-1} />
+        <h2 className='text-center my-3'>Product</h2>
+        <div className='row'>
+          <div className='col-md-12'>
+            <div className='cardItem shadow p-3 mx-3'>
+              <h4>Update Product</h4>
+              <form onSubmit={handleSubmit}>
+                <div className='row'>
+                  <div className='col-6'>
+                    <div className="form-floating mb-3">
+                      <textarea
+                        type="text"
+                        rows="4"
+                        value={productData["product_description"] || productData.description}
+                        style={{ height: "112px" }}
+                        name="product_description"
+                        className="form-control"
+                        placeholder="Description"
+                        onChange={handleChange}
+                        required
+                      />
+                      <label htmlFor="floatingInput">Description</label>
+                    </div>
+                  </div>
+                  <div className='col-6'>
+                    <div className='row'>
+                      <div className='col-6'>
+                        <div className="form-floating mb-3">
+                          <select
+                            className="form-select form-control"
+                            aria-label="Default select example"
+                            name='product_color'
+                            value={productData["color"] || productData.color }
+                            onChange={handleChange}
+                          >
+                            <option defaultValue={"Color"}>Color</option>
+                            <option value="Red">Red</option>
+                            <option value="Black">Black</option>
+                            <option value="Gray">Gray</option>
+                          </select>
+                          <label htmlFor="floatingInput">Color</label>
+                        </div>
+                      </div>
+                      <div className='col-6'>
+                        <div className="form-floating mb-3">
+                          <input
+                            type="text"
+                            value={productData["product_size"] || productData.size}
+                            name="product_size"
+                            className="form-control"
+                            placeholder="Size"
+                            onChange={handleChange}
+                          />
+                          <label htmlFor="floatingInput">Size</label>
+                        </div>
+                      </div>
+                      <div className='col-6'>
+                        <div className="form-floating mb-3">
+                          <input
+                            type="number"
+                            value={productData["product_qty_on_hand"] || productData.quantity_on_hand }
+                            name="product_qty_on_hand"
+                            className="form-control"
+                            placeholder="Qty On Hand"
+                            onChange={handleChange}
+                          />
+                          <label htmlFor="floatingInput">Qty On Hand</label>
+                        </div>
+                      </div>
+                      <div className='col-6'>
+                        <div className="form-floating mb-3">
+                          <input
+                            type="number"
+                            value={productData["product_price"] || productData.price}
+                            name="product_price"
+                            className="form-control"
+                            placeholder="Price"
+                            onChange={handleChange}
+                          />
+                          <label htmlFor="floatingInput">Price</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-6'>
+                    <div className="form-floating mb-3">
+                      <textarea
+                        value={productData["product_options"] || productData.options}
+                        style={{ height: "100px" }}
+                        name="product_options"
+                        className="form-control"
+                        placeholder="Options"
+                        onChange={handleChange}
+                      />
+                      <label htmlFor="floatingInput">Options</label>
+                    </div>
+                    <div className="form-floating mb-3">
+                      <textarea
+                        name="product_notes"
+                        rows="4"
+                        value={productData["product_notes"] || productData.notes}
+                        style={{ height: "150px" }}
+                        className="form-control"
+                        placeholder="Notes"
+                        onChange={handleChange}
+                      />
+                      <label htmlFor="floatingInput">Notes</label>
+                    </div>
+                  </div>
+                  <div className='col-6'>
+                    <div className="mb-3">
+                      <div className='text-center' htmlFor="product_image">
+                        {productData.image_url ? (
+                          <img src={`https://amaronsoftware.com/monumanagerapi/static/${productData.image_url}`} width={200} alt="Product" />
+                        ) : (
+                          <span>No image available</span>
+                        )}
+                      </div>
+                      <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
+                      <input
+                        className="form-control"
+                        type="file"
+                        id="product_image"
+                        name="product_image"
+                        onChange={handleFile}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className='buttonWrapper'>
+                  <Button btnDesign="btn btn-primary" btnText="Archive" onClick={handleSubmit} />
+                  <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
+                </div>
+                {err && <p className='custResponse text-danger'>{err}</p>}
+                {succ && <p className='custResponse text-success'>{succ}</p>}
+
+
+                <p className='custResponse text-danger'>{err && err.sqlMessage}</p>
+<p className='custResponse text-success'>{succ && succ}</p>
+
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
 
 
 
@@ -661,151 +832,65 @@ if(customerId){
 
 
 const Task = () => {
-    const { customerId, orderid, taskId } = useParams();
+    const [taskData, setTaskData] = useState("");
+    const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
     const navigate = useNavigate();
-
-    const [taskData, setTaskData] = useState({
-        task_description: '',
-        task_notes: '',
-        task_creation_date: new Date().toISOString().split('T')[0],
-        task_due_date: new Date().toISOString().split('T')[0],
-    });
-
-    const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
-    const [isEditMode, setIsEditMode] = useState(false);
-
-    // Simulated API request to fetch task data for editing
-    useEffect(() => {
-        if (taskId) {
-            setIsEditMode(true);
-            // Replace this with your actual API URL for editing
-            makeRequest.get(`/tasks/gettask/${taskId}`)
-                .then((res) => {
-                    const data = res.data[0];
-                    setTaskData({
-                        task_description: data.description,
-                        task_notes: data.notes,
-                        task_creation_date: (data.creation_time).split('T')[0], // Convert to Date object
-                        task_due_date: data.due_date ? data.due_date.split('T')[0] : "", // Format due_date, handle null
-                    });
-                    console.log(data);
-                })
-                .catch((err) => {
-                    console.error('Error fetching task data:', err);
-                    setError('An error occurred while fetching task data for editing.');
-                });
-        }
-    }, [taskId, makeRequest, setIsEditMode, setTaskData, setError]);
-        
-    
-            
-    
-    
-
+    const { orderid, customerId } = useParams();
+    const currentDate = new Date().toISOString().split('T')[0];
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setTaskData({ ...taskData, [name]: value });
-        console.log(taskData);
-    };
+        setTaskData({ ...taskData, [name]: value, ["task_creation_date"]: currentDate });
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
-        setSuccessMessage(null);
-    
+        console.log(taskData);
+        setErr(null);
+        setSucc(null);
         try {
-            if (isEditMode) {
-                // Update an existing task
-                const response = await makeRequest.put(`/tasks/edittask/${taskId}`, taskData);
-                if (response.status === 200) {
-                    setSuccessMessage('Task updated successfully.');
-                    navigate(`/dashboard/tasks`);
-                    console.log("Updated");
-                } else {
-                    setError('Failed to update the task.');
-                }
-            } else {
-                // Add a new task
-                const response = await makeRequest.post(`/tasks/addtask/${orderid}`, taskData);
-                if (response.status === 200) {
-                    setSuccessMessage('Task added successfully.');
-                    navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
-                } else {
-                    setError('Failed to add the task.');
-                }
-            }
+            const response = await makeRequest.post(`/tasks/addtask/${orderid}`, taskData);
+            setSucc(response.data[0].successmsg);
+            console.log(response.data);
+            navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
         } catch (err) {
-            setError('An error occurred while saving the task.');
+            setErr(err.response.data);
         }
-    };
-    
+    }
 
     return (
         <div className='task'>
-            <h2 className='text-center my-3'>{isEditMode ? 'Edit Task' : 'Add Task'}</h2>
+            <TopNav prevStep={`/dashboard/customer/${customerId}/order/${orderid}/orderservices`} />
+            <h2 className='text-center my-3'>Task</h2>
             <div className='mainDiv'>
-                <div className='mainWrapper'>
-                    <form onSubmit={handleSubmit}>
-                        {/* Wrap your form fields in a <form> element */}
+                <div className="mainWrapper">
+                    <form onSubmit={handleSubmit} >
                         <div className='row'>
                             <div className='col-8'>
-                                <div className='form-floating mb-3'>
-                                    <textarea
-                                        id='task_description'
-                                        className='form-control'
-                                        style={{ height: '400px' }}
-                                        name='task_description'
-                                        onChange={handleChange}
-                                        value={taskData.task_description || ""}
-                                        placeholder='Task Description'
-                                        required
-                                    />
-                                    <label htmlFor='task_description'>Task Description</label>
+                                <div className="form-floating mb-3">
+                                    <textarea id='task_description' className="form-control" style={{ height: "400px" }} name='task_description' onChange={handleChange} value={taskData["task_description"] || ""} placeholder='Task Description' required />
+                                    <label htmlFor="task_description">Task Description</label>
                                 </div>
                             </div>
                             <div className='col-4'>
                                 <div className='form-floating mb-3'>
-                                    <input
-                                        id='task_notes'
-                                        type='text'
-                                        className='form-control'
-                                        value={taskData.task_notes || "" }
-                                        name='task_notes'
-                                        onChange={handleChange}
-                                        placeholder="Here's Something"
-                                    />
-                                    <label htmlFor='task_notes'>Here's Something</label>
+                                    <input id='task_notes' type='text' className='form-control' value={taskData["task_notes"] || ""} name='task_notes' onChange={handleChange} placeholder="Here's Something" />
+                                    <label htmlFor="task_notes">Here's Something</label>
                                 </div>
 
                                 <div className='form-floating mb-3'>
-                                    <input
-                                        type='date'
-                                        className='form-control'
-                                        value={taskData.task_creation_date}
-                                        name='task_creation_date'
-                                        required
-                                        onChange={handleChange}
-                                    />
-                                    <label htmlFor='task_creation_date'>Creation Date</label>
+                                    <input type='date' className='form-control' value={taskData["task_creation_date"] || currentDate} name='task_creation_date' required onChange={handleChange} placeholder='Creation Date' />
+                                    <label htmlFor='floatingInput'>Creation Date</label>
                                 </div>
 
                                 <div className='form-floating mb-3'>
-                                    <input
-                                        type='date'
-                                        className='form-control'
-                                        value={taskData.task_due_date}
-                                        name='task_due_date'
-                                        onChange={handleChange}
-                                    />
-                                    <label htmlFor='task_due_date'>Due Date</label>
+                                    <input type='date' className='form-control' value={taskData["task_due_date"] || ""} name='task_due_date' onChange={handleChange} placeholder='Due Date' />
+                                    <label htmlFor='floatingInput'>Due Date</label>
                                 </div>
-                                <button type='submit' className='btn btn-primary'>
-                                    {isEditMode ? 'Update' : 'Save'}
-                                </button>
+                                <button type='submit' className='btn btn-success'>Save</button>
                                 <div className='mb-3'>
-                                    {error && <p className='text-danger'>{error}</p>}
-                                    {successMessage && <p className='text-success'>{successMessage}</p>}
+                                    <p className='text-danger'><strong>{err && err}</strong></p>
+                                    <p className='text-success'><strong>{succ && succ} </strong></p>
                                 </div>
                             </div>
                         </div>
@@ -813,14 +898,134 @@ const Task = () => {
                 </div>
             </div>
         </div>
+    )
+}
+
+
+
+const EditTask = () => {
+    const [taskData, setTaskData] = useState("");
+    const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
+    const navigate = useNavigate();
+    const [prevCreationDate, setPrevCreationDate]  = useState("");
+    const [prevDueDate, setPrevDueDate]  = useState("");
+    
+    const currentDate = new Date().toISOString().split('T')[0];
+const {taskid} = useParams();
+
+
+const { isLoading, error, data } = useQuery(['carvings'], () =>
+makeRequest.get("/tasks/gettask/" + taskid).then(res => {
+    const data = res.data[0];
+    setTaskData(data);
+    const dateString = data.creation_time;
+const dd =    new Date(dateString).toISOString().split('T')[0]
+setPrevCreationDate(dd);
+})
+);
+
+  /*  useEffect(() => {
+        if (taskid) {
+            makeRequest.get("/tasks/gettask/" + taskid)
+                .then(res => {
+                    const data = res.data[0];
+                    setTaskData(data);
+                })
+                .catch(err => console.log(err));
+        }
+    }, []
     );
-};
+*/
+    //console.log(taskData);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setTaskData({ ...taskData, [name]: value, ["task_creation_date"]: currentDate });
+    }
+
+    
 
 
+//console.log(prevCreationDate);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(taskData);
+        setErr(null);
+        setSucc(null);
+    /*    try {
+            const response = await makeRequest.post(`/tasks/addtask/${orderid}`, taskData);
+            setSucc(response.data[0].successmsg);
+            console.log(response.data);
+            navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
+        } catch (err) {
+            setErr(err.response.data);
+        }
+        */
+    }
+
+    return (
+        <div className='task'>
+            <TopNav prevStep={-1} />
+            <h2 className='text-center my-3'>Edit Task</h2>
+
+            {error ? "Something went wrong!" : (isLoading
+                                    ? <ThreeDots
+                                        height="80"
+                                        width="80"
+                                        radius="9"
+                                        color="#4fa94d"
+                                        ariaLabel="three-dots-loading"
+                                        wrapperStyle={{}}
+                                        wrapperClassName=""
+                                        visible={true}
+                                    />
+                                    :
+
+            <div className='mainDiv'>
+                <div className="mainWrapper">
+                    <form onSubmit={handleSubmit} >
+                        <div className='row'>
+                            <div className='col-8'>
+                                <div className="form-floating mb-3">
+                                    <textarea id='task_description' className="form-control" style={{ height: "400px" }} name='task_description' onChange={handleChange} value={taskData["task_description"] || taskData.description} placeholder='Task Description' required />
+                                    <label htmlFor="task_description">Task Description</label>
+                                </div>
+                            </div>
+                            <div className='col-4'>
+                                <div className='form-floating mb-3'>
+                                    <input id='task_notes' type='text' className='form-control' value={taskData["task_notes"] || taskData.notes=="undefined" ? "" : taskData.notes} name='task_notes' onChange={handleChange} placeholder="Here's Something" />
+                                    <label htmlFor="task_notes">Here's Something</label>
+                                </div>
+
+                                <div className='form-floating mb-3'>
+                                    <input type='date' className='form-control' value={taskData["task_creation_date"] || prevCreationDate } name='task_creation_date' required onChange={handleChange} placeholder='Creation Date' />
+                                    <label htmlFor='floatingInput'>Creation Date</label>
+                                </div>
+
+                                <div className='form-floating mb-3'>
+                                    <input type='date' className='form-control' value={taskData["task_due_date"] || ""} name='task_due_date' onChange={handleChange} placeholder='Due Date' />
+                                    <label htmlFor='floatingInput'>Due Date</label>
+                                </div>
+                                <button type='submit' className='btn btn-success'>Save</button>
+                                <div className='mb-3'>
+                                    <p className='text-danger'><strong>{err && err}</strong></p>
+                                    <p className='text-success'><strong>{succ && succ} </strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
 
+            )}
 
 
+        </div>
+    )
+}
 
 
 const CarvingType = () => {
@@ -831,136 +1036,77 @@ const CarvingType = () => {
 
 
 const Carving = (props) => {
-    const { customerId, orderid,carvingId } = useParams();
-    const navigate = useNavigate();
-
-    const [carvingData, setCarvingData] = useState([{
-        car_side: '',
-        car_position: '',
-        car_first_name: '',
-        car_middle_name: '',
-        car_last_name: '',
-        car_birth_date: '',
-        car_passing_date: '',
-        car_notes: ''
-    }]);
+    const state = useLocation().state;
+    const [carvingData, setCarvingData] = useState("");
     const [err, setErr] = useState(null);
-    const [error, setError] = useState(null);
     const [succ, setSucc] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
-    const [isEditMode, setIsEditMode] = useState(false);
-
-
-    useEffect(() => {
-        if (carvingId) {
-            setIsEditMode(true);
-            // Replace this with your actual API URL for editing
-            makeRequest.get(`/carvings/getcarving/${carvingId}`)
-                .then((res) => {
-                    const data = res.data[0];
-                    setCarvingData({
-                        car_side: data.side == null ? "" : data.side,
-        car_position: data.position == null ? "" : data.position ,
-        car_first_name: data.first_name == null ? "" : data.first_name ,
-        car_middle_name: data.middle_name == null ? "" : data.middle_name,
-        car_last_name: data.last_name == null ? "" : data.last_name,
-        car_birth_date: data.passing_date == null ? null : data.birth_date.split('T')[0],
-        car_passing_date: data.passing_date == null ? null : data.passing_date.split('T')[0] ,
-        car_notes: data.other_details
-                    });
-                    console.log(data);
-                })
-                .catch((err) => {
-                    console.error('Error fetching Carving data:', err);
-                    setError('An error occurred while fetching Carving data for editing.');
-                });
-        }
-    }, [carvingId, makeRequest, setIsEditMode, setCarvingData, setError]);
-    
-    
+    const { customerId, orderid } = useParams();
+    const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCarvingData({ ...carvingData, [name]: value });
-
-        console.log(carvingData);
     };
-    const handleSubmit = async (e) => {
+    const handleClick = async (e) => {
         e.preventDefault();
-        setError(null);
-        setSuccessMessage(null);
-
+        console.log(carvingData);
         setErr(null);
         setSucc(null);
-
         try {
-            if (isEditMode) {
-                                // Update an existing task
-                                const response = await makeRequest.put(`/carvings/editcarving/${carvingId}`, carvingData);
-                                if (response.status === 200) {
-                                    setSuccessMessage('Carving updated successfully.');
-                                    navigate(`/dashboard/carvings`);
-                                    console.log("Updated");
-                                } else {
-                                    setError('Failed to update the Carving.');
-                                }
-                            } else {
-                
             const response = await makeRequest.post(`/carvings/addcarving/${orderid}`, carvingData);
             //console.log(response.data);
-           
+            setSucc(response.data);
             console.log(response);
             navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
-        } }
-        catch (err) {
+        } catch (err) {
             setErr(err.response.data);
         }
     }
     return (
         <div className='carving' style={{ margin: "0 auto" }}>
-            <TopNav prevStep={-1} />
-            <h2 className='text-center my-3'>{isEditMode ? 'Edit Carving' : 'Add Carving'}</h2>
+            <TopNav prevStep={`/dashboard/customer/${customerId}/order/${orderid}/orderservices`} />
+            <h2 className='text-center my-3'>Carving</h2>
             <div className='cardItem shadow p-3 mx-3'>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleClick}>
                     <div className='carTopSection'>
-                        <div className='' >
+                        <div className='' onChange={handleChange}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" id="inlineradio1" value="Front" checked={carvingData["car_side"] === "Front"} name='car_side' onChange={handleChange} />
+                                <input className="form-check-input" type="radio" id="inlineradio1" value="Front" name='car_side' />
                                 <label className="form-check-label" htmlFor="inlineradio1">Front</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" id="inlineradio2" value="Back" name='car_side' checked={carvingData["car_side"] === "Back"} onChange={handleChange} />
+                                <input className="form-check-input" type="radio" id="inlineradio2" value="Back" name='car_side' />
                                 <label className="form-check-label" htmlFor="inlineradio2">Back</label>
                             </div>
                         </div>
                         <div className='carPosition'>
                             <h5 className='h4 text-center my-3'>Position</h5>
-                            <div className='carvingPositionWrap' >
+                            <div className='carvingPositionWrap' onChange={handleChange}>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Left" name='car_position' checked={carvingData["car_position"]==="Top Left"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Left" name='car_position' />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Top Center" name='car_position' checked={carvingData["car_position"]==="Top Center"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Top Center" name='car_position' />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio3" value="Top Right" name='car_position' checked={carvingData["car_position"]==="Top Right"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Right" name='car_position' />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio4" value="Center Left" name='car_position' checked={carvingData["car_position"]==="Center Left"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Center Left" name='car_position' />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio5" value="Center Center" name='car_position' checked={carvingData["car_position"]==="Center Center"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Center Center" name='car_position' />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio6" value="Center Right" name='car_position' checked={carvingData["car_position"]==="Center Right"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Center Right" name='car_position' />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio7" value="Bottom Left" name='car_position' checked={carvingData["car_position"]==="Bottom Left"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Left" name='car_position' />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio8" value="Bottom Center" name='car_position' checked={carvingData["car_position"]==="Bottom Center"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Center" name='car_position' />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio9" value="Bottom Right" name='car_position' checked={carvingData["car_position"]==="Bottom Right"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Bottom Right" name='car_position' />
                                 </div>
                             </div>
                         </div>
@@ -968,19 +1114,19 @@ const Carving = (props) => {
                     <div className='row'>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={carvingData["car_first_name"]} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange}  />
+                                <input type="text" value={carvingData["car_first_name"] || ""} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange}  />
                                 <label htmlFor="floatingInput">First Name</label>
                             </div>
                         </div>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={carvingData["car_middle_name"]} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
+                                <input type="text" value={carvingData["car_middle_name"] || ""} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
                                 <label htmlFor="floatingInput">Middlename</label>
                             </div>
                         </div>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={carvingData["car_last_name"]} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} />
+                                <input type="text" value={carvingData["car_last_name"] || ""} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} />
                                 <label htmlFor="floatingInput">Lastname</label>
                             </div>
                         </div>
@@ -988,20 +1134,20 @@ const Carving = (props) => {
                     <div className='row'>
                         <div className='col-6'>
                             <div className="form-floating mb-3">
-                                <input type="date" value={carvingData["car_birth_date"]} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange}  />
+                                <input type="date" value={carvingData["car_birth_date"] || ""} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange}  />
                                 <label htmlFor="floatingInput">Birth Date</label>
                             </div>
                         </div>
                         <div className='col-6'>
                             <div className="form-floating mb-3">
-                                <input type="date" value={carvingData["car_passing_date"]} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange}  />
+                                <input type="date" value={carvingData["car_passing_date"] || ""} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange}  />
                                 <label htmlFor="floatingInput">Passing Date</label>
                             </div>
                         </div>
                     </div>
                     <div className='col-12'>
                         <div className="form-floating mb-3">
-                            <textarea name="car_notes" rows="4" value={carvingData["car_notes"]} style={{ height: "150px" }} className="form-control"  onChange={handleChange} />
+                            <textarea name="car_notes" rows="4" value={carvingData["car_notes"] || ""} style={{ height: "150px" }} className="form-control"  onChange={handleChange} />
                             <label htmlFor="floatingInput"></label>
                         </div>
                     </div>
@@ -1015,6 +1161,175 @@ const Carving = (props) => {
         </div>
     )
 }
+
+
+
+
+const EditCarving = (props) => {
+    const [carvingData, setCarvingData] = useState("");
+    const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
+
+const {carvingid} = useParams();
+
+    const navigate = useNavigate();
+    const [prevBirthDate, setPrevBirthDate]  = useState("");
+    const [prevPassingDate, setPrevPassingDate]  = useState("");
+    const [prevDueDate, setPrevDueDate]  = useState("");
+    
+    const currentDate = new Date().toISOString().split('T')[0];
+const {taskid} = useParams();
+
+
+const { isLoading, error, data } = useQuery(['carvings'], () =>
+makeRequest.get("/carvings/getcarving/" + carvingid).then(res => {
+    const data = res.data[0];
+    setCarvingData(data);
+    const dateString = data.Birth_time;
+const dd =    new Date(dateString).toISOString().split('T')[0]
+setPrevBirthDate(dd);
+})
+);
+
+console.log(carvingData)
+
+
+
+const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCarvingData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+    const handleClick = async (e) => {
+        e.preventDefault();
+        console.log(carvingData);
+        setErr(null);
+        setSucc(null);
+    /*    try {
+            const response = await makeRequest.post(`/carvings/addcarving/${orderid}`, carvingData);
+            //console.log(response.data);
+            setSucc(response.data);
+            console.log(response);
+            navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
+        } catch (err) {
+            setErr(err.response.data);
+        }*/
+    }
+    return (
+        <div className='carving' style={{ margin: "0 auto" }}>
+            <TopNav prevStep={-1} />
+            <h2 className='text-center my-3'>Carving</h2>
+            <div className='cardItem shadow p-3 mx-3'>
+                <form onSubmit={handleClick}>
+                    <div className='carTopSection'>
+                        <div className='' onChange={handleChange}>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" id="inlineradio1" value="Front" name='car_side' />
+                                <label className="form-check-label" htmlFor="inlineradio1">Front</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" id="inlineradio2" value="Back" name='car_side' />
+                                <label className="form-check-label" htmlFor="inlineradio2">Back</label>
+                            </div>
+                        </div>
+                        <div className='carPosition'>
+                            <h5 className='h4 text-center my-3'>Position</h5>
+                            <div className='carvingPositionWrap'>
+                                <div className="form-check form-check-inline">
+                                <input
+  className="form-check-input"
+  type="radio"
+  id="inlineradio1"
+  checked={carvingData.position === 'Top Left'}
+  value="Top Left"
+  name='car_position'
+  onChange={handleChange}
+/>
+
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio1" checked={carvingData.position === 'Top Center'} value="Top Center" name='car_position' onChange={handleChange} />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio2" checked={carvingData.position === 'Top Right'} value="Top Right" name='car_position' onChange={handleChange} />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio3" checked={carvingData.position === 'Center Left'} value="Center Left" name='car_position' onChange={handleChange} />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio4" checked={carvingData.position === 'Center Center'} value="Center Center" name='car_position' onChange={handleChange} />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio5" checked={carvingData.position === 'Center Right'} value="Center Right" name='car_position' onChange={handleChange} />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio6" checked={carvingData.position === 'Bottom Left'} value="Bottom Left" name='car_position' onChange={handleChange} />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio7" checked={carvingData.position === 'Bottom Center'} value="Bottom Center" name='car_position' onChange={handleChange} />
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" id="inlineradio8" checked={carvingData.position === 'Bottom Right'} value="Bottom Right" name='car_position' onChange={handleChange} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-4'>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={carvingData["car_first_name"] || carvingData.first_name} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange}  />
+                                <label htmlFor="floatingInput">First Name</label>
+                            </div>
+                        </div>
+                        <div className='col-4'>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={carvingData["car_middle_name"] || ""} name="car_middle_name" className="form-control" placeholder="middlename" onChange={handleChange} />
+                                <label htmlFor="floatingInput">Middlename</label>
+                            </div>
+                        </div>
+                        <div className='col-4'>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={carvingData["car_last_name"] || carvingData.last_name} name="car_last_name" className="form-control" placeholder="lastname" onChange={handleChange} />
+                                <label htmlFor="floatingInput">Lastname</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-6'>
+                            <div className="form-floating mb-3">
+                                <input type="date" value={carvingData["car_birth_date"] || ""} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange}  />
+                                <label htmlFor="floatingInput">Birth Date</label>
+                            </div>
+                        </div>
+                        <div className='col-6'>
+                            <div className="form-floating mb-3">
+                                <input type="date" value={carvingData["car_passing_date"] || ""} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange}  />
+                                <label htmlFor="floatingInput">Passing Date</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='col-12'>
+                        <div className="form-floating mb-3">
+                            <textarea name="car_notes" rows="4" value={carvingData["car_notes"] || carvingData.other_details} style={{ height: "150px" }} className="form-control"  onChange={handleChange} />
+                            <label htmlFor="floatingInput"></label>
+                        </div>
+                    </div>
+                    <div className='buttonWrapper'>
+                        <button className='btn btn-primary'>Save</button>
+                        <p className='custResponse text-danger'><strong> {err && err}</strong></p>
+                        <p className='custResponse text-success'><strong>{succ && succ}</strong></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}
+
+
+
 
 
 const Status = () => {
@@ -1214,4 +1529,4 @@ const OrderServices = (props) => {
     )
 }
 export default Customer;
-export { Customer, Status, Order, OrderServices, Carving, CarvingType, Task, Product, }
+export { Customer, Status, Order, OrderServices, Carving,EditCarving, CarvingType, Task,EditTask, Product, EditProduct }

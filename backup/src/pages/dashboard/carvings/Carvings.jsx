@@ -85,7 +85,7 @@ const Carvings = () => {
 <td><Moment format="D MMM YYYY" withTitle>{carving.passing_date}</Moment></td>
 <td>{carving.position}</td>
 <td>{carving.side}</td>
-<td> <Link title="Edit" to={`/dashboard/carving/edit/${carving.id}`} state={carving}><FaEdit /></Link> <span title='Delete' class="iconBtn" onClick={() => showDeleteModal(carving.id)}><FaTrash color="red" /></span>   </td>
+<td> <Link title="Edit" to={`/dashboard/carving?edit=${carving.id}`} state={carving}><FaEdit /></Link> <span title='Delete' class="iconBtn" onClick={() => showDeleteModal(carving.id)}><FaTrash color="red" /></span>   </td>
  </tr> )}
 </tbody>
 </table>
