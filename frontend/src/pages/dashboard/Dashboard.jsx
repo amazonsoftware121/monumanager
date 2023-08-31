@@ -32,9 +32,13 @@ const Dashboard = () => {
 
               <div className='row flex-nowrap'>
                 <div className='col-6 '>
+<div className='d-flex topAddLink '>
+  <Link to="customer/addcustomer" className='nav-link' >Add customer </Link>
 
+  <Link to="tasks/addtask" className='nav-link' >Add Task </Link>
 
-                 { /* <div className="calender">
+  <Link to="carvings/addcarving" className='nav-link' >Add Carving </Link>
+  </div>          { /* <div className="calender">
 
                     <div className="container shadow py-4 d-flex flex-column align-items-center">
 

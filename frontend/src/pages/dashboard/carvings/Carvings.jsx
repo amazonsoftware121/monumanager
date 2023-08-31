@@ -62,6 +62,8 @@ const Carvings = () => {
     <>
    <div className='carvings'>
    <PageTitle title={"Carvings"} />
+   <div class="addnew"><Link to="addcarving" className='btn btn-primary btn-lg mb-4' >Add Carving</Link> </div>
+
    {carvingMessage && <p className="text-center text-success"><strong>{carvingMessage}</strong></p>}
   <table className="table table-striped">
   <thead>

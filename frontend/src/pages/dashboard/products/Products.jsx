@@ -51,7 +51,8 @@ const Products = () => {
     <>
       <div className="products">
       <PageTitle title={"Products"} />
-        
+      <div class="addnew"><Link to="addproduct" className='btn btn-primary btn-lg mb-3' >Add Product</Link> </div>
+
         {productMessage && (
           <p className="text-center text-success">
             <strong>{productMessage}</strong>

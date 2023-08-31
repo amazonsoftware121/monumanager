@@ -10,7 +10,7 @@ import Button from '../../../components/Button';
 import { AuthContext } from "../../../context/authContext";
 import { makeRequest } from '../../../axios';
 import { useMutation, useQueryClient } from "react-query";
-
+import PageTitle from '../../../components/PageTitle';
 import { useQuery } from 'react-query';
 import { ThreeDots } from 'react-loader-spinner'
 import TopNav from '../../../components/TopNav';
@@ -113,7 +113,7 @@ const Customer = (props) => {
                 setSucc(ccName + " Updated");
             }
             else {
-               
+
                 const response = await makeRequest.post("/customers/addcustomer", userData);
                 const ccName = `${userData?.first_name} ${!userData.middle_name ? "" : userData.middle_name} ${userData?.last_name}`;
                 setSucc(ccName + " " + response.data[0].successmsg);
@@ -126,10 +126,10 @@ const Customer = (props) => {
                         const data = res.data[0];
                         setUserData(data);
                         navigate(`/dashboard/customers/`);
-                    })                
-                
+                    })
+
+            }
         }
-    }
         catch (err) {
             setErr(err.response.data[0].msg);
             setAlrcust(err.response.data[0].custid);
@@ -142,7 +142,7 @@ const Customer = (props) => {
         <>
 
             <div className='customer'>
-                 <TopNav prevStep={-1} />
+                <TopNav prevStep={-1} />
                 <h2 className='text-center my-3'>Customer</h2>
                 <div className='row'>
                     <div className='col-7'>
@@ -188,7 +188,7 @@ const Customer = (props) => {
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="address" value={userData["address"] } className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
+                                            <textarea name="address" value={userData["address"]} className="form-control" style={{ height: "150px" }} placeholder="address" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Address</label>
                                         </div>
                                     </div>
@@ -231,7 +231,7 @@ const Customer = (props) => {
 
                                 <div className='recentOrderButton'>
                                     <div className="form-check form-switch">
-                                        <input onClick={toggleDisplay} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"  />
+                                        <input onClick={toggleDisplay} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" />
                                         <label className="form-check-label" htmlFor="flexSwitchCheckDefault"><strong>Show Recent Orders</strong></label>
                                     </div>
                                 </div>
@@ -342,7 +342,7 @@ const Order = (props) => {
         e.preventDefault();
         try {
             if (orderid) {
-                
+
             }
             else {
                 const response = await makeRequest.post("/jobs/addjob", userData);
@@ -455,11 +455,22 @@ const Order = (props) => {
 }
 
 const Product = () => {
-    const [productData, setProductData] = useState("");
+    const { customerId, orderid } = useParams();
+    const [productData, setProductData] = useState({
+        product_description: "",
+        product_color: "",
+        product_size: "",
+        product_qty_on_hand: "",
+        product_price: "",
+        product_options: "",
+        product_notes: "",
+        product_image: null,
+        orderid: orderid
+    });
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
     const [productImage, setProductImage] = useState("");
-    const { customerId, orderid } = useParams();
+    
     const navigate = useNavigate();
     let { productId } = useParams();
 
@@ -486,8 +497,10 @@ const Product = () => {
     );
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProductData({ ...productData, [name]: value });
+        const { name, value, files } = e.target;
+        
+        setProductData({ ...productData, [name]: value || files[0] });
+        console.log(productData);
     };
 
     const handleFile = (e) => {
@@ -502,39 +515,30 @@ const Product = () => {
         setSucc(null);
         e.preventDefault();
 
-        const formData = new FormData();
-        formData.append('product_description', productData["product_description"]);
-        formData.append('product_color', productData["product_color"]);
-        formData.append('product_size', productData["product_size"]);
-        formData.append('product_qty_on_hand', productData["product_qty_on_hand"]);
-        formData.append('product_price', productData["product_price"]);
-        formData.append('product_options', productData["product_options"]);
-        formData.append('product_notes', productData["product_notes"]);
-        formData.append('product_image', productImage);
-        formData.append('currentjobid', productData["currentjobid"]);
-if(customerId){
-    try {
-        const res = await makeRequest.put(`/products/updateproduct/${productId}`, formData);
-        setSucc(res.data);
-    } catch (err) {
-        console.log(err)
-    }
-
-    }
-        else{
+        //const formData = new FormData();
+        if (productId) {
             try {
-                const res = await makeRequest.post(`/products/addproduct/${orderid}`, formData);
+                const res = await makeRequest.put(`/products/updateproduct/${productId}`, productData);
+                setSucc(res.data);
+            } catch (err) {
+                console.log(err)
+            }
+
+        }
+        else {
+            try {
+                const res = await makeRequest.post(`/products/addproduct/${orderid}`, productData);
                 setSucc(res.data);
                 navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
             } catch (err) {
                 console.log(err)
-            }           
+            }
         }
     }
     return (
         <>
             <div className='customer'>
-                <TopNav prevStep={`/dashboard/customer/${customerId}/order/${orderid}/orderservices`} />
+                <TopNav prevStep={-1} />
                 <h2 className='text-center my-3'>Product</h2>
                 <div className='row'>
                     <div className='col-md-8'>
@@ -553,11 +557,11 @@ if(customerId){
                                         <div className='row'>
                                             <div className='col-6'>
                                                 <div className="form-floating mb-3">
-                                                    <select className="form-select form-control" aria-label="Default select example" name='product_color' onChange={handleChange}>
+                                                    <select className="form-select form-control" value={productData.product_color || ""} aria-label="Default select example" name='product_color' onChange={handleChange}>
                                                         <option defaultValue={"Color"}>Color</option>
-                                                        <option value={productData["product_color"]} >Red</option>
-                                                        <option value={productData["product_color"]}>Black</option>
-                                                        <option value={productData["product_color"]}>Gray</option>
+                                                        <option value="Red" >Red</option>
+                                                        <option value="Black">Black</option>
+                                                        <option value="Gray">Gray</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -596,14 +600,14 @@ if(customerId){
                                     </div>
                                     <div className='col-6'>
                                         <div className="mb-3">
-{productId ? `` : <div className='text-center' htmlFor="product_image">
+                                            {productId ? `` : <div className='text-center' htmlFor="product_image">
                                                 <img src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' width={200} />
                                             </div>}
-                                            
+
 
 
                                             <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
-                                            <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleFile} />
+                                            <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleChange} />
                                         </div>
                                     </div>
                                 </div>
@@ -631,14 +635,16 @@ if(customerId){
                                         wrapperStyle={{}}
                                         wrapperClassName=""
                                         visible={true}
-                                    /> : data.map((product) => { return (
-                                        <li>
-                                    <input type='checkbox' value={product.id}  /> {product.description}
-                                    
-                                    </li> ) }))}
-                                    </ul>
+                                    /> : data.map((product) => {
+                                        return (
+                                            <li>
+                                                <input type='checkbox' value={product.id} /> {product.description}
 
-</div>
+                                            </li>)
+                                    }))}
+                            </ul>
+
+                        </div>
 
 
                     </div>
@@ -697,11 +703,11 @@ const Task = () => {
                 });
         }
     }, [taskId, makeRequest, setIsEditMode, setTaskData, setError]);
-        
-    
-            
-    
-    
+
+
+
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -713,7 +719,7 @@ const Task = () => {
         e.preventDefault();
         setError(null);
         setSuccessMessage(null);
-    
+
         try {
             if (isEditMode) {
                 // Update an existing task
@@ -726,24 +732,39 @@ const Task = () => {
                     setError('Failed to update the task.');
                 }
             } else {
-                // Add a new task
-                const response = await makeRequest.post(`/tasks/addtask/${orderid}`, taskData);
-                if (response.status === 200) {
-                    setSuccessMessage('Task added successfully.');
-                    navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
-                } else {
-                    setError('Failed to add the task.');
+                if (orderid) {
+                    // Add a new task
+                    const response = await makeRequest.post(`/tasks/addtask/${orderid}`, taskData);
+                    if (response.status === 200) {
+                        setSuccessMessage('Task added successfully.');
+                        navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
+                    } else {
+                        setError('Failed to add the task.');
+                    }
+                }
+                else {
+                    // Add a new task
+                    const response = await makeRequest.post(`/tasks/addtask`, taskData);
+                    if (response.status === 200) {
+                        setSuccessMessage('Task added successfully.');
+                    } else {
+                        setError('Failed to add the task.');
+                    }
                 }
             }
         } catch (err) {
             setError('An error occurred while saving the task.');
         }
     };
-    
+
 
     return (
         <div className='task'>
-            <h2 className='text-center my-3'>{isEditMode ? 'Edit Task' : 'Add Task'}</h2>
+            <TopNav prevStep={-1} />
+            <h2 className='text-center my-3'>{ }</h2>
+
+            <PageTitle title={isEditMode ? 'Edit Task' : 'Add Task'} />
+
             <div className='mainDiv'>
                 <div className='mainWrapper'>
                     <form onSubmit={handleSubmit}>
@@ -770,7 +791,7 @@ const Task = () => {
                                         id='task_notes'
                                         type='text'
                                         className='form-control'
-                                        value={taskData.task_notes || "" }
+                                        value={taskData.task_notes || ""}
                                         name='task_notes'
                                         onChange={handleChange}
                                         placeholder="Here's Something"
@@ -831,7 +852,7 @@ const CarvingType = () => {
 
 
 const Carving = (props) => {
-    const { customerId, orderid,carvingId } = useParams();
+    const { customerId, orderid, carvingId } = useParams();
     const navigate = useNavigate();
 
     const [carvingData, setCarvingData] = useState([{
@@ -860,13 +881,13 @@ const Carving = (props) => {
                     const data = res.data[0];
                     setCarvingData({
                         car_side: data.side == null ? "" : data.side,
-        car_position: data.position == null ? "" : data.position ,
-        car_first_name: data.first_name == null ? "" : data.first_name ,
-        car_middle_name: data.middle_name == null ? "" : data.middle_name,
-        car_last_name: data.last_name == null ? "" : data.last_name,
-        car_birth_date: data.passing_date == null ? null : data.birth_date.split('T')[0],
-        car_passing_date: data.passing_date == null ? null : data.passing_date.split('T')[0] ,
-        car_notes: data.other_details
+                        car_position: data.position == null ? "" : data.position,
+                        car_first_name: data.first_name == null ? "" : data.first_name,
+                        car_middle_name: data.middle_name == null ? "" : data.middle_name,
+                        car_last_name: data.last_name == null ? "" : data.last_name,
+                        car_birth_date: data.passing_date == null ? null : data.birth_date.split('T')[0],
+                        car_passing_date: data.passing_date == null ? null : data.passing_date.split('T')[0],
+                        car_notes: data.other_details
                     });
                     console.log(data);
                 })
@@ -876,8 +897,8 @@ const Carving = (props) => {
                 });
         }
     }, [carvingId, makeRequest, setIsEditMode, setCarvingData, setError]);
-    
-    
+
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCarvingData({ ...carvingData, [name]: value });
@@ -894,23 +915,34 @@ const Carving = (props) => {
 
         try {
             if (isEditMode) {
-                                // Update an existing task
-                                const response = await makeRequest.put(`/carvings/editcarving/${carvingId}`, carvingData);
-                                if (response.status === 200) {
-                                    setSuccessMessage('Carving updated successfully.');
-                                    navigate(`/dashboard/carvings`);
-                                    console.log("Updated");
-                                } else {
-                                    setError('Failed to update the Carving.');
-                                }
-                            } else {
-                
-            const response = await makeRequest.post(`/carvings/addcarving/${orderid}`, carvingData);
-            //console.log(response.data);
-           
-            console.log(response);
-            navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
-        } }
+                // Update an existing task
+                const response = await makeRequest.put(`/carvings/editcarving/${carvingId}`, carvingData);
+                if (response.status === 200) {
+                    setSuccessMessage('Carving updated successfully.');
+                    navigate(`/dashboard/carvings`);
+                    console.log("Updated");
+                } else {
+                    setError('Failed to update the Carving.');
+                }
+            } else {
+                if(orderid){
+
+                const response = await makeRequest.post(`/carvings/addcarving/${orderid}`, carvingData);
+                //console.log(response.data);
+
+                console.log(response);
+                navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
+                }
+                else{
+                    const response = await makeRequest.post(`/carvings/addcarving/`, carvingData);
+                    //console.log(response.data);
+    
+                    console.log(response);
+                    navigate(-1);
+                  
+                }
+            }
+        }
         catch (err) {
             setErr(err.response.data);
         }
@@ -936,31 +968,31 @@ const Carving = (props) => {
                             <h5 className='h4 text-center my-3'>Position</h5>
                             <div className='carvingPositionWrap' >
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Left" name='car_position' checked={carvingData["car_position"]==="Top Left"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio1" value="Top Left" name='car_position' checked={carvingData["car_position"] === "Top Left"} onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Top Center" name='car_position' checked={carvingData["car_position"]==="Top Center"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio2" value="Top Center" name='car_position' checked={carvingData["car_position"] === "Top Center"} onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio3" value="Top Right" name='car_position' checked={carvingData["car_position"]==="Top Right"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio3" value="Top Right" name='car_position' checked={carvingData["car_position"] === "Top Right"} onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio4" value="Center Left" name='car_position' checked={carvingData["car_position"]==="Center Left"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio4" value="Center Left" name='car_position' checked={carvingData["car_position"] === "Center Left"} onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio5" value="Center Center" name='car_position' checked={carvingData["car_position"]==="Center Center"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio5" value="Center Center" name='car_position' checked={carvingData["car_position"] === "Center Center"} onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio6" value="Center Right" name='car_position' checked={carvingData["car_position"]==="Center Right"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio6" value="Center Right" name='car_position' checked={carvingData["car_position"] === "Center Right"} onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio7" value="Bottom Left" name='car_position' checked={carvingData["car_position"]==="Bottom Left"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio7" value="Bottom Left" name='car_position' checked={carvingData["car_position"] === "Bottom Left"} onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio8" value="Bottom Center" name='car_position' checked={carvingData["car_position"]==="Bottom Center"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio8" value="Bottom Center" name='car_position' checked={carvingData["car_position"] === "Bottom Center"} onChange={handleChange} />
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="radio" id="inlineradio9" value="Bottom Right" name='car_position' checked={carvingData["car_position"]==="Bottom Right"} onChange={handleChange} />
+                                    <input className="form-check-input" type="radio" id="inlineradio9" value="Bottom Right" name='car_position' checked={carvingData["car_position"] === "Bottom Right"} onChange={handleChange} />
                                 </div>
                             </div>
                         </div>
@@ -968,7 +1000,7 @@ const Carving = (props) => {
                     <div className='row'>
                         <div className='col-4'>
                             <div className="form-floating mb-3">
-                                <input type="text" value={carvingData["car_first_name"]} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange}  />
+                                <input type="text" value={carvingData["car_first_name"]} name="car_first_name" className="form-control" placeholder="First Name" onChange={handleChange} />
                                 <label htmlFor="floatingInput">First Name</label>
                             </div>
                         </div>
@@ -988,20 +1020,20 @@ const Carving = (props) => {
                     <div className='row'>
                         <div className='col-6'>
                             <div className="form-floating mb-3">
-                                <input type="date" value={carvingData["car_birth_date"]} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange}  />
+                                <input type="date" value={carvingData["car_birth_date"]} name="car_birth_date" className="form-control" placeholder="phone" onChange={handleChange} />
                                 <label htmlFor="floatingInput">Birth Date</label>
                             </div>
                         </div>
                         <div className='col-6'>
                             <div className="form-floating mb-3">
-                                <input type="date" value={carvingData["car_passing_date"]} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange}  />
+                                <input type="date" value={carvingData["car_passing_date"]} name="car_passing_date" className="form-control" placeholder="email" onChange={handleChange} />
                                 <label htmlFor="floatingInput">Passing Date</label>
                             </div>
                         </div>
                     </div>
                     <div className='col-12'>
                         <div className="form-floating mb-3">
-                            <textarea name="car_notes" rows="4" value={carvingData["car_notes"]} style={{ height: "150px" }} className="form-control"  onChange={handleChange} />
+                            <textarea name="car_notes" rows="4" value={carvingData["car_notes"]} style={{ height: "150px" }} className="form-control" onChange={handleChange} />
                             <label htmlFor="floatingInput"></label>
                         </div>
                     </div>
@@ -1198,11 +1230,11 @@ const OrderServices = (props) => {
                                         visible={true}
                                     /> : data && data.map((jobdetail, key) =>
                                         <li key={key}> <p> <span className='icon'><FaHome /></span>
-                                         <Link to={jobdetail.type == "task" ? `/dashboard/task/edit/${jobdetail.id}` : jobdetail.type == "product" ? `/dashboard/product/edit/${jobdetail.id}` : jobdetail.type == "carving" ? `/dashboard/carving/edit/${jobdetail.id}` : "" }>
-                                         { jobdetail.type=="carving" ? `${jobdetail.type}: ${jobdetail.description == null ? "Not Updated" : ""}` : jobdetail.type=="task" ? `${jobdetail.type}: ${jobdetail.description}` : ""}
-                                         </Link>
-                                         
-                                          </p> </li>
+                                            <Link to={jobdetail.type == "task" ? `/dashboard/task/edit/${jobdetail.id}` : jobdetail.type == "product" ? `/dashboard/product/edit/${jobdetail.id}` : jobdetail.type == "carving" ? `/dashboard/carving/edit/${jobdetail.id}` : ""}>
+                                                {jobdetail.type == "carving" ? `${jobdetail.type}: ${jobdetail.description == null ? "Not Updated" : ""}` : jobdetail.type == "task" ? `${jobdetail.type}: ${jobdetail.description}` : ""}
+                                            </Link>
+
+                                        </p> </li>
                                     ))}
                             </ul>
                         </div>

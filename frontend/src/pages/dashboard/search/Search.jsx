@@ -255,7 +255,7 @@ const Search = () => {
                   <li key={job.id}>
                     <Link
                       title='Edit'
-                      to={`/dashboard/customers/${job.customerid}/job//edit/${job.id}`}
+                      to={`/dashboard/customer/${job.customer_id}/order/edit/${job.id}`}
                     >
                       <FaHouseUser /> {job.notes}
                     </Link>
@@ -315,13 +315,13 @@ const Search = () => {
     />
     </div>
               <ul>
-                {productsData.map((product) => (
-                  <li key={product.id}>
+                {carvingsData.map((carving) => (
+                  <li key={carving.id}>
                     <Link
                       title='Edit'
-                      to={`/dashboard/product/edit/${product.id}`}
+                      to={`/dashboard/carving/edit/${carving.id}`}
                     >
-                      <FaHouseUser /> {product.description}
+                      <FaHouseUser /> {carving.other_details}
                     </Link>
                   </li>
                 ))}

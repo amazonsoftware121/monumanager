@@ -100,6 +100,10 @@ function App() {
                     element: <Order />
                 },
                 {
+                    path: "/dashboard/customer/:customerId/order/edit/:orderid",
+                    element: <Order />
+                },
+                {
                     path: "/dashboard/customer/:customerId/order/:orderid/orderservices",
                     element: <OrderServices />
                 },
@@ -109,6 +113,10 @@ function App() {
                 },
                 {
                     path: "/dashboard/customer/:customerId/order/:orderid/task/:taskid",
+                    element: <Task />
+                },
+                {
+                    path: "/dashboard/tasks/addtask/",
                     element: <Task />
                 },
                 {
@@ -124,7 +132,15 @@ function App() {
                     element: <Carving />
                 },
                 {
+                    path: "/dashboard/carvings/addcarving",
+                    element: <Carving />
+                },
+                {
                     path: "/dashboard/customer/:customerId/order/:orderid/addproduct",
+                    element: <Product />
+                },
+                {
+                    path: "/dashboard/products/addproduct",
                     element: <Product />
                 },
                 {

@@ -77,6 +77,7 @@ const Customers = () => {
   return (
     <div className='customers'>
       <PageTitle title={"Customers"} />
+      <div class="addnew"><Link to="/dashboard/customer/addcustomer" className='btn btn-primary btn-lg mb-5' >Add Customer</Link> </div>
 
 
       {customerMessage && <p className="text-center text-success"><strong>{customerMessage}</strong></p>}

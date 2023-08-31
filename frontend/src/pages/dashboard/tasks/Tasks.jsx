@@ -66,6 +66,7 @@ const Tasks = () => {
       <div className='tasks'>
 
       <PageTitle title={"Tasks"} />
+<div class="addnew"><Link to="addtask" className='btn btn-primary btn-lg' >Add Task</Link> </div>
       {taskMessage && <p className="text-center text-success"><strong>{taskMessage}</strong></p>}        
         <table className="table table-striped">
           <thead>
