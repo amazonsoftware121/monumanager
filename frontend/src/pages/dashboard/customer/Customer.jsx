@@ -454,41 +454,114 @@ const Order = (props) => {
     )
 }
 
-const Product = () => {
+const Product = ({ onClose, onUpdate }) => {
     const { customerId, orderid } = useParams();
-    const [productData, setProductData] = useState({
-        product_description: "",
-        product_color: "",
-        product_size: "",
-        product_qty_on_hand: "",
-        product_price: "",
-        product_options: "",
-        product_notes: "",
-        product_image: null,
-        orderid: orderid
+    console.log(orderid);
+    const [formData, setFormData] = useState({
+        orderid: orderid || 0,
+        description: '',
+        color: '', // Initialize with an empty string
+        size: '',
+        quantity_on_hand: '',
+        price: '',
+        options: '',
+        notes: '',
+        image: null
     });
+
+    const [isEditing, setIsEditing] = useState(false);
+
+    /*Not use start*/
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
-    const [productImage, setProductImage] = useState("");
-    
+    //const [productproduct_Image, setProductImage] = useState("");
     const navigate = useNavigate();
     let { productId } = useParams();
-
-
-
+    /*Not use End*/
     useEffect(() => {
         if (productId) {
-            makeRequest.get("/products/getproduct/" + productId)
-                .then(res => {
-                    const data = res.data[0];
-                    setProductData(data);
-                })
-                .catch(err => console.log(err));
+            setIsEditing(true);
+            const fetchData = async () => {
+                try {
+                    const response = await makeRequest.get(`/products/getproduct/${productId}`);
+                    setFormData(...response.data);
+                }
+                catch (error) {
+                    console.error('Error fetching data: ' + error.message);
+                }
+            };
+            fetchData();
+        } else {
+            setIsEditing(false);
         }
-    }, []
-    );
+    }, [productId]);
 
-    console.log(productData);
+    console.log(formData);
+
+
+
+    const handleChange = (e) => {
+        const { name, value, files } = e.target;
+
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: files ? files[0] : value,
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+
+        setErr(null);
+        setSucc(null);
+
+        e.preventDefault();
+
+        if (formData.image === null) {
+            setFormData((prevData) => ({
+              ...prevData,
+              image: formData.image, // Keep the existing image
+            }));
+          }
+
+        const dataToSend = new FormData();
+
+        Object.entries(formData).forEach(([key, value]) => {
+            dataToSend.append(key, value);
+        });
+        console.log(dataToSend);
+        try {
+            if (isEditing) {
+                await makeRequest.put(`/products/updateproduct/${productId}`, dataToSend, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+                setSucc("Product Update Successfully");
+                alert('Product Update Successfully');
+                setTimeout(() => {
+                    navigate(-1);
+                }, 1500); // 3000 milliseconds (3 seconds)
+
+                onUpdate();
+            } else {
+                await makeRequest.post(`/products/addproduct`, dataToSend, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+
+                setSucc("Product Added Successfully");
+                alert('Product added successfully');
+                setTimeout(() => {
+                    navigate(-1);
+                }, 1500); // 3000 milliseconds (3 seconds)
+
+
+
+            }
+
+            onClose();
+        } catch (error) {
+            console.error('Error submitting data: ' + error.message);
+        }
+    }
+
 
     const { isLoading, error, data } = useQuery(['products'], () =>
         makeRequest.get("/products/getproducts").then(res => {
@@ -496,45 +569,8 @@ const Product = () => {
         })
     );
 
-    const handleChange = (e) => {
-        const { name, value, files } = e.target;
-        
-        setProductData({ ...productData, [name]: value || files[0] });
-        console.log(productData);
-    };
-
-    const handleFile = (e) => {
-        setProductImage(e.target.files[0]);
-    }
 
 
-    const { currentUser } = useContext(AuthContext);
-    const queryClient = useQueryClient();
-    const handleClick = async (e) => {
-        setErr(null);
-        setSucc(null);
-        e.preventDefault();
-
-        //const formData = new FormData();
-        if (productId) {
-            try {
-                const res = await makeRequest.put(`/products/updateproduct/${productId}`, productData);
-                setSucc(res.data);
-            } catch (err) {
-                console.log(err)
-            }
-
-        }
-        else {
-            try {
-                const res = await makeRequest.post(`/products/addproduct/${orderid}`, productData);
-                setSucc(res.data);
-                navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
-            } catch (err) {
-                console.log(err)
-            }
-        }
-    }
     return (
         <>
             <div className='customer'>
@@ -545,11 +581,12 @@ const Product = () => {
 
                         <div className='cardItem shadow p-3 mx-3'>
                             <h4>Create Product</h4>
-                            <form onSubmit={handleClick}>
+                            <form onSubmit={handleSubmit}>
+                                <input type='hidden' value={formData.orderid ? orderid : null} name='orderid' />
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea type="text" rows="4" value={productData["product_description"]} style={{ height: "112px" }} name="product_description" className="form-control" placeholder="Description" onChange={handleChange} required />
+                                            <textarea type="text" rows="4" value={[formData.description]} style={{ height: "112px" }} name="description" className="form-control" placeholder="Description" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Description</label>
                                         </div>
                                     </div>
@@ -557,8 +594,8 @@ const Product = () => {
                                         <div className='row'>
                                             <div className='col-6'>
                                                 <div className="form-floating mb-3">
-                                                    <select className="form-select form-control" value={productData.product_color || ""} aria-label="Default select example" name='product_color' onChange={handleChange}>
-                                                        <option defaultValue={"Color"}>Color</option>
+                                                    <select className="form-select form-control" value={formData.color} aria-label="Default select example" name='color' onChange={handleChange}>
+                                                        <option value="">Select Color</option>
                                                         <option value="Red" >Red</option>
                                                         <option value="Black">Black</option>
                                                         <option value="Gray">Gray</option>
@@ -567,19 +604,19 @@ const Product = () => {
                                             </div>
                                             <div className='col-6'>
                                                 <div className="form-floating mb-3">
-                                                    <input type="text" value={productData["product_size"] || ""} name="product_size" className="form-control" placeholder="Options" onChange={handleChange} />
+                                                    <input type="text" value={formData.size} name="size" className="form-control" placeholder="Options" onChange={handleChange} />
                                                     <label htmlFor="floatingInput">Size </label>
                                                 </div>
                                             </div>
                                             <div className='col-6'>
                                                 <div className="form-floating mb-3">
-                                                    <input type="number" value={productData["product_qty_on_hand"] || ""} name="product_qty_on_hand" className="form-control" placeholder="phone" onChange={handleChange} />
+                                                    <input type="number" value={formData.quantity_on_hand} name="quantity_on_hand" className="form-control" placeholder="phone" onChange={handleChange} />
                                                     <label htmlFor="floatingInput">Qty On Hand</label>
                                                 </div>
                                             </div>
                                             <div className='col-6'>
                                                 <div className="form-floating mb-3">
-                                                    <input type="number" value={productData["product_price"] || ""} name="product_price" className="form-control" placeholder="email" onChange={handleChange} />
+                                                    <input type="number" value={formData.price} name="price" className="form-control" placeholder="email" onChange={handleChange} />
                                                     <label htmlFor="floatingInput">Price</label>
                                                 </div>
                                             </div>
@@ -590,31 +627,33 @@ const Product = () => {
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea value={productData["product_options"]} style={{ height: "100px" }} name="product_options" className="form-control" placeholder="Options" onChange={handleChange} />
+                                            <textarea value={formData.options} style={{ height: "100px" }} name="options" className="form-control" placeholder="Options" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Options</label>
                                         </div>
                                         <div className="form-floating mb-3">
-                                            <textarea name="product_notes" rows="4" value={productData["product_notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                            <textarea name="notes" rows="4" value={formData.notes} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Notes</label>
                                         </div>
                                     </div>
+
+
                                     <div className='col-6'>
                                         <div className="mb-3">
-                                            {productId ? `` : <div className='text-center' htmlFor="product_image">
+                                            {formData.image ? <div className='text-center' htmlFor="image"> <img src={`http://granitx.com:3000/monumanagerapi/static/${formData.image}`} width={200} /> </div> : <div className='text-center' htmlFor="image">
                                                 <img src='https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' width={200} />
                                             </div>}
 
 
 
-                                            <label htmlFor="product_image" name="product_image" className="form-label">Select Product Image</label>
-                                            <input className="form-control" type="file" id="product_image" name="product_image" onChange={handleChange} />
+                                            <label htmlFor="image" name="image" className="form-label" >Select Product Image</label>
+                                            <input className="form-control" type="file" id="image" name="image" accept="image/*" onChange={handleChange} />
                                         </div>
                                     </div>
                                 </div>
                                 <div className='buttonWrapper'>
-                                    <Button btnDesign="btn btn-primary" btnText="Archive" onClick={handleClick} />
-                                    <Button btnDesign="btn btn-success" btnText="Save" btnType="submit" />
-                                    <Button btnDesign="btn btn-success" btnText="Add" btnType="submit" />
+
+                                    <Button btnDesign="btn btn-success" btnText={isEditing ? 'Update' : 'Add'} btnType="submit" />
+
                                 </div>
                                 <p className='custResponse text-danger'> {err && err}</p>
                                 <p className='custResponse text-success'>{succ && succ}</p>
@@ -925,21 +964,21 @@ const Carving = (props) => {
                     setError('Failed to update the Carving.');
                 }
             } else {
-                if(orderid){
+                if (orderid) {
 
-                const response = await makeRequest.post(`/carvings/addcarving/${orderid}`, carvingData);
-                //console.log(response.data);
+                    const response = await makeRequest.post(`/carvings/addcarving/${orderid}`, carvingData);
+                    //console.log(response.data);
 
-                console.log(response);
-                navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
+                    console.log(response);
+                    navigate(`/dashboard/customer/${customerId}/order/${orderid}/orderservices`);
                 }
-                else{
+                else {
                     const response = await makeRequest.post(`/carvings/addcarving/`, carvingData);
                     //console.log(response.data);
-    
+
                     console.log(response);
                     navigate(-1);
-                  
+
                 }
             }
         }
