@@ -12,7 +12,7 @@ const Header = () =>{
                     <img src={logo} className="logo-image img-fluid" alt="Monument Manager" />
                 </Link>
 
-                <form action="#" method="get" className="custom-form search-form flex-fill me-3" role="search">
+              {/*  <form action="#" method="get" className="custom-form search-form flex-fill me-3" role="search">
                     <div className="input-group input-group-lg">
                         <input name="search" type="search" className="form-control" id="search" placeholder="Search Monu" aria-label="Search" />
 
@@ -24,10 +24,10 @@ const Header = () =>{
 
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
-                </button>
+                </button> */}
 
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav ms-lg-auto">
+                <div className="" id="navbarNav">
+                    {/*<ul className="navbar-nav ms-lg-auto">
                         <li className="nav-item">
                             <Link className="nav-link active" to="/">Home</Link>
                         </li>
@@ -42,8 +42,8 @@ const Header = () =>{
 
                         <li className="nav-item">
                             <Link className="nav-link" to="#">Contact</Link>
-                        </li>
-                    </ul>
+                        </li> 
+                    </ul>*/}
 
                     <div className="ms-4">
                         <Link to="/login" className="btn custom-btn custom-border-btn smoothscroll">Login</Link>
