@@ -287,7 +287,10 @@ const Order = (props) => {
     const [userData, setUserData] = useState("");
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
-    const [orderDetail, setOrderDetails] = useState({});
+    const [orderDetails, setOrderDetails] = useState({
+        status: "",
+        notes: ""
+    });
     const [jobTasks, setJobTasks] = useState([]);
     let { orderid } = useParams();
     let { customerId } = useParams();
@@ -314,7 +317,10 @@ const Order = (props) => {
             makeRequest.get(`/jobs/getjob/${orderid}`)
                 .then(res => {
                     const data = res.data[0];
-                    setOrderDetails(data);
+                    setOrderDetails({
+                        status: data.status,
+                        notes: data.notes
+                    });
                 })
                 .catch(err => console.log(err));
         }
@@ -329,11 +335,12 @@ const Order = (props) => {
     );
 
 
-    console.log(orderDetail);
+    console.log(orderDetails);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserData({ ...userData, "currentCustomerid": customerId, [name]: value });
+        setOrderDetails({...orderDetails, [name]: value})
     };
 
     const handleClick = async (e) => {
@@ -342,7 +349,8 @@ const Order = (props) => {
         e.preventDefault();
         try {
             if (orderid) {
-
+                const response = await makeRequest.put(`/jobs/updatejob/${orderid}`, orderDetails);
+                setSucc("Job Updated");
             }
             else {
                 const response = await makeRequest.post("/jobs/addjob", userData);
@@ -384,7 +392,7 @@ const Order = (props) => {
 
                             <div className='col-md-4'>
 
-                                {orderid ? <div> <p className='mt-3'><strong>Order Status: </strong> {orderDetail.status ? `${orderDetail.status}` : "Not Updated"} </p> <button className="btn btn-success" onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/status`)}  > Change Status </button></div> : ""}
+                                {orderid ? <div> <p className='mt-3'><strong>Order Status: </strong> {orderDetails.status ? `${orderDetails.status}` : "Not Updated"} </p> <button className="btn btn-success" onClick={() => navigate(`/dashboard/customer/${customerId}/order/${orderid}/status`)}  > Change Status </button></div> : ""}
                                 <p></p>
                             </div>
 
@@ -394,7 +402,7 @@ const Order = (props) => {
 
                             <div className=''>
                                 <div className="form-floating mb-3">
-                                    <textarea value={orderDetail.notes} name="order_notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                    <textarea value={orderid ? orderDetails.notes : userData.notes} name="notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                     <label htmlFor="floatingInput">Order Description</label>
                                 </div>
                             </div>
