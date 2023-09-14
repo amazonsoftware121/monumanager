@@ -26,6 +26,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import AddCustomer from './pages/dashboard/customer/AddCustomer';
 import { CustomerDetails } from './pages/dashboard/customer/Customer';
 import { EditProduct } from './pages/dashboard/customer/Customer';
+import Forgotpassword from './pages/forgotpassword/Forgotpassword';
 
 function App() {
     const { currentUser } = useContext(AuthContext);
@@ -73,6 +74,10 @@ function App() {
         {
             path: "/login",
             element: <Login />,
+        },
+        {
+            path: "/forgotpassword",
+            element: <Forgotpassword />
         },
         {
             path: "/dashboard",
