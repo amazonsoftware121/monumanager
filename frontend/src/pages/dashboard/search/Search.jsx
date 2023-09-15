@@ -105,20 +105,7 @@ const Search = () => {
               </button>
             </li>
 
-            <li className='nav-item' role='presentation'>
-              <button
-                className='nav-link'
-                id='pills-services-tab'
-                data-bs-toggle='pill'
-                data-bs-target='#pills-services'
-                type='button'
-                role='tab'
-                aria-controls='pills-services'
-                aria-selected='true'
-              >
-                services
-              </button>
-            </li>
+           
 
             <li className='nav-item' role='presentation'>
               <button
@@ -264,36 +251,7 @@ const Search = () => {
               </ul>
             </div>
 
-            <div
-              className='tab-pane fade show'
-              id='pills-services'
-              role='tabpanel'
-              aria-labelledby='pills-services-tab'
-            >
-
-<div className='searchBar text-center mt-3'>
-    
-    <input
-      className='searchBoxInput'
-      type='text'
-      placeholder='Search here'
-      value={filter}
-      onChange={handleFilterChange}
-    />
-    </div>
-              <ul>
-                {filteredData.map((customer) => (
-                  <li key={customer.id}>
-                    <Link
-                      title='Edit'
-                      to={`/dashboard/customer/${customer.id}`}
-                    >
-                      <FaHouseUser /> {customer.first_name} {customer.middle_name} {customer.last_name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+           
             
 
 

@@ -42,6 +42,8 @@ const Customer = (props) => {
     useEffect(() => {
         if (customerId) {
             setIsEditMode(true);
+            
+            // Fetch customer data
             makeRequest.get("/customers/getsinglecustomer/" + customerId)
                 .then(res => {
                     const data = res.data[0];
@@ -57,20 +59,20 @@ const Customer = (props) => {
                     });
                 })
                 .catch(err => console.log(err));
+    
+            // Fetch recent orders
+            makeRequest.post("/jobs/recentjobs", { customerId: customerId })
+                .then(response => {
+                    setRecentOrders(response.data.data); // Set recentOrders with the fetched data
+                })
+                .catch(err => console.log(err));
         }
-    }, []
-    );
+    }, [customerId]);
+    
 
 
 
-    const toggleDisplay = async () => {
-
-        try {
-            const response = await makeRequest.post("/jobs/recentjobs", { "customerId": customerId });
-            setRecentOrders(response.data.data);
-        } catch (err) {
-            setErr(err.response.data);
-        }
+    const toggleDisplay = () => {
 
         if (!display) {
             setDisplay(true);
@@ -231,11 +233,11 @@ const Customer = (props) => {
 
                                 <div className='recentOrderButton'>
                                     <div className="form-check form-switch">
-                                        <input onClick={toggleDisplay} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" />
+                                        <input onClick={toggleDisplay} className="form-check-input" type="checkbox"  checked={display} id="flexSwitchCheckDefault" />
                                         <label className="form-check-label" htmlFor="flexSwitchCheckDefault"><strong>Show Recent Orders</strong></label>
                                     </div>
                                 </div>
-                                {!display ? <div className='recentOrders'>
+                                {display ? <div className='recentOrders'>
                                     <ul>
 
 
@@ -324,12 +326,14 @@ const Order = (props) => {
                 })
                 .catch(err => console.log(err));
         }
+        if(customerId != "null"){
         makeRequest.get("/customers/getsinglecustomer/" + customerId)
             .then(res => {
                 const data = res.data[0];
                 setUserData(data);
             })
             .catch(err => console.log(err));
+        }
     }
         , []
     );
