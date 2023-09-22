@@ -845,9 +845,9 @@ const Task = () => {
                                         value={taskData.task_notes || ""}
                                         name='task_notes'
                                         onChange={handleChange}
-                                        placeholder="Here's Something"
+                                        placeholder="Notes"
                                     />
-                                    <label htmlFor='task_notes'>Here's Something</label>
+                                    <label htmlFor='task_notes'>Notes</label>
                                 </div>
 
                                 <div className='form-floating mb-3'>
