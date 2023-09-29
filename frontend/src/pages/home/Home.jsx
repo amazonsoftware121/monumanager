@@ -10,8 +10,8 @@ const Home = () => {
                     <div className="row">
                         <div className="col-lg-12 col-12">
                             <div className="text-center mb-5 pb-2">
-                                <h1 className="text-white">Monument Manager</h1>
-                                <p className="text-white">Lorem Ipsum is simply dummy text of the printing.</p>
+                                <h1 className="text-white">GranitX</h1>
+                                <p className="text-white">Hello.</p>
                                 <Link to="login" className="btn custom-btn smoothscroll mt-3">Login</Link>
                             </div> 
                             <div className="owl-carousel owl-theme owl-loaded owl-drag">

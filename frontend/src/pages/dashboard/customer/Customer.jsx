@@ -153,7 +153,7 @@ const Customer = (props) => {
                                 <div className='row'>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["first_name"]} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} required />
+                                            <input type="text" value={userData["first_name"]} name="first_name" className="form-control" placeholder="firstname" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Firstname</label>
                                         </div>
                                     </div>
@@ -165,7 +165,7 @@ const Customer = (props) => {
                                     </div>
                                     <div className='col-4'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["last_name"]} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} required />
+                                            <input type="text" value={userData["last_name"]} name="last_name" className="form-control" placeholder="lastname" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Lastname</label>
                                         </div>
                                     </div>
@@ -174,14 +174,14 @@ const Customer = (props) => {
                                 <div className='row'>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" value={userData["phone"]} name="phone" className="form-control" placeholder="phone" onChange={handleChange} required />
+                                            <input type="text" value={userData["phone"]} name="phone" className="form-control" placeholder="phone" onChange={handleChange} />
                                             <label htmlFor="floatingInput">Phone</label>
                                         </div>
                                     </div>
                                     <div className='col-6'>
 
                                         <div className="form-floating mb-3">
-                                            <input type="email" value={userData["email"]} name="email" className="form-control" placeholder="email" onChange={handleChange} required disabled={customerId && true} />
+                                            <input type="email" value={userData["email"]} name="email" className="form-control" placeholder="email" onChange={handleChange} disabled={customerId && true} />
                                             <label htmlFor="floatingInput">Email</label>
                                         </div>
                                     </div>
@@ -196,7 +196,7 @@ const Customer = (props) => {
                                     </div>
                                     <div className='col-6'>
                                         <div className="form-floating mb-3">
-                                            <textarea name="notes" rows="4" value={userData["notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                            <textarea name="notes" rows="4" value={userData["notes"]} style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} required />
                                             <label htmlFor="floatingInput">Notes</label>
                                         </div>
                                     </div>
@@ -406,7 +406,7 @@ const Order = (props) => {
 
                             <div className=''>
                                 <div className="form-floating mb-3">
-                                    <textarea value={orderid ? orderDetails.notes : userData.notes} name="notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                    <textarea value={ orderDetails.notes } name="notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                     <label htmlFor="floatingInput">Order Description</label>
                                 </div>
                             </div>
