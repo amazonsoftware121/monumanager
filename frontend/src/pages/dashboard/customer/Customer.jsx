@@ -42,7 +42,7 @@ const Customer = (props) => {
     useEffect(() => {
         if (customerId) {
             setIsEditMode(true);
-            
+
             // Fetch customer data
             makeRequest.get("/customers/getsinglecustomer/" + customerId)
                 .then(res => {
@@ -59,7 +59,7 @@ const Customer = (props) => {
                     });
                 })
                 .catch(err => console.log(err));
-    
+
             // Fetch recent orders
             makeRequest.post("/jobs/recentjobs", { customerId: customerId })
                 .then(response => {
@@ -68,7 +68,7 @@ const Customer = (props) => {
                 .catch(err => console.log(err));
         }
     }, [customerId]);
-    
+
 
 
 
@@ -233,7 +233,7 @@ const Customer = (props) => {
 
                                 <div className='recentOrderButton'>
                                     <div className="form-check form-switch">
-                                        <input onClick={toggleDisplay} className="form-check-input" type="checkbox"  checked={display} id="flexSwitchCheckDefault" />
+                                        <input onClick={toggleDisplay} className="form-check-input" type="checkbox" checked={display} id="flexSwitchCheckDefault" />
                                         <label className="form-check-label" htmlFor="flexSwitchCheckDefault"><strong>Show Recent Orders</strong></label>
                                     </div>
                                 </div>
@@ -326,13 +326,13 @@ const Order = (props) => {
                 })
                 .catch(err => console.log(err));
         }
-        if(customerId != "null"){
-        makeRequest.get("/customers/getsinglecustomer/" + customerId)
-            .then(res => {
-                const data = res.data[0];
-                setUserData(data);
-            })
-            .catch(err => console.log(err));
+        if (customerId != "null") {
+            makeRequest.get("/customers/getsinglecustomer/" + customerId)
+                .then(res => {
+                    const data = res.data[0];
+                    setUserData(data);
+                })
+                .catch(err => console.log(err));
         }
     }
         , []
@@ -344,7 +344,7 @@ const Order = (props) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserData({ ...userData, "currentCustomerid": customerId, [name]: value });
-        setOrderDetails({...orderDetails, [name]: value})
+        setOrderDetails({ ...orderDetails, [name]: value })
     };
 
     const handleClick = async (e) => {
@@ -373,7 +373,6 @@ const Order = (props) => {
             <div className="order">
                 <TopNav prevStep={-1} />
                 <h2 className='text-center my-3'>Order Info</h2>
-
                 <div className="row">
                     <div className="col-8 px-5 mt-3">
 
@@ -406,7 +405,7 @@ const Order = (props) => {
 
                             <div className=''>
                                 <div className="form-floating mb-3">
-                                    <textarea value={ orderDetails.notes } name="notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
+                                    <textarea value={orderDetails.notes} name="notes" rows="4" style={{ height: "150px" }} className="form-control" placeholder="notes" onChange={handleChange} />
                                     <label htmlFor="floatingInput">Order Description</label>
                                 </div>
                             </div>
@@ -530,10 +529,10 @@ const Product = ({ onClose, onUpdate }) => {
 
         if (formData.image === null) {
             setFormData((prevData) => ({
-              ...prevData,
-              image: formData.image, // Keep the existing image
+                ...prevData,
+                image: formData.image, // Keep the existing image
             }));
-          }
+        }
 
         const dataToSend = new FormData();
 
