@@ -117,6 +117,10 @@ function App() {
                     element: <Task />
                 },
                 {
+                    path: "/dashboard/customer/:customerId/tasks/addtask",
+                    element: <Task />
+                },
+                {
                     path: "/dashboard/customer/:customerId/order/:orderid/task/:taskid",
                     element: <Task />
                 },
@@ -142,6 +146,10 @@ function App() {
                 },
                 {
                     path: "/dashboard/customer/:customerId/order/:orderid/addproduct",
+                    element: <Product />
+                },
+                {
+                    path: "/dashboard/customer/:customerId/addproduct",
                     element: <Product />
                 },
                 {

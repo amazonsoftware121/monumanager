@@ -14,6 +14,8 @@ import PageTitle from '../../../components/PageTitle';
 import { useQuery } from 'react-query';
 import { ThreeDots } from 'react-loader-spinner'
 import TopNav from '../../../components/TopNav';
+import AddTasks from '../tasks/AddTasks';
+import AddProducts from '../products/AddProducts';
 
 const Customer = (props) => {
     const [userData, setUserData] = useState({
@@ -230,7 +232,13 @@ const Customer = (props) => {
 
                             <div className='recentOrderWrapper'>
 
+                            { customerId && 
 
+<div className='text-center mb-3'>
+                            <button className='btn btn-primary mx-2'><Link to="tasks/addtask" className='nav-link' >Add Tasks </Link></button>
+
+                            <button className='btn btn-primary'><Link to="addproduct" className='nav-link' >Add Products </Link></button>
+                            </div> }
                                 <div className='recentOrderButton'>
                                     <div className="form-check form-switch">
                                         <input onClick={toggleDisplay} className="form-check-input" type="checkbox" checked={display} id="flexSwitchCheckDefault" />
@@ -673,26 +681,8 @@ const Product = ({ onClose, onUpdate }) => {
                     </div>
                     <div className='col-md-4 px-5 sidebar'>
                         <div className='sidebar_inner'>
-                            <h5>Select Products</h5>
-                            <ul>
-                                {error ? "Something went wrong!" : (isLoading
-                                    ? <ThreeDots
-                                        height="80"
-                                        width="80"
-                                        radius="9"
-                                        color="#4fa94d"
-                                        ariaLabel="three-dots-loading"
-                                        wrapperStyle={{}}
-                                        wrapperClassName=""
-                                        visible={true}
-                                    /> : data.map((product) => {
-                                        return (
-                                            <li>
-                                                <input type='checkbox' value={product.id} /> {product.description}
-
-                                            </li>)
-                                    }))}
-                            </ul>
+                            
+                          <AddProducts id={customerId} />
 
                         </div>
 
@@ -731,6 +721,11 @@ const Task = () => {
     const [successMessage, setSuccessMessage] = useState(null);
     const [isEditMode, setIsEditMode] = useState(false);
 
+
+    
+
+      
+
     // Simulated API request to fetch task data for editing
     useEffect(() => {
         if (taskId) {
@@ -764,6 +759,7 @@ const Task = () => {
         setTaskData({ ...taskData, [name]: value });
         console.log(taskData);
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -816,7 +812,8 @@ const Task = () => {
             <PageTitle title={isEditMode ? 'Edit Task' : 'Add Task'} />
 
             <div className='mainDiv'>
-                <div className='mainWrapper'>
+                <div className='mainWrapper row'>
+                <div className='col-md-8'>
                     <form onSubmit={handleSubmit}>
                         {/* Wrap your form fields in a <form> element */}
                         <div className='row'>
@@ -881,6 +878,12 @@ const Task = () => {
                             </div>
                         </div>
                     </form>
+                    </div>
+                    <div className='col-md-4'>
+                    <AddTasks customerId={customerId} />
+                  
+                    
+                    </div>
                 </div>
             </div>
         </div>

@@ -1538,7 +1538,28 @@ margin-bottom: 20px;
   gap: 25px;
   a{
     font-weight: bold;
-    color:#0d6efd;
+    color: #fff;
     text-transform: uppercase;
+    background-color: #4974ff;
+    padding: 5px 20px;
   }
+}
+.relatedSection{
+  
+    .relatedList{
+      max-height: 250px;
+      overflow-y: scroll;
+      
+      li{
+        margin: 10px 0;
+        list-style: none;
+    border-bottom: 1px solid #d0d0d0;
+    padding: 6px 0;
+    display: flex;
+    align-items: baseline;
+    input[type="checkbox"]{
+      margin-right: 5px;
+    }
+      }
+    }
 }
