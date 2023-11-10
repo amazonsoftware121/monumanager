@@ -18,6 +18,46 @@ const addTask = (req, res) =>{
     });
 }
 
+const addTaskCustomer = (req, res) => {
+    const customer_id = req.params.customerId;
+    const tasks = req.body.selectedTasks;
+  
+    // Check if tasks is an array and not empty
+    if (!Array.isArray(tasks) || tasks.length === 0) {
+      return res.status(400).json({ errorMsg: "Invalid or empty tasks array" });
+    }
+  
+    const insertTasksQuery = "INSERT INTO customer_tasks (customer_id, task_id) VALUES ?";
+    const taskValues = tasks.map(taskId => [customer_id, taskId]);
+  
+    // Check if the combination of customer_id and taskId already exists
+    const checkExistenceQuery = "SELECT * FROM customer_tasks WHERE customer_id = ? AND task_id IN (?)";
+  
+    db.query(checkExistenceQuery, [customer_id, tasks], (checkErr, checkResult) => {
+      if (checkErr) {
+        console.error(checkErr);
+        return res.status(500).json({ errorMsg: "Error checking task existence" });
+      }
+  
+      if (checkResult.length > 0) {
+        // Tasks already exist for this customer
+        return res.status(200).json({ errorMsg: "Tasks already added for this customer" });
+      }
+  
+      // If not exists, proceed with the insertion
+      db.query(insertTasksQuery, [taskValues], (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ errorMsg: "Error inserting tasks" });
+        }
+  
+        const lastInsertId = result.insertId;
+        return res.status(200).json({ successMsg: "Tasks have been added", lastInsertId });
+      });
+    });
+  };
+  
+      
 
 const editTask = (req, res) => {
     const taskId = req.params.taskId; // Assuming taskId is the unique identifier for the task
@@ -78,4 +118,4 @@ db.query(q, [taskId], (err,data)=>{
 })
 }
 
-module.exports = {addTask,getTasks, deleteTask, getJobTasks,getTask,editTask};
+module.exports = {addTask,getTasks, deleteTask, getJobTasks,getTask,editTask,addTaskCustomer};

@@ -57,6 +57,30 @@ if (req.file) {
 }
 
 
+const addProductCustomer = (req, res) => {
+    const customer_id = req.params.id; 
+    const products = req.body.selectedProducts; // Assuming req.body.products is an array of task IDs
+  
+    // Check if products is an array and not empty
+    if (!Array.isArray(products) || products.length === 0) {
+      return res.status(400).json({ errorMsg: "Invalid or empty products array" });
+    }
+  
+    const insertProductsQuery = "INSERT INTO customer_products (customer_id, product_id) VALUES ?";
+    const productValues = products.map(productId => [customer_id, productId]);
+  
+    db.query(insertProductsQuery, [productValues], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ errorMsg: "Error inserting products" });
+      }
+      const lastInsertId = result.insertId; // This won't work for bulk insert, you might need to change this logic
+      return res.status(200).json({ successMsg: "products have been added", lastInsertId });
+    });
+  };
+
+
+
 const updateProduct = (req, res) => {
     let image = "";
     if (req.file) {
@@ -113,4 +137,4 @@ const deleteProduct = (req, res)  =>{
     })
     }
 
-module.exports = { addProduct, upload, getProducts, deleteProduct,getProduct,updateProduct };
+module.exports = { addProduct, upload, getProducts, deleteProduct,getProduct,updateProduct,addProductCustomer };
